@@ -1,0 +1,17 @@
+{
+  "name": "brighton-pauper-league",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Brighton Pauper League website - monorepo",
+  "scripts": {
+    "dev:studio": "cd studio && npm run dev",
+    "dev:web": "cd web && npm run dev",
+    "build:studio": "cd studio && npm run build",
+    "build:web": "cd web && npm run build",
+    "build": "npm run build:studio && npm run build:web"
+  },
+  "workspaces": [
+    "studio",
+    "web"
+  ]
+}
