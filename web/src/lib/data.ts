@@ -1,4 +1,5 @@
 import { sanityFetch } from "@/sanity/lib/live";
+import { client } from "@/sanity/lib/client";
 import {
   ACTIVE_SEASON_QUERY,
   ALL_EVENTS_QUERY,
@@ -106,7 +107,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 }
 
 export async function getPostSlugs(): Promise<string[]> {
-  const { data } = await sanityFetch({ query: POST_SLUGS_QUERY });
+  const data = await client.fetch(POST_SLUGS_QUERY);
   return (data as string[] | null) ?? [];
 }
 
@@ -126,7 +127,7 @@ export async function getPlayerBySlug(slug: string): Promise<PlayerProfile | nul
 }
 
 export async function getPlayerSlugs(): Promise<string[]> {
-  const { data } = await sanityFetch({ query: PLAYER_SLUGS_QUERY });
+  const data = await client.fetch(PLAYER_SLUGS_QUERY);
   return (data as string[] | null) ?? [];
 }
 
