@@ -29,7 +29,7 @@ export default async function Home() {
         <div className="max-w-360 mx-auto px-6 md:px-12 lg:px-20 w-full flex flex-col lg:flex-row items-center justify-between gap-10">
           {/* Hero Content - Left Aligned */}
           <div className="flex flex-col gap-8 items-start max-w-200 py-16 lg:py-40">
-            <h1 className="font-(family-name:--font-young-serif) text-5xl sm:text-7xl lg:text-[120px] text-secondary-text-yellow leading-none text-left">
+            <h1 className="font-(family-name:--font-young-serif) text-5xl sm:text-7xl lg:text-[120px] text-secondary-yellow leading-none text-left">
               Brighton Pauper League
             </h1>
             <p className="font-(family-name:--font-bricolage-grotesque) font-medium text-2xl md:text-[32px] text-light-purple leading-tight text-left">
@@ -229,7 +229,7 @@ export default async function Home() {
                   <h3 className="font-(family-name:--font-young-serif) text-2xl md:text-[32px] text-white">
                     Tuesdays
                   </h3>
-                  <p className="font-(family-name:--font-bricolage-grotesque) font-bold text-lg text-secondary-text-yellow">
+                  <p className="font-(family-name:--font-bricolage-grotesque) font-bold text-lg text-secondary-yellow">
                     2nd & 4th Tuesday of the month
                   </p>
                   <p className="font-(family-name:--font-bricolage-grotesque) text-lg text-light-purple">
@@ -248,7 +248,7 @@ export default async function Home() {
                   <h3 className="font-(family-name:--font-young-serif) text-2xl md:text-[32px] text-white">
                     Tuesdays
                   </h3>
-                  <p className="font-(family-name:--font-bricolage-grotesque) font-bold text-lg text-secondary-text-yellow">
+                  <p className="font-(family-name:--font-bricolage-grotesque) font-bold text-lg text-secondary-yellow">
                     1st & 3rd Tuesday of the month
                   </p>
                   <p className="font-(family-name:--font-bricolage-grotesque) text-lg text-light-purple">
@@ -355,25 +355,25 @@ export default async function Home() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="flex gap-3 items-start">
-                  <span className="text-secondary-text-yellow text-2xl leading-none">•</span>
+                  <span className="text-secondary-yellow text-2xl leading-none">•</span>
                   <p className="font-(family-name:--font-bricolage-grotesque) text-lg text-white">
                     3 seasons per year
                   </p>
                 </div>
                 <div className="flex gap-3 items-start">
-                  <span className="text-secondary-text-yellow text-2xl leading-none">•</span>
+                  <span className="text-secondary-yellow text-2xl leading-none">•</span>
                   <p className="font-(family-name:--font-bricolage-grotesque) text-lg text-white">
                     Each season lasts ~6 league nights
                   </p>
                 </div>
                 <div className="flex gap-3 items-start">
-                  <span className="text-secondary-text-yellow text-2xl leading-none">•</span>
+                  <span className="text-secondary-yellow text-2xl leading-none">•</span>
                   <p className="font-(family-name:--font-bricolage-grotesque) text-lg text-white">
                     Standings based on W/L/D and attendance
                   </p>
                 </div>
                 <div className="flex gap-3 items-start">
-                  <span className="text-secondary-text-yellow text-2xl leading-none">•</span>
+                  <span className="text-secondary-yellow text-2xl leading-none">•</span>
                   <p className="font-(family-name:--font-bricolage-grotesque) text-lg text-white">
                     End-of-season Top 8 invitational
                   </p>
@@ -397,7 +397,7 @@ export default async function Home() {
         <div className="max-w-360 mx-auto flex flex-col gap-10">
           {/* Left - Our Values */}
           <div className="flex flex-col gap-12">
-            <h2 className="font-(family-name:--font-young-serif) text-3xl md:text-4xl lg:text-[56px] text-secondary-text-yellow leading-tight">
+            <h2 className="font-(family-name:--font-young-serif) text-3xl md:text-4xl lg:text-[56px] text-secondary-yellow leading-tight">
               Our Values
             </h2>
 
@@ -486,7 +486,7 @@ export default async function Home() {
             </div>
             <Link
                 href="/volunteer"
-                className="border-b-2 border-secondary-yellow text-secondary-text-yellow font-(family-name:--font-bricolage-grotesque) font-semibold text-lg pb-1 w-fit hover:border-[#d09602] hover:text-[#d09602] transition-colors"
+                className="border-b-2 border-secondary-yellow text-secondary-yellow font-(family-name:--font-bricolage-grotesque) font-semibold text-lg pb-1 w-fit hover:border-[#d09602] hover:text-[#d09602] transition-colors"
             >
               About Us →
             </Link>
@@ -640,7 +640,7 @@ export default async function Home() {
         <div className="max-w-360 mx-auto grid grid-cols-1 md:grid-cols-3 gap-16">
           {/* Code of Conduct */}
           <div className="flex flex-col gap-6">
-            <h3 className="font-(family-name:--font-young-serif) text-2xl md:text-[32px] text-secondary-text-yellow">
+            <h3 className="font-(family-name:--font-young-serif) text-2xl md:text-[32px] text-secondary-yellow">
               Code of Conduct
             </h3>
             <p className="font-(family-name:--font-bricolage-grotesque) text-base text-light-purple leading-relaxed">
@@ -649,7 +649,7 @@ export default async function Home() {
             </p>
             <Link
                 href="/code-of-conduct"
-                className="border-b-2 border-secondary-yellow text-secondary-text-yellow font-(family-name:--font-bricolage-grotesque) font-semibold text-base pb-1 w-fit hover:border-[#d09602] hover:text-[#d09602] transition-colors"
+                className="border-b-2 border-secondary-yellow text-secondary-yellow font-(family-name:--font-bricolage-grotesque) font-semibold text-base pb-1 w-fit hover:border-[#d09602] hover:text-[#d09602] transition-colors"
             >
               Read more
             </Link>
@@ -657,7 +657,7 @@ export default async function Home() {
 
           {/* League Rules */}
           <div className="flex flex-col gap-6">
-            <h3 className="font-(family-name:--font-young-serif) text-2xl md:text-[32px] text-secondary-text-yellow">
+            <h3 className="font-(family-name:--font-young-serif) text-2xl md:text-[32px] text-secondary-yellow">
               League Rules
             </h3>
             <p className="font-(family-name:--font-bricolage-grotesque) text-base text-light-purple leading-relaxed">
@@ -666,7 +666,7 @@ export default async function Home() {
             </p>
             <Link
                 href="/rules"
-                className="border-b-2 border-secondary-yellow text-secondary-text-yellow font-(family-name:--font-bricolage-grotesque) font-semibold text-base pb-1 w-fit hover:border-[#d09602] hover:text-[#d09602] transition-colors"
+                className="border-b-2 border-secondary-yellow text-secondary-yellow font-(family-name:--font-bricolage-grotesque) font-semibold text-base pb-1 w-fit hover:border-[#d09602] hover:text-[#d09602] transition-colors"
             >
               Read more
             </Link>
@@ -674,7 +674,7 @@ export default async function Home() {
 
           {/* Data & Privacy */}
           <div className="flex flex-col gap-6">
-            <h3 className="font-(family-name:--font-young-serif) text-2xl md:text-[32px] text-secondary-text-yellow">
+            <h3 className="font-(family-name:--font-young-serif) text-2xl md:text-[32px] text-secondary-yellow">
               Data & Privacy
             </h3>
             <p className="font-(family-name:--font-bricolage-grotesque) text-base text-light-purple leading-relaxed">
@@ -683,7 +683,7 @@ export default async function Home() {
             </p>
             <Link
                 href="/privacy"
-                className="border-b-2 border-secondary-yellow text-secondary-text-yellow font-(family-name:--font-bricolage-grotesque) font-semibold text-base pb-1 w-fit hover:border-[#d09602] hover:text-[#d09602] transition-colors"
+                className="border-b-2 border-secondary-yellow text-secondary-yellow font-(family-name:--font-bricolage-grotesque) font-semibold text-base pb-1 w-fit hover:border-[#d09602] hover:text-[#d09602] transition-colors"
             >
               Read more
             </Link>
