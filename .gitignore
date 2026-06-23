@@ -4,6 +4,8 @@
 
 # Dependencies
 node_modules/
+web/package-lock.json
+studio/package-lock.json
 .pnp/
 .pnp.js
 
