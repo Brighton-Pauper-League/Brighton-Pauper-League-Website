@@ -84,6 +84,71 @@ export const event = defineType({
       title: 'Registration/Info Link',
       type: 'url',
     }),
+    defineField({
+      name: 'results',
+      title: 'Event Results',
+      type: 'array',
+      description: 'Enter each attendee\'s results for this event night',
+      of: [
+        {
+          type: 'object',
+          title: 'Player Result',
+          fields: [
+            defineField({
+              name: 'player',
+              title: 'Player',
+              type: 'reference',
+              to: [{ type: 'player' }],
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'wins',
+              title: 'Wins',
+              type: 'number',
+              validation: (rule) => rule.required().integer().min(0),
+              initialValue: 0,
+            }),
+            defineField({
+              name: 'draws',
+              title: 'Draws',
+              type: 'number',
+              validation: (rule) => rule.required().integer().min(0),
+              initialValue: 0,
+            }),
+            defineField({
+              name: 'losses',
+              title: 'Losses',
+              type: 'number',
+              validation: (rule) => rule.required().integer().min(0),
+              initialValue: 0,
+            }),
+            defineField({
+              name: 'points',
+              title: 'Points',
+              type: 'number',
+              description: '3 per win, 1 per draw — enter from Companion',
+              validation: (rule) => rule.required().integer().min(0),
+              initialValue: 0,
+            }),
+          ],
+          preview: {
+            select: {
+              playerName: 'player.name',
+              wins: 'wins',
+              draws: 'draws',
+              losses: 'losses',
+              points: 'points',
+            },
+            prepare({ playerName, wins, draws, losses, points }) {
+              return {
+                title: playerName ?? 'Unknown player',
+                subtitle: `${wins}W / ${draws}D / ${losses}L — ${points} pts`,
+              }
+            },
+          },
+        },
+      ],
+    }),
   ],
   preview: {
     select: {

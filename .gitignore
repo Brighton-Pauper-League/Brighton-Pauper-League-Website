@@ -1,5 +1,6 @@
 .github/prompts/
 .agents
+.claude
 
 # Dependencies
 node_modules/

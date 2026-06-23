@@ -3,6 +3,7 @@ import { Young_Serif, Bricolage_Grotesque, Inter } from "next/font/google";
 import { draftMode } from "next/headers";
 import { SanityLive } from "@/sanity/lib/live";
 import { VisualEditing } from "next-sanity/visual-editing";
+import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
 const youngSerif = Young_Serif({
@@ -24,11 +25,52 @@ const inter = Inter({
   display: "swap",
 });
 
+const siteName = "Brighton Pauper League";
+const description =
+  "Accessible, community-led Pauper Magic — open to everyone, run by players, for players.";
+
 export const metadata: Metadata = {
-  title: "Brighton Pauper League",
-  description: "Accessible, community-led Pauper Magic — open to everyone, run by players, for players.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: siteName,
+    template: `%s | ${siteName}`,
+  },
+  description,
+  applicationName: siteName,
+  keywords: [
+    "Pauper",
+    "Magic: The Gathering",
+    "MTG",
+    "Brighton",
+    "league",
+    "Dice Saloon",
+    "competitive Pauper",
+  ],
+  alternates: {
+    canonical: "/",
+  },
   icons: {
-    icon: '/favicon.ico',
+    icon: "/favicon.ico",
+  },
+  openGraph: {
+    type: "website",
+    siteName,
+    title: siteName,
+    description,
+    url: siteUrl,
+    locale: "en_GB",
+    images: [
+      {
+        url: "/logo.webp",
+        alt: siteName,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteName,
+    description,
+    images: ["/logo.webp"],
   },
 };
 
