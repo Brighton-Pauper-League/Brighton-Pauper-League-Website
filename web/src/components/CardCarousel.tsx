@@ -35,8 +35,7 @@ export function CardCarousel() {
       spaceBetween={12}
       breakpoints={{
         640: { slidesPerView: 3, spaceBetween: 16 },
-        1024: { slidesPerView: 5, spaceBetween: 20 },
-        1280: { slidesPerView: 6, spaceBetween: 20 },
+        1024: { slidesPerView: 4, spaceBetween: 20 },
       }}
       className="w-full"
     >

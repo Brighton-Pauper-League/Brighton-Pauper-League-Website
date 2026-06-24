@@ -167,9 +167,6 @@ export default async function Home() {
                 players to play powerful, iconic cards without the massive price tags of other competitive formats.
               </p>
 
-              {/* Card Carousel */}
-              <CardCarousel />
-
               {/* Callout Card */}
               <div className="bg-primary-blue p-8 rounded-2xl mt-auto">
                 <p className="font-(family-name:--font-bricolage-grotesque) font-semibold text-lg text-white text-center">
@@ -178,6 +175,9 @@ export default async function Home() {
               </div>
             </div>
           </div>
+        </div>
+        <div className="mt-12">
+          <CardCarousel />
         </div>
       </section>
 
