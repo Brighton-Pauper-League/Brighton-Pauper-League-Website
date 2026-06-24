@@ -3,8 +3,6 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import Image from "next/image";
-import "swiper/css";
-
 const CARDS = [
   { src: "/p10-1-lightning-bolt.jpg", alt: "Lightning Bolt" },
   { src: "/mmq-61-brainstorm.jpg", alt: "Brainstorm" },
