@@ -99,12 +99,22 @@ export default function AboutPage() {
         <section className="bg-off-white px-6 md:px-12 lg:px-20 py-16 md:py-24">
           <div className="max-w-360 mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="relative aspect-square sm:aspect-3/4 rounded-2xl overflow-hidden bg-light-purple">
-              {/* placeholder — replace with a real photo */}
-
+              <Image
+                  src="/neils-farewell.jpg"
+                  alt="Founding member Neil's last Pauper Tuesday"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 100vw, 33vw"
+              />
             </div>
             <div className="relative aspect-square sm:aspect-3/4 rounded-2xl overflow-hidden bg-primary-blue/20">
-              {/* placeholder — replace with a real photo */}
-            </div>
+              <Image
+                  src="/top-8.jpg"
+                  alt="Top-8 at a tournament on the 17/05/26"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 100vw, 33vw"
+              />            </div>
             <div className="relative aspect-square sm:aspect-3/4 rounded-2xl overflow-hidden bg-primary-blue/10">
               {/* placeholder — replace with a real photo */}
             </div>
