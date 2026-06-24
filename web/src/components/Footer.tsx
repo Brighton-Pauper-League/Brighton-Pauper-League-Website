@@ -109,6 +109,9 @@ export async function Footer() {
               <Link href="/players" className="font-[family-name:var(--font-bricolage-grotesque)] text-base text-white/80 hover:text-white transition-colors">
                 Members
               </Link>
+              <Link href="/blog" className="font-[family-name:var(--font-bricolage-grotesque)] text-base text-white/80 hover:text-white transition-colors">
+                Blog
+              </Link>
             </div>
 
             {/* Play Links */}
