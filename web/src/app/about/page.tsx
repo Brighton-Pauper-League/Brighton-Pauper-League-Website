@@ -99,13 +99,8 @@ export default function AboutPage() {
         <section className="bg-off-white px-6 md:px-12 lg:px-20 py-16 md:py-24">
           <div className="max-w-360 mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="relative aspect-square sm:aspect-3/4 rounded-2xl overflow-hidden bg-light-purple">
-              <Image
-                src="/Away-day-in-bristol.jpeg"
-                alt="League night at Dice Saloon"
-                fill
-                className="object-cover"
-                sizes="(max-width: 640px) 100vw, 33vw"
-              />
+              {/* placeholder — replace with a real photo */}
+
             </div>
             <div className="relative aspect-square sm:aspect-3/4 rounded-2xl overflow-hidden bg-primary-blue/20">
               {/* placeholder — replace with a real photo */}
@@ -153,7 +148,7 @@ export default function AboutPage() {
                 Ready to play?
               </h2>
               <p className="font-(family-name:--font-bricolage-grotesque) text-lg text-light-purple">
-                Come along to a league night — no deck needed.
+                Come along to a league night.
               </p>
             </div>
             <Link

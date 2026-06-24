@@ -4,7 +4,7 @@ export interface StandingsPlayer {
   nickname?: string | null
   pseudonym?: string | null
   isAnonymised?: boolean
-  isActive: boolean
+  isActive?: boolean
 }
 
 export interface StandingsRow {

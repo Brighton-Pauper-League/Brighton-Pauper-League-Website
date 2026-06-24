@@ -3,6 +3,9 @@ import { client } from "@/sanity/lib/client";
 import {
   ACTIVE_SEASON_QUERY,
   ALL_EVENTS_QUERY,
+  EVENT_BY_SLUG_QUERY,
+  EVENT_SLUGS_QUERY,
+  PAST_EVENTS_QUERY,
   ALL_POSTS_QUERY,
   ALL_SEASONS_QUERY,
   PAST_SEASONS_QUERY,
@@ -18,6 +21,7 @@ import {
 } from "@/sanity/lib/queries";
 import { getTodayString } from "./standings";
 import type {
+  EventDetail,
   EventListItem,
   PlayerCard,
   PlayerProfile,
@@ -89,6 +93,24 @@ export async function getUpcomingEvents(limit = 3): Promise<EventListItem[]> {
 export async function getAllEvents(): Promise<EventListItem[]> {
   const { data } = await sanityFetch({ query: ALL_EVENTS_QUERY });
   return (data as EventListItem[] | null) ?? [];
+}
+
+export async function getPastEvents(): Promise<EventListItem[]> {
+  const { data } = await sanityFetch({ query: PAST_EVENTS_QUERY });
+  return (data as EventListItem[] | null) ?? [];
+}
+
+export async function getEventBySlug(slug: string): Promise<EventDetail | null> {
+  const { data } = await sanityFetch({
+    query: EVENT_BY_SLUG_QUERY,
+    params: { slug },
+  });
+  return (data as EventDetail | null) ?? null;
+}
+
+export async function getEventSlugs(): Promise<string[]> {
+  const data = await client.fetch(EVENT_SLUGS_QUERY);
+  return (data as string[] | null) ?? [];
 }
 
 // ── Posts ──────────────────────────────────────────────────────────────────

@@ -36,6 +36,27 @@ export interface EventListItem {
   status: EventStatus;
 }
 
+export interface EventResult {
+  player: {
+    _id: string;
+    name: string;
+    nickname?: string | null;
+    pseudonym?: string | null;
+    isAnonymised?: boolean;
+  };
+  wins: number;
+  draws: number;
+  losses: number;
+  points: number;
+}
+
+export interface EventDetail extends EventListItem {
+  description?: string;
+  registrationLink?: string;
+  season?: { _id: string; name: string; seasonNumber: number } | null;
+  results?: EventResult[];
+}
+
 export interface PostListItem {
   _id: string;
   title: string;

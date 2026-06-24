@@ -1,14 +1,14 @@
+import Link from "next/link";
 import { getDateBadge, formatEventDateTime } from "@/lib/dates";
 import type { EventListItem } from "@/lib/types";
 import { EventStatusBadge } from "./EventStatusBadge";
 
-// A single event row: square date badge, title + when/where, status pill.
-// Presentational — receives a fully-typed event, holds no data of its own.
 export function EventCard({ event }: { event: EventListItem }) {
   const { day, month } = getDateBadge(event.eventDate);
+  const slug = event.slug?.current;
 
-  return (
-    <div className="bg-white p-6 sm:p-8 rounded-2xl flex gap-4 sm:gap-8 items-center">
+  const inner = (
+    <div className="bg-white p-6 sm:p-8 rounded-2xl flex gap-4 sm:gap-8 items-center hover:shadow-md transition-shadow">
       <div className="w-20 h-20 flex flex-col items-center justify-center bg-primary-blue/10 rounded-xl flex-shrink-0">
         <span className="font-(family-name:--font-bricolage-grotesque) font-bold text-3xl text-primary-blue">
           {day}
@@ -19,7 +19,7 @@ export function EventCard({ event }: { event: EventListItem }) {
       </div>
 
       <div className="flex-1 min-w-0">
-        <h3 className="font-(family-name:--font-young-serif) text-xl sm:text-2xl text-dark-brown mb-2">
+        <h3 className="font-(family-name:--font-young-serif) text-xl sm:text-2xl text-dark-brown mb-2 group-hover:text-primary-blue transition-colors">
           {event.title}
         </h3>
         <p className="font-(family-name:--font-bricolage-grotesque) text-base text-black/60">
@@ -29,6 +29,14 @@ export function EventCard({ event }: { event: EventListItem }) {
 
       <EventStatusBadge status={event.status} />
     </div>
+  );
+
+  if (!slug) return inner;
+
+  return (
+    <Link href={`/events/${slug}`} className="group block">
+      {inner}
+    </Link>
   );
 }
 

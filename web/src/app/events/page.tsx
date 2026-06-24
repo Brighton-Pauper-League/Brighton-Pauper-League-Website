@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { EventList } from "@/components/EventList";
-import { getAllEvents } from "@/lib/data";
+import { getUpcomingEvents } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Events",
@@ -11,14 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function EventsPage() {
-  const events = await getAllEvents();
-  const now = Date.now();
-
-  // getAllEvents is newest-first; upcoming reads best oldest-first.
-  const upcoming = events
-    .filter((e) => e.status !== "cancelled" && new Date(e.eventDate).getTime() >= now)
-    .reverse();
-  const past = events.filter((e) => new Date(e.eventDate).getTime() < now);
+  const upcoming = await getUpcomingEvents(20);
 
   return (
     <>
@@ -44,14 +38,14 @@ export default async function EventsPage() {
             />
           </section>
 
-          {past.length > 0 && (
-            <section className="flex flex-col gap-8">
-              <h2 className="font-(family-name:--font-young-serif) text-4xl text-dark-brown/70">
-                Past Events
-              </h2>
-              <EventList events={past} />
-            </section>
-          )}
+          <div className="border-t border-black/10 pt-8">
+            <Link
+              href="/events/past"
+              className="font-(family-name:--font-bricolage-grotesque) font-semibold text-lg text-primary-blue border-b-2 border-primary-blue pb-1 hover:text-darker-blue hover:border-darker-blue transition-colors"
+            >
+              View past events →
+            </Link>
+          </div>
         </div>
       </main>
       <Footer />

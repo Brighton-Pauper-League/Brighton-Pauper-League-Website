@@ -104,6 +104,56 @@ export const ALL_EVENTS_QUERY = defineQuery(`
   }
 `)
 
+export const PAST_EVENTS_QUERY = defineQuery(`
+  *[_type == "event" && dateTime(eventDate) < dateTime(now())]
+    | order(eventDate desc) {
+    _id,
+    title,
+    slug,
+    eventDate,
+    location,
+    description,
+    featuredImage,
+    status
+  }
+`)
+
+export const EVENT_BY_SLUG_QUERY = defineQuery(`
+  *[_type == "event" && slug.current == $slug][0] {
+    _id,
+    title,
+    slug,
+    eventDate,
+    location,
+    description,
+    featuredImage,
+    status,
+    registrationLink,
+    season-> {
+      _id,
+      name,
+      seasonNumber
+    },
+    results[] {
+      player-> {
+        _id,
+        name,
+        nickname,
+        pseudonym,
+        isAnonymised
+      },
+      wins,
+      draws,
+      losses,
+      points
+    }
+  }
+`)
+
+export const EVENT_SLUGS_QUERY = defineQuery(`
+  *[_type == "event" && defined(slug.current)].slug.current
+`)
+
 // ── Players ───────────────────────────────────────────────────────────────────
 
 export const PUBLIC_PLAYERS_QUERY = defineQuery(`
