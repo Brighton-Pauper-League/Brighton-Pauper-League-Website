@@ -5,6 +5,7 @@ import { Footer } from "@/components/Footer";
 import { EventList } from "@/components/EventList";
 import { StandingsTable } from "@/components/StandingsTable";
 import { PastSeasonsList } from "@/components/PastSeasonsList";
+import { CardCarousel } from "@/components/CardCarousel";
 import {
   getActiveSeason,
   getStandings,
@@ -85,11 +86,10 @@ export default async function Home() {
               <div
                   className="bg-white p-8 rounded-2xl flex gap-6 items-center hover:shadow-lg hover:scale-[1.02] transition-all duration-200 cursor-pointer">
                 <div className="w-10 h-10 flex items-center justify-center shrink-0">
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#004aad" strokeWidth="2"
-                       strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10"/>
-                    <line x1="15" y1="9" x2="9" y2="15"/>
-                    <line x1="9" y1="9" x2="15" y2="15"/>
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#004aad" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="16" stroke-linecap="round" />
+                    <line x1="8" y1="12" x2="16" y2="12" stroke-linecap="round" />
                   </svg>
                 </div>
                 <div className="flex-1">
@@ -167,6 +167,9 @@ export default async function Home() {
                 players to play powerful, iconic cards without the massive price tags of other competitive formats.
               </p>
 
+              {/* Card Carousel */}
+              <CardCarousel />
+
               {/* Callout Card */}
               <div className="bg-primary-blue p-8 rounded-2xl mt-auto">
                 <p className="font-(family-name:--font-bricolage-grotesque) font-semibold text-lg text-white text-center">
@@ -188,7 +191,7 @@ export default async function Home() {
                 Dice Saloon
               </h3>
               <p className="font-(family-name:--font-bricolage-grotesque) text-lg text-black">
-                4 Marlborough Place, Brighton, BN1 1UB
+                88 London Rd, Brighton and Hove, Brighton BN1 4JF
               </p>
 
               {/* Dice Saloon Image */}
