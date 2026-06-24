@@ -42,10 +42,10 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="w-full lg:w-[520px] shrink-0">
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
+            <div className="w-full lg:w-130 shrink-0">
+              <div className="relative aspect-4/3 rounded-2xl overflow-hidden">
                 <Image
-                  src="/Away-day-in-bristol.jpeg"
+                  src="/away-day-in-bristol.jpeg"
                   alt="Brighton Pauper League away day in Bristol"
                   fill
                   className="object-cover"
@@ -98,7 +98,7 @@ export default function AboutPage() {
         {/* Photo Strip */}
         <section className="bg-off-white px-6 md:px-12 lg:px-20 py-16 md:py-24">
           <div className="max-w-360 mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="relative aspect-square sm:aspect-[3/4] rounded-2xl overflow-hidden bg-light-purple">
+            <div className="relative aspect-square sm:aspect-3/4 rounded-2xl overflow-hidden bg-light-purple">
               <Image
                 src="/Away-day-in-bristol.jpeg"
                 alt="League night at Dice Saloon"
@@ -107,10 +107,10 @@ export default function AboutPage() {
                 sizes="(max-width: 640px) 100vw, 33vw"
               />
             </div>
-            <div className="relative aspect-square sm:aspect-[3/4] rounded-2xl overflow-hidden bg-primary-blue/20">
+            <div className="relative aspect-square sm:aspect-3/4 rounded-2xl overflow-hidden bg-primary-blue/20">
               {/* placeholder — replace with a real photo */}
             </div>
-            <div className="relative aspect-square sm:aspect-[3/4] rounded-2xl overflow-hidden bg-primary-blue/10">
+            <div className="relative aspect-square sm:aspect-3/4 rounded-2xl overflow-hidden bg-primary-blue/10">
               {/* placeholder — replace with a real photo */}
             </div>
           </div>
@@ -119,7 +119,7 @@ export default function AboutPage() {
         {/* People */}
         <section className="bg-dark-brown px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y">
           <div className="max-w-360 mx-auto flex flex-col lg:flex-row gap-12 lg:gap-20 items-center">
-            <div className="w-full lg:w-[440px] shrink-0">
+            <div className="w-full lg:w-110 shrink-0">
               <div className="relative aspect-square rounded-2xl overflow-hidden bg-primary-blue/30">
                 {/* placeholder — replace with a group photo */}
               </div>
