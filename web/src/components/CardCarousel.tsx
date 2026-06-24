@@ -29,7 +29,7 @@ export function CardCarousel() {
   return (
     <Swiper
       modules={[Autoplay]}
-      autoplay={{ delay: 2500, disableOnInteraction: false, pauseOnMouseEnter: true }}
+      autoplay={{ delay: 500, disableOnInteraction: false, pauseOnMouseEnter: true }}
       loop={true}
       slidesPerView={2}
       spaceBetween={12}

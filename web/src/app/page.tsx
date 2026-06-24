@@ -58,7 +58,7 @@ export default async function Home() {
           </div>
 
           {/* League Logo */}
-          <div className="flex items-center justify-center w-full max-w-[180px] sm:max-w-[240px] lg:max-w-140 shrink-0">
+          <div className="flex items-center justify-center w-full max-w-45 sm:max-w-60 lg:max-w-140 shrink-0">
             <Image
                 src="/logo.webp"
                 alt="Brighton Pauper League"
