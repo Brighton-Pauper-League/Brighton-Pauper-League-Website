@@ -53,7 +53,7 @@ export default function AboutPage() {
                 />
               </div>
               <p className="font-(family-name:--font-bricolage-grotesque) text-sm text-black/40 mt-3">
-                Away day in Bristol
+                Ursa's Saga, Bristol Pauper League's IPT - First tournament in the team kits
               </p>
             </div>
           </div>
