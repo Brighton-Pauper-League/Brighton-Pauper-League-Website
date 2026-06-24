@@ -25,45 +25,45 @@ export default async function Home() {
       <Navbar/>
 
       {/* Hero Section */}
-      <div className="relative bg-primary-blue h-[calc(100vh-72px)] w-full flex items-center">
-        <div className="max-w-360 mx-auto px-6 md:px-12 lg:px-20 w-full flex flex-col lg:flex-row items-center justify-between gap-10">
-          {/* Hero Content - Left Aligned */}
-          <div className="flex flex-col gap-8 items-start max-w-200 py-16 lg:py-40">
-            <h1 className="font-(family-name:--font-young-serif) text-5xl sm:text-7xl lg:text-[120px] text-secondary-yellow leading-none text-left">
+      <div className="relative bg-primary-blue min-h-[calc(100vh-72px)] w-full flex items-center py-16 lg:py-0">
+        <div className="max-w-360 mx-auto px-6 md:px-12 lg:px-20 w-full flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16">
+          {/* Hero Content */}
+          <div className="flex flex-col gap-6 lg:gap-8 items-center lg:items-start text-center lg:text-left max-w-200 lg:py-40">
+            <h1 className="font-(family-name:--font-young-serif) text-[clamp(2.5rem,10vw,7.5rem)] text-secondary-yellow leading-none">
               Brighton Pauper League
             </h1>
-            <p className="font-(family-name:--font-bricolage-grotesque) font-medium text-2xl md:text-[32px] text-light-purple leading-tight text-left">
+            <p className="font-(family-name:--font-bricolage-grotesque) font-medium text-xl md:text-2xl lg:text-[32px] text-light-purple leading-tight">
               Accessible, community-led Pauper Magic
             </p>
-            <p className="font-(family-name:--font-bricolage-grotesque) text-lg text-white/80 max-w-150 text-left">
+            <p className="font-(family-name:--font-bricolage-grotesque) text-base lg:text-lg text-white/80 max-w-150">
               Open to everyone, run by players, for players. High-skill competitive Magic on a budget.
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex gap-6 mt-4">
+            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-2 lg:mt-4">
               <Link
                   href="/events"
-                  className="px-8 py-4 bg-secondary-yellow text-dark-brown font-(family-name:--font-inter) font-bold text-sm rounded-lg hover:bg-[#d09602] transition-colors"
+                  className="px-8 py-4 bg-secondary-yellow text-dark-brown font-(family-name:--font-inter) font-bold text-sm rounded-lg hover:bg-[#d09602] transition-colors text-center"
               >
                 Join the League
               </Link>
               <Link
                   href="/about"
-                  className="px-8 py-4 border-2 border-white text-white font-(family-name:--font-inter) font-bold text-sm rounded-lg hover:bg-white/10 transition-colors"
+                  className="px-8 py-4 border-2 border-white text-white font-(family-name:--font-inter) font-bold text-sm rounded-lg hover:bg-white/10 transition-colors text-center"
               >
                 Find out more
               </Link>
             </div>
           </div>
 
-          {/* League Logo - Right Side, Centered in remaining space */}
-          <div className="flex items-center justify-center w-full max-w-[320px] lg:max-w-140">
+          {/* League Logo */}
+          <div className="flex items-center justify-center w-full max-w-[180px] sm:max-w-[240px] lg:max-w-140 shrink-0">
             <Image
                 src="/logo.webp"
                 alt="Brighton Pauper League"
                 width={475}
                 height={475}
-                className="object-contain"
+                className="object-contain w-full h-auto"
                 priority
             />
           </div>
