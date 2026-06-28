@@ -113,6 +113,7 @@ export interface DeckCard {
   quantityOwned: number;
   isSideboard: boolean;
   imageUri?: string | null;
+  imageUriBack?: string | null;
 }
 
 export interface LoanerDeckListItem {

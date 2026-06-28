@@ -55,6 +55,7 @@ function CardSection({ title, cards }: { title: string; cards: DeckCard[] }) {
             key={`${card.cardName}-${i}`}
             cardName={card.cardName}
             imageUri={card.imageUri ?? null}
+            imageUriBack={card.imageUriBack ?? null}
             quantity={card.quantity}
             quantityOwned={card.quantityOwned}
           />

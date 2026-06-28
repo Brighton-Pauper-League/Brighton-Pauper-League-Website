@@ -148,6 +148,14 @@ export const loanerDeck = defineType({
               readOnly: true,
               hidden: true,
             }),
+            defineField({
+              name: 'imageUriBack',
+              title: 'Back Face Image URI',
+              type: 'url',
+              description: 'Back face for double-faced cards. Populated automatically on publish.',
+              readOnly: true,
+              hidden: true,
+            }),
           ],
           preview: {
             select: {

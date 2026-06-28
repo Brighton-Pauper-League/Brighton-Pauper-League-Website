@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@sanity/client";
 import { isValidSignature, SIGNATURE_HEADER_NAME } from "@sanity/webhook";
-import { resolveCardImages } from "@/lib/scryfall";
+import { resolveCardImages, type CardImageResult } from "@/lib/scryfall";
 
 const writeClient = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
@@ -19,6 +19,7 @@ interface SanityCard {
   quantityOwned: number;
   isSideboard: boolean;
   imageUri?: string | null;
+  imageUriBack?: string | null;
 }
 
 interface SanityDeck {
@@ -75,16 +76,21 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const allNames = [...new Set([...cards.map((c) => c.cardName), ...(coverName ? [coverName] : [])])];
 
-  const imageMap = await resolveCardImages(allNames);
+  const imageMap: Record<string, CardImageResult> = await resolveCardImages(allNames);
 
-  // Build updated cards with imageUri merged in.
-  const updatedCards = cards.map((card) => ({
-    ...card,
-    imageUri: imageMap[card.cardName] ?? null,
-  }));
+  // Build updated cards with front and back face URIs merged in.
+  const updatedCards = cards.map((card) => {
+    const faces = imageMap[card.cardName];
+    return {
+      ...card,
+      imageUri: faces?.front ?? null,
+      imageUriBack: faces?.back ?? null,
+    };
+  });
 
   // Patch the document — replace cards array and set cover image URI.
-  const coverUri = coverName ? (imageMap[coverName] ?? null) : null;
+  const coverFaces = coverName ? imageMap[coverName] : null;
+  const coverUri = coverFaces?.front ?? null;
 
   let patch = writeClient.patch(_id).set({ cards: updatedCards });
   if (coverUri) {
