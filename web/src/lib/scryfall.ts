@@ -8,10 +8,12 @@ const SCRYFALL_HEADERS = {
 
 interface ScryfallCardFace {
   image_uris?: { normal?: string };
+  type_line?: string;
 }
 
 interface ScryfallCard {
   name: string;
+  type_line?: string;
   image_uris?: { normal?: string };
   card_faces?: ScryfallCardFace[];
 }
@@ -23,18 +25,22 @@ interface ScryfallCollectionResponse {
 export interface CardImageResult {
   front: string;
   back?: string;
+  typeLine?: string;
 }
 
 function extractFaces(card: ScryfallCard): CardImageResult | null {
+  // For DFCs, use the front face type line; fall back to the card-level type line.
+  const typeLine = card.card_faces?.[0]?.type_line ?? card.type_line;
+
   // Single-faced card
   if (card.image_uris?.normal) {
-    return { front: card.image_uris.normal };
+    return { front: card.image_uris.normal, typeLine };
   }
   // Double-faced card
   const front = card.card_faces?.[0]?.image_uris?.normal;
   const back = card.card_faces?.[1]?.image_uris?.normal;
   if (front) {
-    return { front, ...(back ? { back } : {}) };
+    return { front, ...(back ? { back } : {}), typeLine };
   }
   return null;
 }

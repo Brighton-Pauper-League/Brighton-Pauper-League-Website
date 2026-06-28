@@ -20,6 +20,7 @@ interface SanityCard {
   isSideboard: boolean;
   imageUri?: string | null;
   imageUriBack?: string | null;
+  typeLine?: string | null;
 }
 
 interface SanityDeck {
@@ -85,6 +86,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       ...card,
       imageUri: faces?.front ?? null,
       imageUriBack: faces?.back ?? null,
+      typeLine: faces?.typeLine ?? null,
     };
   });
 

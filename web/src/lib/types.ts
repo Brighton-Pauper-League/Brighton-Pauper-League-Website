@@ -114,6 +114,7 @@ export interface DeckCard {
   isSideboard: boolean;
   imageUri?: string | null;
   imageUriBack?: string | null;
+  typeLine?: string | null;
 }
 
 export interface LoanerDeckListItem {

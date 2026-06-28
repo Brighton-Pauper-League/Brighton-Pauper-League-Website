@@ -156,6 +156,14 @@ export const loanerDeck = defineType({
               readOnly: true,
               hidden: true,
             }),
+            defineField({
+              name: 'typeLine',
+              title: 'Type Line',
+              type: 'string',
+              description: 'Card type from Scryfall (e.g. "Creature — Wizard"). Populated automatically on publish.',
+              readOnly: true,
+              hidden: true,
+            }),
           ],
           preview: {
             select: {

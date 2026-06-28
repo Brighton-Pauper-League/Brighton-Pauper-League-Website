@@ -28,14 +28,76 @@ export async function generateMetadata({
   };
 }
 
-function CardSection({ title, cards }: { title: string; cards: DeckCard[] }) {
+const CATEGORIES = [
+  "Creature",
+  "Instant",
+  "Sorcery",
+  "Enchantment",
+  "Artifact",
+  "Land",
+] as const;
+
+type Category = (typeof CATEGORIES)[number] | "Other";
+
+const CATEGORY_LABEL: Record<Category, string> = {
+  Creature: "Creatures",
+  Instant: "Instants",
+  Sorcery: "Sorceries",
+  Enchantment: "Enchantments",
+  Artifact: "Artifacts",
+  Land: "Lands",
+  Other: "Other",
+};
+
+function getCategory(typeLine: string | null | undefined): Category {
+  if (!typeLine) return "Other";
+  for (const cat of CATEGORIES) {
+    if (typeLine.includes(cat)) return cat;
+  }
+  return "Other";
+}
+
+function CardGrid({ cards }: { cards: DeckCard[] }) {
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
+      {cards.map((card, i) => (
+        <MtgCard
+          key={`${card.cardName}-${i}`}
+          cardName={card.cardName}
+          imageUri={card.imageUri ?? null}
+          imageUriBack={card.imageUriBack ?? null}
+          quantity={card.quantity}
+          quantityOwned={card.quantityOwned}
+        />
+      ))}
+    </div>
+  );
+}
+
+function CardSection({
+  title,
+  cards,
+  grouped = false,
+}: {
+  title: string;
+  cards: DeckCard[];
+  grouped?: boolean;
+}) {
   const total = cards.reduce((sum, c) => sum + c.quantity, 0);
   const owned = cards.reduce((sum, c) => sum + c.quantityOwned, 0);
   const missing = total - owned;
 
+  const groups: [Category, DeckCard[]][] = grouped
+    ? ([...CATEGORIES, "Other"] as Category[])
+        .map((cat) => [cat, cards.filter((c) => getCategory(c.typeLine) === cat)] as [Category, DeckCard[]])
+        .filter(([, catCards]) => catCards.length > 0)
+    : [];
+
+  const showGroups = groups.length > 1 || (groups.length === 1 && groups[0][0] !== "Other");
+
   return (
     <section>
-      <div className="flex items-baseline gap-3 mb-6">
+      <div className="flex items-baseline gap-3 mb-8">
         <h2 className="font-(family-name:--font-young-serif) text-2xl md:text-3xl text-dark-brown">
           {title}
         </h2>
@@ -49,18 +111,23 @@ function CardSection({ title, cards }: { title: string; cards: DeckCard[] }) {
         </span>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
-        {cards.map((card, i) => (
-          <MtgCard
-            key={`${card.cardName}-${i}`}
-            cardName={card.cardName}
-            imageUri={card.imageUri ?? null}
-            imageUriBack={card.imageUriBack ?? null}
-            quantity={card.quantity}
-            quantityOwned={card.quantityOwned}
-          />
-        ))}
-      </div>
+      {showGroups ? (
+        <div className="flex flex-col gap-10">
+          {groups.map(([cat, catCards]) => {
+            const catTotal = catCards.reduce((sum, c) => sum + c.quantity, 0);
+            return (
+              <div key={cat}>
+                <h3 className="font-(family-name:--font-bricolage-grotesque) font-semibold text-sm uppercase tracking-widest text-black/40 mb-4">
+                  {CATEGORY_LABEL[cat]} ({catTotal})
+                </h3>
+                <CardGrid cards={catCards} />
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <CardGrid cards={cards} />
+      )}
     </section>
   );
 }
@@ -125,7 +192,7 @@ export default async function DeckDetailPage({
       <section className="bg-light-purple px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y">
         <div className="max-w-360 mx-auto flex flex-col gap-16">
           {mainboard.length > 0 && (
-            <CardSection title="Mainboard" cards={mainboard} />
+            <CardSection title="Mainboard" cards={mainboard} grouped />
           )}
           {sideboard.length > 0 && (
             <CardSection title="Sideboard" cards={sideboard} />
