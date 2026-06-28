@@ -98,11 +98,7 @@ export interface SocialLinks {
 }
 
 export interface SiteSettings {
-  siteName?: string;
-  siteDescription?: string;
-  logo?: SanityImage;
   socialLinks?: SocialLinks;
-  contactEmail?: string;
 }
 
 // ── Loaner Decks ─────────────────────────────────────────────────────────────
