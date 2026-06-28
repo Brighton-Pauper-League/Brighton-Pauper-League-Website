@@ -98,9 +98,12 @@ export default async function DeckDetailPage({
               {deck.name}
             </h1>
             {!deck.isComplete && (
-              <span className="px-3 py-1.5 rounded font-(family-name:--font-bricolage-grotesque) font-extrabold text-sm uppercase bg-[#f59e0b] text-dark-brown">
+              <a
+                href="#donate"
+                className="px-3 py-1.5 rounded font-(family-name:--font-bricolage-grotesque) font-extrabold text-sm uppercase bg-[#f59e0b] text-dark-brown hover:bg-[#d97706] transition-colors"
+              >
                 Incomplete
-              </span>
+              </a>
             )}
           </div>
         </div>
@@ -132,7 +135,7 @@ export default async function DeckDetailPage({
 
       {/* Donate CTA */}
       {!deck.isComplete && (
-        <section className="bg-off-white px-6 md:px-12 lg:px-20 py-16 md:py-24">
+        <section id="donate" className="bg-off-white px-6 md:px-12 lg:px-20 py-16 md:py-24">
           <div className="max-w-360 mx-auto flex flex-col sm:flex-row sm:items-center gap-6">
             <div className="flex flex-col gap-2 flex-1">
               <h2 className="font-(family-name:--font-young-serif) text-2xl md:text-3xl text-dark-brown">
