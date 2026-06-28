@@ -27,8 +27,8 @@ export default async function LoanerDecksPage() {
             Loaner Decks
           </h1>
           <p className="font-(family-name:--font-bricolage-grotesque) text-xl text-white/80 max-w-200">
-            Borrow any of these competitive, tournament-legal Pauper decks for free at any
-            Brighton Pauper League event. Just ask on the night.
+              We are currently building a library of loaner decks that will make it easier than ever for you lovely people to participate in competitive league play.
+              Forget the hefty financial investment for now and simply jam the deck first! Ask us to borrow one on the night.
           </p>
         </div>
       </div>
