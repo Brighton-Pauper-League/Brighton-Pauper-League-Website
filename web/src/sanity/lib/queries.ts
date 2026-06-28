@@ -235,3 +235,33 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
     contactEmail
   }
 `)
+
+// ── Loaner Decks ──────────────────────────────────────────────────────────────
+
+export const LOANER_DECKS_QUERY = defineQuery(`
+  *[_type == "loanerDeck" && isHidden != true] | order(name asc) {
+    _id,
+    name,
+    slug,
+    featuredCardImageUri,
+    cards[]{ cardName, quantity, quantityOwned, isSideboard },
+    "isComplete": !defined(cards[quantityOwned < quantity][0])
+  }
+`)
+
+export const LOANER_DECK_BY_SLUG_QUERY = defineQuery(`
+  *[_type == "loanerDeck" && slug.current == $slug && isHidden != true][0] {
+    _id,
+    name,
+    slug,
+    featuredCardImageUri,
+    cards[]{ cardName, quantity, quantityOwned, isSideboard, imageUri },
+    "isComplete": !defined(cards[quantityOwned < quantity][0]),
+    primer,
+    donors
+  }
+`)
+
+export const LOANER_DECK_SLUGS_QUERY = defineQuery(`
+  *[_type == "loanerDeck" && isHidden != true && defined(slug.current)].slug.current
+`)

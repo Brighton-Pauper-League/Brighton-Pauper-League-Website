@@ -104,3 +104,27 @@ export interface SiteSettings {
   socialLinks?: SocialLinks;
   contactEmail?: string;
 }
+
+// ── Loaner Decks ─────────────────────────────────────────────────────────────
+
+export interface DeckCard {
+  cardName: string;
+  quantity: number;
+  quantityOwned: number;
+  isSideboard: boolean;
+  imageUri?: string | null;
+}
+
+export interface LoanerDeckListItem {
+  _id: string;
+  name: string;
+  slug: { current: string };
+  featuredCardImageUri?: string | null;
+  cards: DeckCard[];
+  isComplete: boolean;
+}
+
+export interface LoanerDeckDetail extends LoanerDeckListItem {
+  primer?: unknown[];
+  donors?: string[];
+}

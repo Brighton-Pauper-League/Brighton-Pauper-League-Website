@@ -4,6 +4,7 @@ import { season } from './season'
 import { player } from './player'
 import { playerSeasonStats } from './playerSeasonStats'
 import { siteSettings } from './siteSettings'
+import { loanerDeck } from './loanerDeck'
 
 export const schemaTypes = [
   // Site configuration
@@ -12,6 +13,7 @@ export const schemaTypes = [
   // Content types
   event,
   post,
+  loanerDeck,
 
   // League management
   season,

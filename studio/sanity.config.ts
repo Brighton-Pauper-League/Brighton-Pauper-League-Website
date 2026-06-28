@@ -3,6 +3,7 @@ import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemaTypes'
 import {structure} from './structure'
+import {importDecklistAction} from './documentActions/importDecklist'
 
 export default defineConfig({
   name: 'default',
@@ -15,5 +16,12 @@ export default defineConfig({
 
   schema: {
     types: schemaTypes,
+  },
+
+  document: {
+    actions: (prev, ctx) =>
+      ctx.schemaType === 'loanerDeck'
+        ? [prev[0], importDecklistAction, ...prev.slice(1)]
+        : prev,
   },
 })

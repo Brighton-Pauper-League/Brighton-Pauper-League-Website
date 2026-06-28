@@ -1,26 +1,59 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { DeckCard } from "@/components/DeckCard";
+import { EmptyState } from "@/components/EmptyState";
+import { getLoanerDecks } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "Loaner Decks | Brighton Pauper League",
-  description: "Borrow a competitive, tournament-legal Pauper deck at any Brighton Pauper League event.",
+  title: "Loaner Decks",
+  description:
+    "Borrow a competitive, tournament-legal Pauper deck at any Brighton Pauper League event. Free to use — just ask on the night.",
 };
 
-export default function LoanerDecksPage() {
+export default async function LoanerDecksPage() {
+  const decks = await getLoanerDecks();
+  const imageMap = Object.fromEntries(
+    decks.map((deck) => [deck._id, deck.featuredCardImageUri ?? null])
+  );
+
   return (
     <>
       <Navbar />
-      <main className="bg-off-white px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y min-h-[60vh]">
-        <div className="max-w-360 mx-auto flex flex-col gap-6">
-          <h1 className="font-(family-name:--font-young-serif) text-4xl md:text-6xl lg:text-[72px] text-[#371e22] leading-none">
+
+      <div className="bg-primary-blue px-6 md:px-12 lg:px-20 py-16 md:py-24">
+        <div className="max-w-360 mx-auto flex flex-col gap-4">
+          <h1 className="font-(family-name:--font-young-serif) text-4xl md:text-6xl lg:text-[72px] text-secondary-yellow leading-none">
             Loaner Decks
           </h1>
-          <p className="font-(family-name:--font-bricolage-grotesque) text-xl text-black/70 max-w-200">
-            Our library of competitive, tournament-legal decks is free to borrow at every event. Content coming soon.
+          <p className="font-(family-name:--font-bricolage-grotesque) text-xl text-white/80 max-w-200">
+            Borrow any of these competitive, tournament-legal Pauper decks for free at any
+            Brighton Pauper League event. Just ask on the night.
           </p>
         </div>
+      </div>
+
+      <main className="bg-off-white px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y min-h-[40vh]">
+        <div className="max-w-360 mx-auto">
+          {decks.length === 0 ? (
+            <EmptyState
+              title="No decks yet"
+              message="Check back soon — we're adding our loaner deck library."
+            />
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {decks.map((deck) => (
+                <DeckCard
+                  key={deck._id}
+                  deck={deck}
+                  imageUri={imageMap[deck._id] ?? null}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </main>
+
       <Footer />
     </>
   );

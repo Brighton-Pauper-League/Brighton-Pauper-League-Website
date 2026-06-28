@@ -1,0 +1,153 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import type { PortableTextBlock } from "@portabletext/react";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
+import { PortableTextBody } from "@/components/PortableTextBody";
+import { MtgCard } from "@/components/MtgCard";
+import { getLoanerDeckBySlug, getLoanerDeckSlugs } from "@/lib/data";
+import type { DeckCard } from "@/lib/types";
+
+export async function generateStaticParams() {
+  const slugs = await getLoanerDeckSlugs();
+  return slugs.map((slug) => ({ slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const deck = await getLoanerDeckBySlug(slug);
+  if (!deck) return { title: "Deck not found" };
+  return {
+    title: deck.name,
+    description: `View the card list and primer for ${deck.name}, available to borrow at any Brighton Pauper League event.`,
+  };
+}
+
+function CardSection({ title, cards }: { title: string; cards: DeckCard[] }) {
+  const total = cards.reduce((sum, c) => sum + c.quantity, 0);
+  const owned = cards.reduce((sum, c) => sum + c.quantityOwned, 0);
+  const missing = total - owned;
+
+  return (
+    <section>
+      <div className="flex items-baseline gap-3 mb-6">
+        <h2 className="font-(family-name:--font-young-serif) text-2xl md:text-3xl text-dark-brown">
+          {title}
+        </h2>
+        <span className="font-(family-name:--font-bricolage-grotesque) text-sm text-black/50">
+          {total} cards
+          {missing > 0 && (
+            <span className="ml-2 text-red-placeholder font-semibold">
+              · {missing} missing
+            </span>
+          )}
+        </span>
+      </div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
+        {cards.map((card, i) => (
+          <MtgCard
+            key={`${card.cardName}-${i}`}
+            cardName={card.cardName}
+            imageUri={card.imageUri ?? null}
+            quantity={card.quantity}
+            quantityOwned={card.quantityOwned}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+export default async function DeckDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const deck = await getLoanerDeckBySlug(slug);
+  if (!deck) notFound();
+
+  const mainboard = deck.cards.filter((c) => !c.isSideboard);
+  const sideboard = deck.cards.filter((c) => c.isSideboard);
+
+  const hasPrimer = Array.isArray(deck.primer) && deck.primer.length > 0;
+  const hasDonors = Array.isArray(deck.donors) && deck.donors.length > 0;
+
+  return (
+    <>
+      <Navbar />
+
+      {/* Hero */}
+      <div className="bg-primary-blue px-6 md:px-12 lg:px-20 py-16 md:py-24">
+        <div className="max-w-360 mx-auto flex flex-col gap-4">
+          <Link
+            href="/loaner-decks"
+            className="font-(family-name:--font-bricolage-grotesque) text-sm text-white/60 hover:text-white transition-colors w-fit"
+          >
+            ← All Loaner Decks
+          </Link>
+          <div className="flex flex-wrap items-center gap-4">
+            <h1 className="font-(family-name:--font-young-serif) text-4xl md:text-6xl lg:text-[72px] text-secondary-yellow leading-none">
+              {deck.name}
+            </h1>
+            {!deck.isComplete && (
+              <span className="px-3 py-1.5 rounded font-(family-name:--font-bricolage-grotesque) font-extrabold text-sm uppercase bg-[#f59e0b] text-dark-brown">
+                Incomplete
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Primer */}
+      {hasPrimer && (
+        <section className="bg-off-white px-6 md:px-12 lg:px-20 py-16 md:py-24">
+          <div className="max-w-200 mx-auto flex flex-col gap-6">
+            <h2 className="font-(family-name:--font-young-serif) text-2xl md:text-3xl lg:text-[40px] text-dark-brown">
+              About this deck
+            </h2>
+            <PortableTextBody value={deck.primer as PortableTextBlock[]} />
+          </div>
+        </section>
+      )}
+
+      {/* Cards */}
+      <section className="bg-light-purple px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y">
+        <div className="max-w-360 mx-auto flex flex-col gap-16">
+          {mainboard.length > 0 && (
+            <CardSection title="Mainboard" cards={mainboard} />
+          )}
+          {sideboard.length > 0 && (
+            <CardSection title="Sideboard" cards={sideboard} />
+          )}
+        </div>
+      </section>
+
+      {/* Special Thanks */}
+      {hasDonors && (
+        <section className="bg-dark-brown px-6 md:px-12 lg:px-20 py-16 md:py-24">
+          <div className="max-w-360 mx-auto flex flex-col gap-4">
+            <h2 className="font-(family-name:--font-young-serif) text-2xl md:text-3xl text-secondary-yellow">
+              Special Thanks
+            </h2>
+            <p className="font-(family-name:--font-bricolage-grotesque) text-off-white/80 text-lg">
+              Thank you to everyone who donated cards to make this deck possible:{" "}
+              <span className="text-off-white font-semibold">
+                {deck.donors!.join(", ")}
+              </span>
+              .
+            </p>
+          </div>
+        </section>
+      )}
+
+      <Footer />
+    </>
+  );
+}

@@ -18,11 +18,16 @@ import {
   SITE_SETTINGS_QUERY,
   STANDINGS_BY_SEASON_QUERY,
   UPCOMING_EVENTS_QUERY,
+  LOANER_DECKS_QUERY,
+  LOANER_DECK_BY_SLUG_QUERY,
+  LOANER_DECK_SLUGS_QUERY,
 } from "@/sanity/lib/queries";
 import { getTodayString } from "./standings";
 import type {
   EventDetail,
   EventListItem,
+  LoanerDeckDetail,
+  LoanerDeckListItem,
   PlayerCard,
   PlayerProfile,
   Post,
@@ -158,4 +163,24 @@ export async function getPlayerSlugs(): Promise<string[]> {
 export async function getSiteSettings(): Promise<SiteSettings | null> {
   const { data } = await sanityFetch({ query: SITE_SETTINGS_QUERY });
   return (data as SiteSettings | null) ?? null;
+}
+
+// ── Loaner Decks ─────────────────────────────────────────────────────────────
+
+export async function getLoanerDecks(): Promise<LoanerDeckListItem[]> {
+  const { data } = await sanityFetch({ query: LOANER_DECKS_QUERY });
+  return (data as LoanerDeckListItem[] | null) ?? [];
+}
+
+export async function getLoanerDeckBySlug(slug: string): Promise<LoanerDeckDetail | null> {
+  const { data } = await sanityFetch({
+    query: LOANER_DECK_BY_SLUG_QUERY,
+    params: { slug },
+  });
+  return (data as LoanerDeckDetail | null) ?? null;
+}
+
+export async function getLoanerDeckSlugs(): Promise<string[]> {
+  const data = await client.fetch(LOANER_DECK_SLUGS_QUERY);
+  return (data as string[] | null) ?? [];
 }

@@ -6,6 +6,7 @@ import {
   CalendarIcon,
   DocumentTextIcon,
   CogIcon,
+  StackIcon,
 } from '@sanity/icons'
 
 export const structure = (S: StructureBuilder) =>
@@ -55,6 +56,11 @@ export const structure = (S: StructureBuilder) =>
         .title('Blog Posts')
         .icon(DocumentTextIcon)
         .child(S.documentTypeList('post').title('Blog Posts')),
+
+      S.listItem()
+        .title('Loaner Decks')
+        .icon(StackIcon)
+        .child(S.documentTypeList('loanerDeck').title('Loaner Decks')),
 
       S.divider(),
 
