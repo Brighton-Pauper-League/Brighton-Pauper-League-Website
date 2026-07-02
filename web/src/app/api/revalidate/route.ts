@@ -20,9 +20,15 @@ type WebhookPayload = { _type?: string; _id?: string };
 
 export async function POST(req: NextRequest) {
   try {
+    // Skip parseBody's default 3-second "eventual consistency" sleep: Sanity
+    // delivers webhook messages sequentially per hook, so a slow response
+    // throttles the whole delivery queue (a backlog drains at one message per
+    // response time). Nothing here needs the wait — revalidatePath doesn't
+    // read the dataset, and eventSync re-fetches the document itself.
     const { isValidSignature, body } = await parseBody<WebhookPayload>(
       req,
       process.env.SANITY_REVALIDATE_SECRET,
+      false,
     );
 
     if (!isValidSignature) {
