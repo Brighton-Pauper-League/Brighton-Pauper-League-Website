@@ -11,7 +11,7 @@ export interface SanityImage {
   crop?: { top: number; bottom: number; left: number; right: number };
 }
 
-export type { SeasonStatus } from "./dates";
+export type { SeasonStatus, EventStatus } from "./dates";
 
 export interface Season {
   _id: string;
@@ -22,8 +22,6 @@ export interface Season {
   description?: string;
 }
 
-export type EventStatus = "upcoming" | "in-progress" | "completed" | "cancelled";
-
 export interface EventListItem {
   _id: string;
   title: string;
@@ -32,7 +30,7 @@ export interface EventListItem {
   location: string;
   description?: string;
   featuredImage?: SanityImage;
-  status: EventStatus;
+  isCancelled?: boolean;
 }
 
 export interface EventResult {

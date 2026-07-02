@@ -60,3 +60,19 @@ export function getSeasonStatus(startDate: string, endDate: string, today = new 
   if (todayStr > endDate) return "completed";
   return "active";
 }
+
+export type EventStatus = "upcoming" | "in-progress" | "completed" | "cancelled";
+
+// League nights run for a few hours — treat an event as "in progress" for this
+// long after its start time before it's considered completed.
+const EVENT_DURATION_MS = 4 * 60 * 60 * 1000;
+
+/** Derives an event's status from its date (and a manual cancellation flag) rather than a stored field. */
+export function getEventStatus(eventDate: string, isCancelled?: boolean, now = new Date()): EventStatus {
+  if (isCancelled) return "cancelled";
+  const start = new Date(eventDate).getTime();
+  const nowMs = now.getTime();
+  if (nowMs < start) return "upcoming";
+  if (nowMs < start + EVENT_DURATION_MS) return "in-progress";
+  return "completed";
+}

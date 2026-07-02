@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getDateBadge, formatEventDateTime } from "@/lib/dates";
+import { getDateBadge, formatEventDateTime, getEventStatus } from "@/lib/dates";
 import type { EventListItem } from "@/lib/types";
 import { EventStatusBadge } from "./EventStatusBadge";
 
@@ -27,7 +27,7 @@ export function EventCard({ event }: { event: EventListItem }) {
         </p>
       </div>
 
-      <EventStatusBadge status={event.status} />
+      <EventStatusBadge status={getEventStatus(event.eventDate, event.isCancelled)} />
     </div>
   );
 

@@ -21,11 +21,10 @@ export const event = defineType({
         source: 'title',
         maxLength: 96,
       },
-      validation: (rule) => rule.required(),
       readOnly: true,
       hidden: true,
       description:
-        'Generated automatically from the title and event date. Do not edit manually.',
+        'Generated automatically from the title and event date shortly after publish. Do not edit manually.',
     }),
     defineField({
       name: 'eventDate',
@@ -61,20 +60,12 @@ export const event = defineType({
       ],
     }),
     defineField({
-      name: 'status',
-      title: 'Event Status',
-      type: 'string',
-      options: {
-        list: [
-          { title: 'Upcoming', value: 'upcoming' },
-          { title: 'In Progress', value: 'in-progress' },
-          { title: 'Completed', value: 'completed' },
-          { title: 'Cancelled', value: 'cancelled' },
-        ],
-        layout: 'radio',
-      },
-      initialValue: 'upcoming',
-      validation: (rule) => rule.required(),
+      name: 'isCancelled',
+      title: 'Cancelled',
+      type: 'boolean',
+      description:
+        'Mark this event as cancelled. Upcoming/in progress/completed are otherwise detected automatically from the event date.',
+      initialValue: false,
     }),
     defineField({
       name: 'season',
@@ -127,14 +118,6 @@ export const event = defineType({
               initialValue: 0,
             }),
             defineField({
-              name: 'points',
-              title: 'Points',
-              type: 'number',
-              description: '3 per win, 1 per draw — enter from Companion',
-              validation: (rule) => rule.required().integer().min(0),
-              initialValue: 0,
-            }),
-            defineField({
               name: 'omwPercentage',
               title: 'OMW% (Opponent Match Win %)',
               type: 'number',
@@ -162,9 +145,9 @@ export const event = defineType({
               wins: 'wins',
               draws: 'draws',
               losses: 'losses',
-              points: 'points',
             },
-            prepare({ playerName, wins, draws, losses, points }) {
+            prepare({ playerName, wins, draws, losses }) {
+              const points = (wins ?? 0) * 3 + (draws ?? 0)
               return {
                 title: playerName ?? 'Unknown player',
                 subtitle: `${wins}W / ${draws}D / ${losses}L — ${points} pts`,
@@ -180,9 +163,10 @@ export const event = defineType({
       title: 'title',
       date: 'eventDate',
       media: 'featuredImage',
-      status: 'status',
+      isCancelled: 'isCancelled',
     },
-    prepare({ title, date, media, status }) {
+    prepare({ title, date, media, isCancelled }) {
+      const status = isCancelled ? 'cancelled' : new Date(date).getTime() < Date.now() ? 'completed' : 'upcoming'
       return {
         title,
         subtitle: `${new Date(date).toLocaleDateString()} - ${status}`,

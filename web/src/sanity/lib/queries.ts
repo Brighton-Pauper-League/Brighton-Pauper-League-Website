@@ -74,7 +74,7 @@ export const STANDINGS_BY_SEASON_QUERY = defineQuery(`
 // ── Events ────────────────────────────────────────────────────────────────────
 
 export const UPCOMING_EVENTS_QUERY = defineQuery(`
-  *[_type == "event" && status != "cancelled" && dateTime(eventDate) >= dateTime(now())]
+  *[_type == "event" && isCancelled != true && dateTime(eventDate) >= dateTime(now())]
     | order(eventDate asc) [0...$limit] {
     _id,
     title,
@@ -83,7 +83,7 @@ export const UPCOMING_EVENTS_QUERY = defineQuery(`
     location,
     description,
     featuredImage,
-    status
+    isCancelled
   }
 `)
 
@@ -96,7 +96,7 @@ export const ALL_EVENTS_QUERY = defineQuery(`
     location,
     description,
     featuredImage,
-    status
+    isCancelled
   }
 `)
 
@@ -110,7 +110,7 @@ export const PAST_EVENTS_QUERY = defineQuery(`
     location,
     description,
     featuredImage,
-    status
+    isCancelled
   }
 `)
 
@@ -123,7 +123,7 @@ export const EVENT_BY_SLUG_QUERY = defineQuery(`
     location,
     description,
     featuredImage,
-    status,
+    isCancelled,
     registrationLink,
     season-> {
       _id,
@@ -141,7 +141,7 @@ export const EVENT_BY_SLUG_QUERY = defineQuery(`
       wins,
       draws,
       losses,
-      points
+      "points": wins * 3 + draws
     }
   }
 `)

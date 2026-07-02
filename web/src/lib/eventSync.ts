@@ -25,10 +25,14 @@ interface SanityEventResult {
   wins: number;
   draws: number;
   losses: number;
-  points: number;
   omwPercentage?: number | null;
   gwPercentage?: number | null;
   ogwPercentage?: number | null;
+}
+
+// 3 points for a win, 1 for a draw — not a field admins enter.
+function resultPoints(r: Pick<SanityEventResult, "wins" | "draws">): number {
+  return r.wins * 3 + r.draws;
 }
 
 interface SanityEvent {
@@ -104,7 +108,7 @@ async function syncSeasonStandings(seasonId: string, currentEventId: string, cur
     acc.wins += r.wins;
     acc.draws += r.draws;
     acc.losses += r.losses;
-    acc.points += r.points;
+    acc.points += resultPoints(r);
     if (r.omwPercentage != null) {
       acc.omwSum += r.omwPercentage;
       acc.omwCount += 1;
@@ -171,7 +175,7 @@ async function syncSeasonStandings(seasonId: string, currentEventId: string, cur
 /** Auto-generates the slug and syncs season standings for a published event. No-op for anything else. */
 export async function syncEventOnPublish(eventId: string): Promise<void> {
   const event: SanityEvent | null = await writeClient.fetch(
-    `*[_id == $id][0]{ _id, title, eventDate, slug, season, results[]{ _key, player, wins, draws, losses, points, omwPercentage, gwPercentage, ogwPercentage } }`,
+    `*[_id == $id][0]{ _id, title, eventDate, slug, season, results[]{ _key, player, wins, draws, losses, omwPercentage, gwPercentage, ogwPercentage } }`,
     { id: eventId }
   );
 

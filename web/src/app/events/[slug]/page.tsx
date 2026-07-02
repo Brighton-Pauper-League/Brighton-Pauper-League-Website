@@ -8,7 +8,7 @@ import { EventStatusBadge } from "@/components/EventStatusBadge";
 import { getEventBySlug, getEventSlugs } from "@/lib/data";
 import { playerDisplayName } from "@/lib/standings";
 import { urlFor } from "@/sanity/lib/image";
-import { formatLongDate, formatEventDateTime } from "@/lib/dates";
+import { formatLongDate, formatEventDateTime, getEventStatus } from "@/lib/dates";
 
 export async function generateStaticParams() {
   const slugs = await getEventSlugs();
@@ -90,7 +90,7 @@ export default async function EventPage({
               {/* Main content */}
               <div className="flex-1 flex flex-col gap-6">
                 <div className="flex flex-wrap items-center gap-3">
-                  <EventStatusBadge status={event.status} />
+                  <EventStatusBadge status={getEventStatus(event.eventDate, event.isCancelled)} />
                   {event.season && (
                     <Link
                       href={`/standings/${event.season.seasonNumber}`}
