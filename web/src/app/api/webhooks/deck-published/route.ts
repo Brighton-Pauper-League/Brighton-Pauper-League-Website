@@ -26,6 +26,7 @@ interface SanityCard {
 interface SanityDeck {
   _id: string;
   featuredCard?: string | null;
+  featuredCardImageUri?: string | null;
   cards: SanityCard[];
 }
 
@@ -57,9 +58,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ ok: true, skipped: true });
   }
 
-  // Re-fetch the full deck document so we have all card fields.
+  // Re-fetch the full deck document, including the previously-resolved image
+  // fields — needed below to detect a no-op update and avoid re-committing,
+  // since committing here would itself re-trigger this same webhook.
   const deck: SanityDeck | null = await writeClient.fetch(
-    `*[_id == $id][0]{ _id, featuredCard, cards[]{ _key, _type, cardName, quantity, quantityOwned, isSideboard } }`,
+    `*[_id == $id][0]{ _id, featuredCard, featuredCardImageUri, cards[]{ _key, _type, cardName, quantity, quantityOwned, isSideboard, imageUri, imageUriBack, typeLine } }`,
     { id: _id }
   );
 
@@ -90,10 +93,27 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     };
   });
 
-  // Patch the document — replace cards array and set cover image URI.
   const coverFaces = coverName ? imageMap[coverName] : null;
   const coverUri = coverFaces?.front ?? null;
 
+  // Bail out if nothing actually changed. Committing unconditionally here
+  // would patch the document we were triggered by, which re-fires this same
+  // webhook — an infinite loop of identical Scryfall lookups and commits.
+  const cardsUnchanged = cards.every((card, i) => {
+    const updated = updatedCards[i];
+    return (
+      card.imageUri === updated.imageUri &&
+      card.imageUriBack === updated.imageUriBack &&
+      card.typeLine === updated.typeLine
+    );
+  });
+  const coverUnchanged = (deck.featuredCardImageUri ?? null) === coverUri;
+
+  if (cardsUnchanged && coverUnchanged) {
+    return NextResponse.json({ ok: true, deckId: _id, unchanged: true });
+  }
+
+  // Patch the document — replace cards array and set cover image URI.
   let patch = writeClient.patch(_id).set({ cards: updatedCards });
   if (coverUri) {
     patch = patch.set({ featuredCardImageUri: coverUri });
