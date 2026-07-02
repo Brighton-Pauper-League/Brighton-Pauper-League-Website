@@ -9,7 +9,6 @@ export const ALL_SEASONS_QUERY = defineQuery(`
     seasonNumber,
     startDate,
     endDate,
-    status,
     description
   }
 `)
@@ -21,7 +20,6 @@ export const PAST_SEASONS_QUERY = defineQuery(`
     seasonNumber,
     startDate,
     endDate,
-    status,
     description
   }
 `)
@@ -34,7 +32,6 @@ export const ACTIVE_SEASON_QUERY = defineQuery(`
     seasonNumber,
     startDate,
     endDate,
-    status,
     description
   }
 `)
@@ -46,7 +43,6 @@ export const SEASON_BY_NUMBER_QUERY = defineQuery(`
     seasonNumber,
     startDate,
     endDate,
-    status,
     description
   }
 `)

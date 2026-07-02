@@ -28,6 +28,13 @@ export const loanerDeck = defineType({
       initialValue: false,
     }),
     defineField({
+      name: 'deckOwner',
+      title: 'Deck Owner',
+      type: 'string',
+      description:
+        'If this deck has an owner, it is currently on loan to Brighton Pauper League. Leave blank if the club owns this deck outright.',
+    }),
+    defineField({
       name: 'featuredCard',
       title: 'Featured Card',
       type: 'string',

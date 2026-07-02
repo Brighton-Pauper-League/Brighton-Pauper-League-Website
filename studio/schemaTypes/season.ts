@@ -34,23 +34,6 @@ export const season = defineType({
         rule.required().min(rule.valueOfField('startDate')),
     }),
     defineField({
-      name: 'status',
-      title: 'Status',
-      type: 'string',
-      options: {
-        list: [
-          { title: 'Upcoming', value: 'upcoming' },
-          { title: 'Active', value: 'active' },
-          { title: 'Completed', value: 'completed' },
-        ],
-        layout: 'radio',
-      },
-      initialValue: 'upcoming',
-      validation: (rule) => rule.required(),
-      description:
-        'Active season is auto-detected by current date falling between start/end dates',
-    }),
-    defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
@@ -61,10 +44,12 @@ export const season = defineType({
     select: {
       name: 'name',
       number: 'seasonNumber',
-      status: 'status',
       startDate: 'startDate',
+      endDate: 'endDate',
     },
-    prepare({ name, number, status, startDate }) {
+    prepare({ name, number, startDate, endDate }) {
+      const today = new Date().toISOString().slice(0, 10)
+      const status = today < startDate ? 'upcoming' : today > endDate ? 'completed' : 'active'
       return {
         title: `${name} (Season ${number})`,
         subtitle: `${status} - Starts ${new Date(startDate).toLocaleDateString()}`,

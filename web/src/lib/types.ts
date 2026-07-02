@@ -11,7 +11,7 @@ export interface SanityImage {
   crop?: { top: number; bottom: number; left: number; right: number };
 }
 
-export type SeasonStatus = "upcoming" | "active" | "completed";
+export type { SeasonStatus } from "./dates";
 
 export interface Season {
   _id: string;
@@ -19,7 +19,6 @@ export interface Season {
   seasonNumber: number;
   startDate: string;
   endDate: string;
-  status: SeasonStatus;
   description?: string;
 }
 

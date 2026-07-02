@@ -1,9 +1,9 @@
 import Link from "next/link";
 import type { Season, StandingsRow } from "@/lib/types";
-import { formatSeasonRange } from "@/lib/dates";
+import { formatSeasonRange, getSeasonStatus, type SeasonStatus } from "@/lib/dates";
 import { StandingsTable } from "./StandingsTable";
 
-const SEASON_STATUS_LABEL: Record<Season["status"], string> = {
+const SEASON_STATUS_LABEL: Record<SeasonStatus, string> = {
   upcoming: "Upcoming",
   active: "Active",
   completed: "Completed",
@@ -68,13 +68,13 @@ export function StandingsView({
     <div className="max-w-360 mx-auto flex flex-col lg:flex-row gap-12">
       <div className="flex-1 flex flex-col gap-8 min-w-0">
         <header className="flex flex-col gap-3">
-          <h1 className="font-(family-name:--font-young-serif) text-4xl md:text-5xl lg:text-[64px] text-dark-brown leading-none">
+          <h1 className="font-(family-name:--font-young-serif) text-4xl md:text-5xl lg:text-[64px] xl:text-[72px] 2xl:text-[80px] text-dark-brown leading-none">
             {season ? season.name : heading}
           </h1>
           {season ? (
             <p className="font-(family-name:--font-bricolage-grotesque) text-xl text-black/60">
               {formatSeasonRange(season.startDate, season.endDate)} ·{" "}
-              {SEASON_STATUS_LABEL[season.status]}
+              {SEASON_STATUS_LABEL[getSeasonStatus(season.startDate, season.endDate)]}
             </p>
           ) : (
             intro && (

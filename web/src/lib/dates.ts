@@ -50,3 +50,13 @@ export function formatSeasonRange(startIso: string, endIso: string): string {
     );
   return `${fmt(startIso)} – ${fmt(endIso)}`;
 }
+
+export type SeasonStatus = "upcoming" | "active" | "completed";
+
+/** Derives a season's status from today's date rather than a manually-set field. */
+export function getSeasonStatus(startDate: string, endDate: string, today = new Date()): SeasonStatus {
+  const todayStr = today.toISOString().slice(0, 10);
+  if (todayStr < startDate) return "upcoming";
+  if (todayStr > endDate) return "completed";
+  return "active";
+}

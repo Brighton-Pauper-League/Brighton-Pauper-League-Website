@@ -22,6 +22,10 @@ export const event = defineType({
         maxLength: 96,
       },
       validation: (rule) => rule.required(),
+      readOnly: true,
+      hidden: true,
+      description:
+        'Generated automatically from the title and event date. Do not edit manually.',
     }),
     defineField({
       name: 'eventDate',
@@ -129,6 +133,27 @@ export const event = defineType({
               description: '3 per win, 1 per draw — enter from Companion',
               validation: (rule) => rule.required().integer().min(0),
               initialValue: 0,
+            }),
+            defineField({
+              name: 'omwPercentage',
+              title: 'OMW% (Opponent Match Win %)',
+              type: 'number',
+              description: 'Enter from MTG Companion app - used for tiebreakers',
+              validation: (rule) => rule.min(0).max(100).precision(2),
+            }),
+            defineField({
+              name: 'gwPercentage',
+              title: 'GW% (Game Win %)',
+              type: 'number',
+              description: 'Enter from MTG Companion app - used for tiebreakers',
+              validation: (rule) => rule.min(0).max(100).precision(2),
+            }),
+            defineField({
+              name: 'ogwPercentage',
+              title: 'OGW% (Opponent Game Win %)',
+              type: 'number',
+              description: 'Enter from MTG Companion app - used for tiebreakers',
+              validation: (rule) => rule.min(0).max(100).precision(2),
             }),
           ],
           preview: {

@@ -1,6 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { parseBody } from "next-sanity/webhook";
 import { NextResponse, type NextRequest } from "next/server";
+import { syncEventOnPublish } from "@/lib/eventSync";
 
 // On-demand revalidation endpoint for Sanity webhooks.
 //
@@ -10,7 +11,12 @@ import { NextResponse, type NextRequest } from "next/server";
 // site, and avoids per-type tag bookkeeping. (Live preview/editing already uses
 // the Sanity Live Content API via `SanityLive`; this covers cached production
 // pages built with the plain client.)
-type WebhookPayload = { _type?: string };
+//
+// Also doubles as the event-publish hook (slug generation + standings sync,
+// see eventSync.ts) — Sanity's free plan caps webhooks at two, and both are
+// already spoken for (this one, and the loaner-deck card-image hook), so
+// there's no free slot for a dedicated event webhook.
+type WebhookPayload = { _type?: string; _id?: string };
 
 export async function POST(req: NextRequest) {
   try {
@@ -21,6 +27,10 @@ export async function POST(req: NextRequest) {
 
     if (!isValidSignature) {
       return new NextResponse("Invalid signature", { status: 401 });
+    }
+
+    if (body?._type === "event" && body._id && !body._id.startsWith("drafts.")) {
+      await syncEventOnPublish(body._id);
     }
 
     // Revalidate everything under the root layout.
