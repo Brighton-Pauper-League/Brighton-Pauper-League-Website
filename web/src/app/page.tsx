@@ -26,14 +26,14 @@ export default async function Home() {
       <Navbar/>
 
       {/* Hero Section */}
-      <div className="relative bg-primary-blue min-h-[calc(100vh-72px)] w-full flex items-center py-16 lg:py-0">
+      <div className="relative bg-primary-blue min-h-[calc(100vh-72px)] lg:max-h-[calc(100vh-72px)] w-full flex items-center py-16 lg:py-0 overflow-hidden">
         <div className="max-w-360 mx-auto px-6 md:px-12 lg:px-20 w-full flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16">
           {/* Hero Content */}
-          <div className="flex flex-col gap-6 lg:gap-8 items-center lg:items-start text-center lg:text-left max-w-200 lg:py-40">
+          <div className="flex flex-col gap-6 lg:gap-8 items-center lg:items-start text-center lg:text-left max-w-200 min-w-0">
             <h1 className="font-(family-name:--font-young-serif) text-[clamp(2.5rem,10vw,7.5rem)] text-secondary-yellow leading-none">
               Brighton Pauper League
             </h1>
-            <p className="font-(family-name:--font-bricolage-grotesque) font-medium text-xl md:text-2xl lg:text-[32px] text-light-purple leading-tight">
+            <p className="font-(family-name:--font-bricolage-grotesque) font-medium text-xl md:text-2xl lg:text-[32px] xl:text-[36px] 2xl:text-[40px] text-light-purple leading-tight">
               Accessible, community-led Pauper Magic
             </p>
             <p className="font-(family-name:--font-bricolage-grotesque) text-base lg:text-lg text-white/80 max-w-150">
@@ -58,7 +58,7 @@ export default async function Home() {
           </div>
 
           {/* League Logo */}
-          <div className="flex items-center justify-center w-full max-w-45 sm:max-w-60 lg:max-w-140 shrink-0">
+          <div className="flex items-center justify-center w-full max-w-45 sm:max-w-60 lg:max-w-72 xl:max-w-100 2xl:max-w-140 shrink-0">
             <Image
                 src="/logo.webp"
                 alt="Brighton Pauper League"
@@ -72,11 +72,11 @@ export default async function Home() {
       </div>
 
       {/* Who We Are Section */}
-      <section className="bg-light-purple px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y">
+      <section className="bg-light-purple px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y 2xl:py-[10rem]">
         <div className="max-w-360 mx-auto flex flex-col lg:flex-row gap-10">
           {/* Left Column - Who is this for? */}
           <div className="w-full lg:w-155 flex flex-col gap-12">
-            <h2 className="font-(family-name:--font-young-serif) text-3xl md:text-4xl lg:text-[56px] text-primary-blue leading-tight">
+            <h2 className="font-(family-name:--font-young-serif) text-3xl md:text-4xl lg:text-[56px] xl:text-[64px] 2xl:text-[72px] text-primary-blue leading-tight">
               Who is this for?
             </h2>
 
@@ -153,7 +153,7 @@ export default async function Home() {
 
           {/* Right Column - What is Pauper? */}
           <div className="w-full lg:w-155 flex flex-col gap-8 justify-start">
-            <h2 className="font-(family-name:--font-young-serif) text-3xl md:text-4xl lg:text-[56px] text-primary-blue leading-tight mb-4">
+            <h2 className="font-(family-name:--font-young-serif) text-3xl md:text-4xl lg:text-[56px] xl:text-[64px] 2xl:text-[72px] text-primary-blue leading-tight mb-4">
               What is Pauper?
             </h2>
 
@@ -213,7 +213,7 @@ export default async function Home() {
 
           {/* Right - Schedule */}
           <div className="flex-1 flex flex-col gap-6">
-            <h2 className="font-(family-name:--font-young-serif) text-3xl md:text-4xl lg:text-[56px] text-secondary-yellow leading-tight">
+            <h2 className="font-(family-name:--font-young-serif) text-3xl md:text-4xl lg:text-[56px] xl:text-[64px] 2xl:text-[72px] text-secondary-yellow leading-tight">
               Join us on the night
             </h2>
             <p className="font-(family-name:--font-bricolage-grotesque) text-xl text-light-purple">
@@ -268,7 +268,7 @@ export default async function Home() {
       <section className="bg-off-white px-6 md:px-12 lg:px-20 py-16 md:py-24">
         <div className="max-w-360 mx-auto flex flex-col gap-7">
           <div className="flex flex-col gap-4">
-            <h2 className="font-(family-name:--font-young-serif) text-3xl md:text-4xl lg:text-[56px] text-dark-brown leading-tight">
+            <h2 className="font-(family-name:--font-young-serif) text-3xl md:text-4xl lg:text-[56px] xl:text-[64px] 2xl:text-[72px] text-dark-brown leading-tight">
               How the League Works
             </h2>
             <p className="font-(family-name:--font-bricolage-grotesque) text-xl text-black/70">
@@ -396,11 +396,11 @@ export default async function Home() {
       </section>
 
       {/* Our Values Section */}
-      <section className="bg-dark-brown px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y">
+      <section className="bg-dark-brown px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y 2xl:py-[10rem]">
         <div className="max-w-360 mx-auto flex flex-col gap-10">
           {/* Left - Our Values */}
           <div className="flex flex-col gap-12">
-            <h2 className="font-(family-name:--font-young-serif) text-3xl md:text-4xl lg:text-[56px] text-secondary-yellow leading-tight">
+            <h2 className="font-(family-name:--font-young-serif) text-3xl md:text-4xl lg:text-[56px] xl:text-[64px] 2xl:text-[72px] text-secondary-yellow leading-tight">
               Our Values
             </h2>
 
@@ -441,7 +441,7 @@ export default async function Home() {
 
           {/* Right - Community Run */}
           <div className="flex flex-col gap-8">
-            <h2 className="font-(family-name:--font-young-serif) text-3xl md:text-4xl lg:text-[56px] text-white leading-tight">
+            <h2 className="font-(family-name:--font-young-serif) text-3xl md:text-4xl lg:text-[56px] xl:text-[64px] 2xl:text-[72px] text-white leading-tight">
               Community Run
             </h2>
             <p className="font-(family-name:--font-bricolage-grotesque) text-xl text-white/70">
@@ -498,12 +498,12 @@ export default async function Home() {
       </section>
 
       {/* Loaner Decks Section */}
-      <section className="bg-sage-green px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y">
+      <section className="bg-sage-green px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y 2xl:py-[10rem]">
         <div className="max-w-360 mx-auto flex flex-col lg:flex-row gap-16 lg:gap-20 items-start">
 
           <div className="flex-1 flex flex-col gap-12">
             <div className="max-w-200">
-              <h2 className="font-(family-name:--font-young-serif) text-4xl md:text-5xl lg:text-[72px] text-dark-brown leading-none mb-8">
+              <h2 className="font-(family-name:--font-young-serif) text-4xl md:text-5xl lg:text-[72px] xl:text-[80px] 2xl:text-[88px] text-dark-brown leading-none mb-8">
                 No deck? No problem.
               </h2>
               <p className="font-(family-name:--font-bricolage-grotesque) text-xl text-dark-brown/80 leading-relaxed">
@@ -567,10 +567,10 @@ export default async function Home() {
         </div>
       </section>
       {/* Events Section */}
-      <section className="bg-light-purple px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y">
+      <section className="bg-light-purple px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y 2xl:py-[10rem]">
         <div className="max-w-360 mx-auto flex flex-col gap-12">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4">
-            <h2 className="font-(family-name:--font-young-serif) text-3xl md:text-4xl lg:text-[56px] text-primary-blue leading-tight">
+            <h2 className="font-(family-name:--font-young-serif) text-3xl md:text-4xl lg:text-[56px] xl:text-[64px] 2xl:text-[72px] text-primary-blue leading-tight">
               Upcoming Events
             </h2>
             <Link
@@ -587,11 +587,11 @@ export default async function Home() {
       </section>
 
       {/* Standings Section */}
-      <section className="bg-off-white px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y">
+      <section className="bg-off-white px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y 2xl:py-[10rem]">
         <div className="max-w-360 mx-auto flex flex-col lg:flex-row gap-10">
           {/* Left - Standings Table */}
           <div className="flex-1">
-            <h2 className="font-(family-name:--font-young-serif) text-3xl md:text-4xl lg:text-[56px] text-dark-brown leading-tight mb-4">
+            <h2 className="font-(family-name:--font-young-serif) text-3xl md:text-4xl lg:text-[56px] xl:text-[64px] 2xl:text-[72px] text-dark-brown leading-tight mb-4">
               Season Standings
             </h2>
             <p className="font-(family-name:--font-bricolage-grotesque) text-xl text-black/60 mb-12">
@@ -622,10 +622,10 @@ export default async function Home() {
             </div>
 
             <Link
-                href="https://melee.gg"
+                href="/standings"
                 className="border-b-2 border-primary-blue text-primary-blue font-(family-name:--font-bricolage-grotesque) font-semibold text-lg pb-1 w-fit hover:border-darker-blue hover:text-darker-blue transition-colors"
             >
-              Full standings on Melee.gg →
+              Full standings →
             </Link>
 
             <div className="bg-primary-blue p-8 rounded-2xl">
@@ -639,7 +639,7 @@ export default async function Home() {
       </section>
 
       {/* Rules Section */}
-      <section className="bg-primary-blue px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y">
+      <section className="bg-primary-blue px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y 2xl:py-[10rem]">
         <div className="max-w-360 mx-auto grid grid-cols-1 md:grid-cols-3 gap-16">
           {/* Code of Conduct */}
           <div className="flex flex-col gap-6">
@@ -695,16 +695,20 @@ export default async function Home() {
       </section>
 
       {/* Media Section */}
-      <section className="bg-dark-brown px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y">
+      <section className="bg-dark-brown px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y 2xl:py-[10rem]">
         <div className="max-w-360 mx-auto flex flex-col gap-12">
-          <h2 className="font-(family-name:--font-young-serif) text-3xl md:text-4xl lg:text-[56px] text-white leading-tight">
+          <h2 className="font-(family-name:--font-young-serif) text-3xl md:text-4xl lg:text-[56px] xl:text-[64px] 2xl:text-[72px] text-white leading-tight">
             Follow the League
           </h2>
 
           <div className="flex flex-col lg:flex-row gap-10">
             {/* Left - Feature Video */}
             <div className="w-full lg:w-190 flex flex-col gap-4">
-              <div className="bg-red-placeholder h-100 rounded-3xl"/>
+              <div className="bg-dark-card h-100 rounded-3xl flex items-center justify-center px-6">
+                <p className="font-(family-name:--font-bricolage-grotesque) text-white/50 text-center">
+                  YouTube thumbnail here :)
+                </p>
+              </div>
               <p className="font-(family-name:--font-bricolage-grotesque) text-sm text-white/60">
                 Season 1 Recap: Alex Morgan&#39;s Championship Run
               </p>
@@ -713,9 +717,21 @@ export default async function Home() {
             {/* Right - Social Feed */}
             <div className="flex-1 flex flex-col gap-8">
               <div className="grid grid-cols-3 gap-4">
-                <div className="bg-red-placeholder aspect-square rounded-xl"/>
-                <div className="bg-red-placeholder aspect-square rounded-xl"/>
-                <div className="bg-red-placeholder aspect-square rounded-xl"/>
+                <div className="bg-dark-card aspect-square rounded-xl flex items-center justify-center px-2">
+                  <p className="font-(family-name:--font-bricolage-grotesque) text-white/50 text-xs text-center">
+                    Event photo
+                  </p>
+                </div>
+                <div className="bg-dark-card aspect-square rounded-xl flex items-center justify-center px-2">
+                  <p className="font-(family-name:--font-bricolage-grotesque) text-white/50 text-xs text-center">
+                    Event photo
+                  </p>
+                </div>
+                <div className="bg-dark-card aspect-square rounded-xl flex items-center justify-center px-2">
+                  <p className="font-(family-name:--font-bricolage-grotesque) text-white/50 text-xs text-center">
+                    Event photo
+                  </p>
+                </div>
               </div>
 
               <p className="font-(family-name:--font-bricolage-grotesque) text-base text-white/70 leading-relaxed">
@@ -749,10 +765,10 @@ export default async function Home() {
       </section>
 
       {/* Get Involved Section */}
-      <section className="bg-sage-green px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y">
+      <section className="bg-sage-green px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y 2xl:py-[10rem]">
         <div className="max-w-360 mx-auto flex flex-col gap-12">
           <div className="max-w-200">
-            <h2 className="font-(family-name:--font-young-serif) text-3xl md:text-4xl lg:text-[56px] text-dark-brown leading-tight mb-6">
+            <h2 className="font-(family-name:--font-young-serif) text-3xl md:text-4xl lg:text-[56px] xl:text-[64px] 2xl:text-[72px] text-dark-brown leading-tight mb-6">
               Want to help?
             </h2>
             <p className="font-(family-name:--font-bricolage-grotesque) text-xl text-dark-brown/80 leading-relaxed">

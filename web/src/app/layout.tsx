@@ -82,9 +82,9 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${youngSerif.variable} ${bricolageGrotesque.variable} ${inter.variable} h-full antialiased`}
+      className={`${youngSerif.variable} ${bricolageGrotesque.variable} ${inter.variable} h-full antialiased overflow-x-hidden`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col overflow-x-hidden">
         {children}
         <SanityLive />
         {(await draftMode()).isEnabled && <VisualEditing />}

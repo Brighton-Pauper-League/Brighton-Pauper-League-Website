@@ -36,6 +36,8 @@ export function CardCarousel() {
       breakpoints={{
         640: { slidesPerView: 3, spaceBetween: 16 },
         1024: { slidesPerView: 4, spaceBetween: 20 },
+        1280: { slidesPerView: 5, spaceBetween: 20 },
+        1536: { slidesPerView: 6, spaceBetween: 24 },
       }}
       className="w-full"
     >
@@ -47,7 +49,7 @@ export function CardCarousel() {
               alt={card.alt}
               fill
               className="object-cover"
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 20vw, (max-width: 1536px) 16vw, 14vw"
             />
           </div>
         </SwiperSlide>
