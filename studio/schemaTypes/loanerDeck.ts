@@ -64,6 +64,15 @@ export const loanerDeck = defineType({
       hidden: true,
     }),
     defineField({
+      name: 'resolvedNamesHash',
+      title: 'Resolved Names Hash',
+      type: 'string',
+      description:
+        'Internal bookkeeping — fingerprint of the card names Scryfall was last resolved for. Do not edit manually.',
+      readOnly: true,
+      hidden: true,
+    }),
+    defineField({
       name: 'primer',
       title: 'Deck Primer',
       type: 'array',

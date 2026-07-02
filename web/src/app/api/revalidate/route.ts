@@ -36,10 +36,7 @@ export async function POST(req: NextRequest) {
     // Revalidate everything under the root layout.
     revalidatePath("/", "layout");
 
-    // TEMP DEBUG: echo the full raw payload so it's visible in Sanity's
-    // webhook attempts log, to diagnose a type-mismatch bug. Remove once
-    // resolved.
-    return NextResponse.json({ revalidated: true, type: body?._type ?? null, debugRawBody: body });
+    return NextResponse.json({ revalidated: true, type: body?._type ?? null });
   } catch (err) {
     console.error("Revalidate webhook error:", err);
     const message = err instanceof Error ? err.message : "Unknown error";

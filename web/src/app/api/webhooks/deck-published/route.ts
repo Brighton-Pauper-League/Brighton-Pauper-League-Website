@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@sanity/client";
 import { isValidSignature, SIGNATURE_HEADER_NAME } from "@sanity/webhook";
+import { createHash } from "crypto";
 import { resolveCardImages, type CardImageResult } from "@/lib/scryfall";
 
 const writeClient = createClient({
@@ -28,6 +29,16 @@ interface SanityDeck {
   featuredCard?: string | null;
   featuredCardImageUri?: string | null;
   cards: SanityCard[];
+  resolvedNamesHash?: string | null;
+}
+
+// Deterministic fingerprint of "what Scryfall was asked to resolve last time".
+// Comparing this (rather than diffing the resolved content itself) sidesteps
+// any flakiness in the resolved values — e.g. Scryfall/JSON transport quirks
+// in non-ASCII type-line text — that previously made an unconditional commit
+// look "changed" on every single run, re-triggering this same webhook forever.
+function hashNames(names: string[]): string {
+  return createHash("sha1").update([...names].sort().join("|")).digest("hex");
 }
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
@@ -58,11 +69,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ ok: true, skipped: true });
   }
 
-  // Re-fetch the full deck document, including the previously-resolved image
-  // fields — needed below to detect a no-op update and avoid re-committing,
-  // since committing here would itself re-trigger this same webhook.
+  // Re-fetch the full deck document, including the fingerprint of what was
+  // resolved last time — needed below to skip re-processing entirely (and
+  // avoid re-triggering this same webhook) when nothing that would change
+  // the Scryfall lookup has actually changed.
   const deck: SanityDeck | null = await writeClient.fetch(
-    `*[_id == $id][0]{ _id, featuredCard, featuredCardImageUri, cards[]{ _key, _type, cardName, quantity, quantityOwned, isSideboard, imageUri, imageUriBack, typeLine } }`,
+    `*[_id == $id][0]{ _id, featuredCard, featuredCardImageUri, resolvedNamesHash, cards[]{ _key, _type, cardName, quantity, quantityOwned, isSideboard, imageUri, imageUriBack, typeLine } }`,
     { id: _id }
   );
 
@@ -79,6 +91,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const coverName = featuredCard ?? fallbackCover;
 
   const allNames = [...new Set([...cards.map((c) => c.cardName), ...(coverName ? [coverName] : [])])];
+  const namesHash = hashNames(allNames);
+
+  // Nothing that affects the Scryfall lookup has changed since last time —
+  // skip entirely without calling Scryfall or committing anything.
+  if (namesHash === deck.resolvedNamesHash) {
+    return NextResponse.json({ ok: true, deckId: _id, unchanged: true });
+  }
 
   const imageMap: Record<string, CardImageResult> = await resolveCardImages(allNames);
 
@@ -96,25 +115,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const coverFaces = coverName ? imageMap[coverName] : null;
   const coverUri = coverFaces?.front ?? null;
 
-  // Bail out if nothing actually changed. Committing unconditionally here
-  // would patch the document we were triggered by, which re-fires this same
-  // webhook — an infinite loop of identical Scryfall lookups and commits.
-  const cardsUnchanged = cards.every((card, i) => {
-    const updated = updatedCards[i];
-    return (
-      card.imageUri === updated.imageUri &&
-      card.imageUriBack === updated.imageUriBack &&
-      card.typeLine === updated.typeLine
-    );
-  });
-  const coverUnchanged = (deck.featuredCardImageUri ?? null) === coverUri;
-
-  if (cardsUnchanged && coverUnchanged) {
-    return NextResponse.json({ ok: true, deckId: _id, unchanged: true });
-  }
-
-  // Patch the document — replace cards array and set cover image URI.
-  let patch = writeClient.patch(_id).set({ cards: updatedCards });
+  // Patch the document — replace cards array, set cover image URI, and
+  // record the fingerprint so the next (self-triggered) invocation no-ops.
+  let patch = writeClient.patch(_id).set({ cards: updatedCards, resolvedNamesHash: namesHash });
   if (coverUri) {
     patch = patch.set({ featuredCardImageUri: coverUri });
   } else {
