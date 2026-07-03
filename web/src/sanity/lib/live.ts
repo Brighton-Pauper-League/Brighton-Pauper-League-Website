@@ -7,9 +7,15 @@ import { client } from "./client";
 // client-side JS for anyone to read. Live updates for published content work
 // without a browser token; draft/preview content is fetched server-side using
 // `serverToken`.
+// The apiVersion is part of the request URL and therefore of Next's data-cache
+// key. Bumping it (2025-02-01 → 2026-05-15, matching the rest of the codebase)
+// abandoned a set of stale immortal cache entries created before fetches
+// carried the shared "sanity" tag below — those entries had revalidate: false
+// and no tag the revalidation webhook could name, and Vercel persists the
+// fetch cache across deployments, so they survived every deploy.
 const { sanityFetch: baseSanityFetch, SanityLive } = defineLive({
   client: client.withConfig({
-    apiVersion: "2025-02-01",
+    apiVersion: "2026-05-15",
   }),
   serverToken: process.env.SANITY_API_READ_TOKEN,
 });
