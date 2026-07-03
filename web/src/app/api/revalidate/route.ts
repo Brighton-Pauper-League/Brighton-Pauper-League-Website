@@ -1,4 +1,4 @@
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { parseBody } from "next-sanity/webhook";
 import { NextResponse, type NextRequest } from "next/server";
 import { syncEventOnPublish } from "@/lib/eventSync";
@@ -39,7 +39,10 @@ export async function POST(req: NextRequest) {
       await syncEventOnPublish(body._id);
     }
 
-    // Revalidate everything under the root layout.
+    // Expire every cached Sanity query (see the shared tag in sanity/lib/live.ts)
+    // and then the route cache. Both are needed: revalidatePath alone re-renders
+    // pages against stale data-cache entries.
+    revalidateTag("sanity", "max");
     revalidatePath("/", "layout");
 
     return NextResponse.json({ revalidated: true, type: body?._type ?? null });

@@ -7,9 +7,20 @@ import { client } from "./client";
 // client-side JS for anyone to read. Live updates for published content work
 // without a browser token; draft/preview content is fetched server-side using
 // `serverToken`.
-export const { sanityFetch, SanityLive } = defineLive({
+const { sanityFetch: baseSanityFetch, SanityLive } = defineLive({
   client: client.withConfig({
     apiVersion: "2025-02-01",
   }),
   serverToken: process.env.SANITY_API_READ_TOKEN,
 });
+
+export { SanityLive };
+
+// Every fetch carries a shared "sanity" cache tag so the /api/revalidate
+// webhook can expire the data cache with a single revalidateTag call.
+// Without it, only the per-query sync tags exist, and those are expired
+// solely by the <SanityLive /> browser event stream — server-rendered pages
+// would otherwise keep serving stale query results after a publish, since
+// revalidatePath clears the route cache but not tagged data-cache entries.
+export const sanityFetch: typeof baseSanityFetch = (options) =>
+  baseSanityFetch({ ...options, tags: ["sanity", ...(options.tags ?? [])] });
