@@ -125,14 +125,19 @@ async function syncSeasonStandings(seasonId: string, currentEventId: string, cur
   }
 
   const existing: { _id: string; playerRef: string }[] = await writeClient.fetch(
-    `*[_type == "playerSeasonStats" && season._ref == $seasonId]{ _id, "playerRef": player._ref }`,
+    `*[_type == "playerSeasonStats" && season._ref == $seasonId && !(_id in path("drafts.**"))]{ _id, "playerRef": player._ref }`,
     { seasonId }
   );
   const remainingExisting = new Set(existing.map((e) => e.playerRef));
 
+  // Dots in a Sanity document ID mark it as a path (draft-like) document,
+  // invisible to the "published" perspective the public site queries with —
+  // so the deterministic ID must join with hyphens, never dots.
+  const canonicalId = (playerRef: string) => `playerSeasonStats-${seasonId}-${playerRef}`;
+
   const tx = writeClient.transaction();
   for (const [playerRef, acc] of byPlayer) {
-    const docId = `playerSeasonStats.${seasonId}.${playerRef}`;
+    const docId = canonicalId(playerRef);
     tx.createIfNotExists({
       _id: docId,
       _type: "playerSeasonStats",
@@ -161,11 +166,13 @@ async function syncSeasonStandings(seasonId: string, currentEventId: string, cur
     remainingExisting.delete(playerRef);
   }
 
-  // Players who had stats before but now have zero results for the season
-  // (e.g. their only event's results were deleted) — remove the stale doc.
-  for (const orphan of existing) {
-    if (remainingExisting.has(orphan.playerRef)) {
-      tx.delete(orphan._id);
+  // Remove stale docs: players with zero remaining results for the season
+  // (e.g. their only event's results were deleted), and any doc under a
+  // non-canonical ID (e.g. the earlier dot-joined IDs, or manually created
+  // duplicates) — the canonical doc created above supersedes it.
+  for (const doc of existing) {
+    if (remainingExisting.has(doc.playerRef) || doc._id !== canonicalId(doc.playerRef)) {
+      tx.delete(doc._id);
     }
   }
 
