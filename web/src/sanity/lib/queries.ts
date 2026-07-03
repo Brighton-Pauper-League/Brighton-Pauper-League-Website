@@ -58,7 +58,9 @@ export const STANDINGS_BY_SEASON_QUERY = defineQuery(`
       nickname,
       pseudonym,
       isAnonymised,
-      isActive
+      isActive,
+      isPublic,
+      slug
     },
     matchesPlayed,
     wins,
@@ -167,7 +169,7 @@ export const PUBLIC_PLAYERS_QUERY = defineQuery(`
 `)
 
 export const PLAYER_BY_SLUG_QUERY = defineQuery(`
-  *[_type == "player" && slug.current == $slug][0] {
+  *[_type == "player" && slug.current == $slug && isPublic == true && isAnonymised != true][0] {
     _id,
     name,
     nickname,
@@ -182,7 +184,7 @@ export const PLAYER_BY_SLUG_QUERY = defineQuery(`
 `)
 
 export const PLAYER_SLUGS_QUERY = defineQuery(`
-  *[_type == "player" && isPublic == true && defined(slug.current)].slug.current
+  *[_type == "player" && isPublic == true && isAnonymised != true && defined(slug.current)].slug.current
 `)
 
 // ── Posts ─────────────────────────────────────────────────────────────────────

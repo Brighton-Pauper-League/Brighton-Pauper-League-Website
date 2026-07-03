@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { PlayerCard } from "@/lib/types";
-import { playerDisplayName } from "@/lib/standings";
+import { playerDisplayName, playerProfilePath } from "@/lib/standings";
 import { urlFor } from "@/sanity/lib/image";
 
 export function MemberCard({ player }: { player: PlayerCard }) {
@@ -9,7 +9,7 @@ export function MemberCard({ player }: { player: PlayerCard }) {
   const imageUrl = player.image?.asset
     ? urlFor(player.image).width(400).height(400).fit("crop").url()
     : null;
-  const slug = player.slug?.current;
+  const profilePath = playerProfilePath(player);
 
   const card = (
     <div className="group flex flex-col bg-white rounded-2xl overflow-hidden border border-[rgba(0,74,173,0.13)] hover:shadow-lg transition-shadow">
@@ -50,10 +50,10 @@ export function MemberCard({ player }: { player: PlayerCard }) {
     </div>
   );
 
-  if (!slug) return card;
+  if (!profilePath) return card;
 
   return (
-    <Link href={`/players/${slug}`} className="block">
+    <Link href={profilePath} className="block">
       {card}
     </Link>
   );

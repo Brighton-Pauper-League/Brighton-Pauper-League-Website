@@ -1,4 +1,10 @@
-import { sortStandings, playerDisplayName, type StandingsRow } from "@/lib/standings";
+import Link from "next/link";
+import {
+  sortStandings,
+  playerDisplayName,
+  playerProfilePath,
+  type StandingsRow,
+} from "@/lib/standings";
 import { EmptyState } from "./EmptyState";
 
 // One standings component, two looks:
@@ -66,11 +72,22 @@ export function StandingsTable({
           </tr>
         </thead>
         <tbody>
-          {display.map((row, index) => (
+          {display.map((row, index) => {
+            const profilePath = playerProfilePath(row.player);
+            return (
             <tr key={row._id} className="border-t border-[rgba(0,74,173,0.13)]">
               <td className={`${CELL_CLASS} font-bold text-lg`}>{index + 1}</td>
               <td className={`${CELL_CLASS} text-base`}>
-                {playerDisplayName(row.player)}
+                {profilePath ? (
+                  <Link
+                    href={profilePath}
+                    className="hover:text-primary-blue underline decoration-[rgba(0,74,173,0.3)] underline-offset-4 transition-colors"
+                  >
+                    {playerDisplayName(row.player)}
+                  </Link>
+                ) : (
+                  playerDisplayName(row.player)
+                )}
                 {!row.player.isActive && (
                   <span className="ml-2 text-xs text-black/40 uppercase">inactive</span>
                 )}
@@ -91,7 +108,8 @@ export function StandingsTable({
               {isFull && <td className={`${CELL_CLASS} text-right`}>{formatPct(row.gwPercentage)}</td>}
               {isFull && <td className={`${CELL_CLASS} text-right`}>{formatPct(row.ogwPercentage)}</td>}
             </tr>
-          ))}
+            );
+          })}
         </tbody>
       </table>
     </div>

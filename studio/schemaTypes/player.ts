@@ -20,8 +20,14 @@ export const player = defineType({
       title: 'Slug',
       type: 'slug',
       options: { source: 'name', maxLength: 96 },
-      description: 'URL identifier for the player profile page — auto-generated from name',
-      validation: (rule) => rule.required(),
+      description: 'URL identifier for the player profile page — auto-generated from name. Not needed for hidden or anonymised players, who have no profile page',
+      hidden: ({ document }) => document?.isAnonymised === true || document?.isPublic === false,
+      validation: (rule) =>
+        rule.custom((slug, context) => {
+          const doc = context.document
+          if (doc?.isAnonymised === true || doc?.isPublic === false) return true
+          return slug?.current ? true : 'Required for players with a public profile page'
+        }),
     }),
     defineField({
       name: 'nickname',
@@ -34,6 +40,13 @@ export const player = defineType({
       title: 'Pseudonym',
       type: 'string',
       description: 'Anonymised name shown when "Anonymise in public displays" is enabled',
+      validation: (rule) =>
+        rule.custom((pseudonym, context) => {
+          if (context.document?.isAnonymised === true && !pseudonym) {
+            return 'Required when "Anonymise in public displays" is on — otherwise the real name would be shown'
+          }
+          return true
+        }),
     }),
     defineField({
       name: 'isAnonymised',

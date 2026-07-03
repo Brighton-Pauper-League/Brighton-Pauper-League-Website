@@ -5,6 +5,8 @@ export interface StandingsPlayer {
   pseudonym?: string | null
   isAnonymised?: boolean
   isActive?: boolean
+  isPublic?: boolean
+  slug?: { current?: string | null } | null
 }
 
 export interface StandingsRow {
@@ -24,6 +26,17 @@ export interface StandingsRow {
 export function playerDisplayName(player: StandingsPlayer): string {
   if (player.isAnonymised && player.pseudonym) return player.pseudonym
   return player.nickname ?? player.name
+}
+
+/**
+ * Returns the player's profile page path, or null when no link should be shown:
+ * the player is hidden from public pages, has no slug, or is anonymised
+ * (the slug is derived from the real name, so linking would defeat the pseudonym).
+ */
+export function playerProfilePath(player: StandingsPlayer): string | null {
+  if (player.isPublic === false || player.isAnonymised) return null
+  const slug = player.slug?.current
+  return slug ? `/players/${slug}` : null
 }
 
 /**
