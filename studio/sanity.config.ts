@@ -5,6 +5,7 @@ import {schemaTypes} from './schemaTypes'
 import {structure} from './structure'
 import {importDecklistAction} from './documentActions/importDecklist'
 import {archetypeExportTool} from './tools/archetypeExport'
+import {adminGuideTool} from './tools/adminGuide'
 
 export default defineConfig({
   name: 'default',
@@ -15,7 +16,7 @@ export default defineConfig({
 
   plugins: [structureTool({structure}), visionTool()],
 
-  tools: (prev) => [...prev, archetypeExportTool],
+  tools: (prev) => [...prev, adminGuideTool, archetypeExportTool],
 
   schema: {
     types: schemaTypes,
