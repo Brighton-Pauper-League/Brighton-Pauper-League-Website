@@ -22,7 +22,7 @@ export default function AboutPage() {
               About Us
             </h1>
             <p className="font-(family-name:--font-bricolage-grotesque) text-xl md:text-2xl text-light-purple max-w-200 leading-relaxed">
-              An independent, community-led Pauper Magic league in Brighton — run by players, for players since 2024.
+              We are an independently run and community-led Magic: The Gathering Pauper league, hosted on Tuesdays at Dice Saloon in Brighton!
             </p>
           </div>
         </section>
@@ -35,10 +35,7 @@ export default function AboutPage() {
                 Our Story
               </h2>
               <p className="font-(family-name:--font-bricolage-grotesque) text-lg text-black/70 leading-relaxed">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-              </p>
-              <p className="font-(family-name:--font-bricolage-grotesque) text-lg text-black/70 leading-relaxed">
-                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                It all began with a dream of a deep yet accessible format, jointly realised by players and Dice Saloon employees. Quickly, the community grew and before we knew it our players became more competitive and have attended various tournaments together. Every Tuesday our community grows tighter as we hone our skills, test decks, share strategies, and chat about anything in between.
               </p>
             </div>
 
@@ -72,7 +69,7 @@ export default function AboutPage() {
                   Competitive League
                 </h3>
                 <p className="font-(family-name:--font-bricolage-grotesque) text-base text-black/70 leading-relaxed">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+                  Player scores are tracked on our bi-weekly league nights, culminating in a cut to top 8 where players battle in a single-elimination bracket for the seasonal title.
                 </p>
               </div>
               <div className="bg-white p-8 rounded-2xl flex flex-col gap-4">
@@ -80,7 +77,7 @@ export default function AboutPage() {
                   Casual Play
                 </h3>
                 <p className="font-(family-name:--font-bricolage-grotesque) text-base text-black/70 leading-relaxed">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.
+                  Come along and bring your pet decks and brews! Expect lower stakes and lower-tiered decks every other Tuesday.
                 </p>
               </div>
               <div className="bg-white p-8 rounded-2xl flex flex-col gap-4">
@@ -88,7 +85,7 @@ export default function AboutPage() {
                   Community Events
                 </h3>
                 <p className="font-(family-name:--font-bricolage-grotesque) text-base text-black/70 leading-relaxed">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Excepteur sint occaecat cupidatat non proident deserunt mollit.
+                  We run a variety of special events in our off-season to keep the community engaged and interacting with the beautiful game of Magic in fresh ways.
                 </p>
               </div>
             </div>
@@ -136,10 +133,7 @@ export default function AboutPage() {
                 The People Behind It
               </h2>
               <p className="font-(family-name:--font-bricolage-grotesque) text-lg text-white/70 leading-relaxed">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
-              </p>
-              <p className="font-(family-name:--font-bricolage-grotesque) text-lg text-white/70 leading-relaxed">
-                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
+                Get to know our most dedicated regular players, who are more than happy to help with anything a new player may feel nervous about. Whether you need to borrow a deck, would like some advice, or just want to chat, we’re here to help!
               </p>
               <Link
                 href="/players"
