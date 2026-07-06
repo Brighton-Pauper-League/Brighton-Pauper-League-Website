@@ -56,7 +56,11 @@ export const structure = (S: StructureBuilder) =>
       S.listItem()
         .title('Events')
         .icon(CalendarIcon)
-        .child(S.documentTypeList('event').title('Events')),
+        .child(
+          S.documentTypeList('event')
+            .title('Events')
+            .defaultOrdering([{ field: 'eventDate', direction: 'desc' }]),
+        ),
 
       S.listItem()
         .title('Blog Posts')

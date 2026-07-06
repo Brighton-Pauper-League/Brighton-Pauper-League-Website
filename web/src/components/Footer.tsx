@@ -142,6 +142,13 @@ export async function Footer() {
               <Link href="/contact" className="font-[family-name:var(--font-bricolage-grotesque)] text-base text-white/80 hover:text-white transition-colors">
                 Contact
               </Link>
+            </div>
+
+            {/* Legal Links */}
+            <div className="flex flex-col gap-4">
+              <p className="font-[family-name:var(--font-bricolage-grotesque)] font-extrabold text-[#e7a802] text-sm uppercase">
+                Legal
+              </p>
               <Link href="/privacy" className="font-[family-name:var(--font-bricolage-grotesque)] text-base text-white/80 hover:text-white transition-colors">
                 GDPR
               </Link>
