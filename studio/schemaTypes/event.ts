@@ -20,6 +20,13 @@ export const event = defineType({
       options: {
         source: 'title',
         maxLength: 96,
+        // The slug is machine-managed: readOnly, hidden, and regenerated on
+        // publish by syncEventOnPublish (computeUniqueSlug appends -2, -3, ...
+        // against any clash). Sanity's default slug uniqueness check would
+        // otherwise reject a duplicated event whose copied slug matches the
+        // original, before the webhook ever runs — so uniqueness is delegated
+        // entirely to publish.
+        isUnique: () => true,
       },
       readOnly: true,
       hidden: true,
