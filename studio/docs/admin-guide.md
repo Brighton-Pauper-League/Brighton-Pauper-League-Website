@@ -1,6 +1,6 @@
-# Brighton Pauper League — Admin Guide
+# Brighton Pauper League - Admin Guide
 
-This Studio is where **everything** on the website is managed: seasons, players,
+This Studio is where **all data** on the website is managed: seasons, players,
 events, results, standings, loaner decks, blog posts, and site settings. If it
 appears on the public site, it lives here.
 
@@ -9,12 +9,12 @@ tab in the top bar) is always available.
 
 ---
 
-## The golden rule: Publish
+## Important: Publish
 
 Nothing is live until you **Publish** it.
 
 - The public website and the standings only read **published** documents.
-- Unpublished edits are **drafts** — visible to you in the Studio, invisible to
+- Unpublished edits are **drafts** - visible to you in the Studio, invisible to
   visitors.
 - After editing anything, click **Publish** (bottom-right). An orange dot next to
   a document means it has unpublished changes.
@@ -35,13 +35,13 @@ A season groups a run of events into one league table.
 | Season Name | Display name, e.g. "Spring 2026". |
 | Season Number | Ordering. Higher = newer. |
 | Start Date | When the season begins. |
-| End Date | When the season ends — **this drives the standings** (see below). |
+| End Date | When the season ends - **this drives the standings** (see below). |
 | Description | Optional blurb. |
 
 **Why the End Date matters:** while today is on or before the End Date the season
 is *active* and standings show the live running total. Once the End Date has
 passed the season is *complete* and the standings switch to the **final table**
-with the "drop worst two" rule applied. So set the End Date correctly — it's the
+with the "drop worst two" rule applied. So we must set the End Date, as it's the
 switch that finalises a season.
 
 ---
@@ -55,7 +55,7 @@ switch that finalises a season.
 | Name | The player's real name. |
 | Nickname | If set, shown on the site instead of the real name. |
 | Pseudonym | Alternate public name used when *Anonymised* is on. |
-| Anonymised | Hides the real identity — the player shows as their pseudonym and their profile is not linked. |
+| Anonymised | Hides the real identity - the player shows as their pseudonym and their profile is not linked. |
 | Public | Turn **off** to hide the player from the site entirely. |
 | Active | Marks a current vs former regular. |
 | Slug | The profile page URL. |
@@ -76,19 +76,19 @@ Add a player once; you then reference them from event results.
 | Location | Venue. |
 | Description | Optional details. |
 | Featured Image | Optional cover image. |
-| Season | Link to a season — **this makes the event a league stage** that counts towards standings. Leave blank for a non-scoring event. |
+| Season | Link to a season - **this makes the event a league stage** that counts towards standings. Leave blank for a non-scoring event. |
 | Registration / Info Link | Optional external link. |
 | Cancelled | Marks the event cancelled without deleting it. |
-| Event Results | Per-player results — see below. |
+| Event Results | Per-player results - see below. |
 
 **Slug:** generated automatically on publish (hidden). Don't edit it. **Duplicating
-an event is safe** — the copy gets its own unique slug when you publish.
+an event is safe** - the copy gets its own unique slug when you publish.
 
 ---
 
-## Entering results (the important part)
+## Entering results
 
-On an event, fill in **Event Results** — one entry per attendee.
+On an event, fill in **Event Results** - one entry per attendee.
 
 For each player:
 
@@ -97,17 +97,17 @@ For each player:
 | Player | Pick the player. |
 | Deck Archetype | The deck they ran. Pick an existing archetype or **create a new one inline**. Optional. |
 | Wins / Draws / Losses | Their record for the night. |
-| OMW% / GW% / OGW% | Copy these from the **MTG Companion** app — used for tiebreakers. |
+| OMW% / GW% / OGW% | Copy these from the **MTG Companion** app - used for tiebreakers. |
 
 Then **Publish the event**. Publishing automatically recalculates that season's
 **Player Season Stats**.
 
 Notes:
 
-- **Points are automatic** — Win = 3, Draw = 1, Loss = 0. You never type points.
-- **A player who didn't attend:** just leave them out. At season end a missed
+- **Points are automatic** - Win = 3, Draw = 1, Loss = 0. You never type points.
+- **A player didn't attend:** leave them out of the results. At season end a missed
   stage counts as a **0** for them (see Standings).
-- Enter results as accurately as you can, then publish — the standings update
+- Enter results as accurately as you can, then publish - the standings update
   from there.
 
 ---
@@ -116,13 +116,13 @@ Notes:
 
 - **During a season:** the table is the live running total of every stage played
   so far.
-- **After the End Date:** the table becomes the **final** version — each player's
+- **After the End Date:** the table becomes the **final** version - each player's
   stage scores with their **worst two dropped**, and any stage they missed counts
   as **0**. In practice: you can miss up to two nights with no penalty; a third
   missed night starts costing you points.
 - **Ties** are broken by OMW%, then GW%, then OGW% (standard MTG tiebreakers).
 - **Player Season Stats** documents are generated automatically. **Do not edit
-  them by hand** — they are overwritten whenever an event is published.
+  them by hand** - they are overwritten whenever an event is published.
 
 ---
 
@@ -134,7 +134,7 @@ The managed list of deck archetypes used in results.
 
 - Add archetypes here, or create one inline from a result's **Deck Archetype**
   field.
-- Keep names **consistent** — one canonical name per deck (e.g. always "Dimir
+- Keep names **consistent** - one canonical name per deck (e.g. always "Dimir
   Faeries", not sometimes "UB Faeries") so the data stays clean and easy to
   analyse later.
 
@@ -189,5 +189,4 @@ Excerpt, Featured Image, Tags, and Body. Publish to make a post live.
 
 ---
 
-*Questions or something not covered here? Note it down so this guide can be
-updated.*
+*Questions or something not covered here? Email me on hello@romanwaters.com with your question and I'll update you + the guide.*
