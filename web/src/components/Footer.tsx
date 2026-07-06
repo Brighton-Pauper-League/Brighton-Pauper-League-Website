@@ -2,6 +2,7 @@ import type { JSX } from "react";
 import Link from "next/link";
 import { getSiteSettings } from "@/lib/data";
 import type { SocialLinks } from "@/lib/types";
+import { CookieSettingsLink } from "@/components/consent/CookieSettingsLink";
 
 // ── Social icons ──────────────────────────────────────────────────────────────
 
@@ -144,6 +145,7 @@ export async function Footer() {
               <Link href="/privacy" className="font-[family-name:var(--font-bricolage-grotesque)] text-base text-white/80 hover:text-white transition-colors">
                 GDPR
               </Link>
+              <CookieSettingsLink className="text-left font-[family-name:var(--font-bricolage-grotesque)] text-base text-white/80 hover:text-white transition-colors cursor-pointer" />
             </div>
           </div>
         </div>
