@@ -205,7 +205,7 @@ export default async function Home() {
               </div>
 
               <p className="font-(family-name:--font-bricolage-grotesque) text-sm text-black/60">
-                We are an independent league — not officially affiliated with Dice Saloon, just grateful to call it
+                We are an independent league - not officially affiliated with Dice Saloon, just grateful to call it
                 home.
               </p>
             </div>
@@ -217,7 +217,7 @@ export default async function Home() {
               Join us on the night
             </h2>
             <p className="font-(family-name:--font-bricolage-grotesque) text-xl text-light-purple">
-              The community gathers regularly to play and trade.
+              We get together regularly to play and trade.
             </p>
 
             {/* Schedule Cards */}
@@ -456,7 +456,13 @@ export default async function Home() {
                   Judging & Rules
                 </h3>
                 <p className="font-(family-name:--font-bricolage-grotesque) text-base text-white/70">
-                  Lorem ipsum dolor sit...
+                  We play according to the <Link
+                    href="https://magic.wizards.com/en/formats/pauper"
+                    target="_blank"
+                    className="border-b-2 border-secondary-yellow text-secondary-yellow font-(family-name:--font-bricolage-grotesque) font-semibold text-base w-fit hover:border-[#d09602] hover:text-[#d09602] transition-colors"
+                >
+                  official Pauper rules
+                </Link>. Judging is handling casually between players, with the venue team on hand to help.
                 </p>
               </div>
 
@@ -465,7 +471,7 @@ export default async function Home() {
                   Content Creation
                 </h3>
                 <p className="font-(family-name:--font-bricolage-grotesque) text-base text-white/70">
-                  Lorem ipsum dolor sit...
+                  We share our love of pauper with match videos, deck and tourney write-ups, and a host of other engaging MTG content.
                 </p>
               </div>
 
@@ -474,7 +480,7 @@ export default async function Home() {
                   Event Support
                 </h3>
                 <p className="font-(family-name:--font-bricolage-grotesque) text-base text-white/70">
-                  Lorem ipsum dolor sit...
+                  We collaborate with our local venues and the wider pauper scene in the UK to help be part of the nations growing common Magic the Gathering movement.
                 </p>
               </div>
 
@@ -483,7 +489,12 @@ export default async function Home() {
                   Deck Donation
                 </h3>
                 <p className="font-(family-name:--font-bricolage-grotesque) text-base text-white/70">
-                  Lorem ipsum dolor sit...
+                  Our ever expanding <Link
+                    href="/loaner-decks"
+                    className="border-b-2 border-secondary-yellow text-secondary-yellow font-(family-name:--font-bricolage-grotesque) font-semibold text-base w-fit hover:border-[#d09602] hover:text-[#d09602] transition-colors"
+                >
+                  deck library
+                </Link> is available thanks to the generosity of our great members.
                 </p>
               </div>
             </div>
@@ -555,7 +566,7 @@ export default async function Home() {
 
           <div className="w-full lg:w-150 h-auto shrink-0">
             <Image
-                src="/loaner-decks-placeholder.jpg"
+                src="/loaner-decks.jpg"
                 alt="Loaner Decks"
                 width={600}
                 height={600}
