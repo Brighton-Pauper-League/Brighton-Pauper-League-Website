@@ -104,6 +104,14 @@ export const event = defineType({
               validation: (rule) => rule.required(),
             }),
             defineField({
+              name: 'deckArchetype',
+              title: 'Deck Archetype',
+              type: 'reference',
+              to: [{ type: 'archetype' }],
+              description:
+                'The archetype this player ran tonight. Pick an existing one or create a new archetype inline. Optional.',
+            }),
+            defineField({
               name: 'wins',
               title: 'Wins',
               type: 'number',
@@ -149,15 +157,17 @@ export const event = defineType({
           preview: {
             select: {
               playerName: 'player.name',
+              archetype: 'deckArchetype.name',
               wins: 'wins',
               draws: 'draws',
               losses: 'losses',
             },
-            prepare({ playerName, wins, draws, losses }) {
+            prepare({ playerName, archetype, wins, draws, losses }) {
               const points = (wins ?? 0) * 3 + (draws ?? 0)
+              const record = `${wins}W / ${draws}D / ${losses}L — ${points} pts`
               return {
                 title: playerName ?? 'Unknown player',
-                subtitle: `${wins}W / ${draws}D / ${losses}L — ${points} pts`,
+                subtitle: archetype ? `${archetype} · ${record}` : record,
               }
             },
           },

@@ -3,6 +3,7 @@ import { post } from './post'
 import { season } from './season'
 import { player } from './player'
 import { playerSeasonStats } from './playerSeasonStats'
+import { archetype } from './archetype'
 import { siteSettings } from './siteSettings'
 import { loanerDeck } from './loanerDeck'
 
@@ -19,4 +20,5 @@ export const schemaTypes = [
   season,
   player,
   playerSeasonStats,
+  archetype,
 ]

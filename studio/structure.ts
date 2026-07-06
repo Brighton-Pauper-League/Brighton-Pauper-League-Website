@@ -7,6 +7,7 @@ import {
   DocumentTextIcon,
   CogIcon,
   StackIcon,
+  TagIcon,
 } from '@sanity/icons'
 
 export const structure = (S: StructureBuilder) =>
@@ -30,6 +31,11 @@ export const structure = (S: StructureBuilder) =>
                 .title('Players')
                 .icon(UserIcon)
                 .child(S.documentTypeList('player').title('Players')),
+
+              S.listItem()
+                .title('Archetypes')
+                .icon(TagIcon)
+                .child(S.documentTypeList('archetype').title('Archetypes')),
 
               S.divider(),
 

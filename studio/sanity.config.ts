@@ -4,6 +4,7 @@ import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemaTypes'
 import {structure} from './structure'
 import {importDecklistAction} from './documentActions/importDecklist'
+import {archetypeExportTool} from './tools/archetypeExport'
 
 export default defineConfig({
   name: 'default',
@@ -13,6 +14,8 @@ export default defineConfig({
   dataset: 'production',
 
   plugins: [structureTool({structure}), visionTool()],
+
+  tools: (prev) => [...prev, archetypeExportTool],
 
   schema: {
     types: schemaTypes,
