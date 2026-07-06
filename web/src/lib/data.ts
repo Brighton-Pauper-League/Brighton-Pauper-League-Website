@@ -15,6 +15,8 @@ import {
   POST_SLUGS_QUERY,
   PUBLIC_PLAYERS_QUERY,
   SEASON_BY_NUMBER_QUERY,
+  SEASON_END_DATE_QUERY,
+  COMPLETED_SEASON_EVENTS_QUERY,
   SITE_SETTINGS_QUERY,
   STANDINGS_BY_SEASON_QUERY,
   UPCOMING_EVENTS_QUERY,
@@ -22,7 +24,8 @@ import {
   LOANER_DECK_BY_SLUG_QUERY,
   LOANER_DECK_SLUGS_QUERY,
 } from "@/sanity/lib/queries";
-import { getTodayString } from "./standings";
+import { getTodayString, type StandingsPlayer } from "./standings";
+import { aggregateSeason, type SeasonStageInput } from "./seasonScoring";
 import type {
   EventDetail,
   EventListItem,
@@ -77,12 +80,97 @@ export async function getSeasonByNumber(seasonNumber: number): Promise<Season | 
 
 // ── Standings ──────────────────────────────────────────────────────────────
 
+interface CompletedSeasonEventResult {
+  wins: number;
+  draws: number;
+  losses: number;
+  omwPercentage?: number | null;
+  gwPercentage?: number | null;
+  ogwPercentage?: number | null;
+  player: StandingsPlayer | null;
+}
+
+interface CompletedSeasonEvent {
+  _id: string;
+  eventDate: string;
+  results?: CompletedSeasonEventResult[];
+}
+
+/**
+ * Standings for a season.
+ *
+ * While a season is running (today on or before its end date) this returns the
+ * live running total denormalised into playerSeasonStats by eventSync. Once the
+ * season has ended it recomputes the final table from the raw event results with
+ * the "drop worst two results" rule applied (see seasonScoring.aggregateSeason).
+ */
 export async function getStandings(seasonId: string): Promise<StandingsRow[]> {
-  const { data } = await sanityFetch({
-    query: STANDINGS_BY_SEASON_QUERY,
+  const { data: endDate } = await sanityFetch({
+    query: SEASON_END_DATE_QUERY,
     params: { seasonId },
   });
-  return (data as StandingsRow[] | null) ?? [];
+  const seasonEndDate = endDate as string | null;
+
+  if (!seasonEndDate || getTodayString() <= seasonEndDate) {
+    const { data } = await sanityFetch({
+      query: STANDINGS_BY_SEASON_QUERY,
+      params: { seasonId },
+    });
+    return (data as StandingsRow[] | null) ?? [];
+  }
+
+  const { data } = await sanityFetch({
+    query: COMPLETED_SEASON_EVENTS_QUERY,
+    params: { seasonId },
+  });
+  return computeFinalStandings(seasonId, (data as CompletedSeasonEvent[] | null) ?? []);
+}
+
+/** Builds the dropped final standings rows from a completed season's events. */
+function computeFinalStandings(
+  seasonId: string,
+  events: CompletedSeasonEvent[],
+): StandingsRow[] {
+  const playersByRef = new Map<string, StandingsPlayer>();
+  const stages: SeasonStageInput[] = events.map((event) => ({
+    eventId: event._id,
+    eventDate: event.eventDate,
+    results: (event.results ?? [])
+      .filter((r): r is CompletedSeasonEventResult & { player: StandingsPlayer } =>
+        Boolean(r.player?._id),
+      )
+      .map((r) => {
+        playersByRef.set(r.player._id, r.player);
+        return {
+          playerRef: r.player._id,
+          wins: r.wins,
+          draws: r.draws,
+          losses: r.losses,
+          omwPercentage: r.omwPercentage,
+          gwPercentage: r.gwPercentage,
+          ogwPercentage: r.ogwPercentage,
+        };
+      }),
+  }));
+
+  return aggregateSeason(stages, { dropWorstTwo: true }).flatMap((t) => {
+    const player = playersByRef.get(t.playerRef);
+    if (!player) return [];
+    return [
+      {
+        _id: `playerSeasonStats-${seasonId}-${t.playerRef}`,
+        player,
+        matchesPlayed: t.matchesPlayed,
+        wins: t.wins,
+        draws: t.draws,
+        losses: t.losses,
+        points: t.points,
+        omwPercentage: t.omwPercentage,
+        gwPercentage: t.gwPercentage,
+        ogwPercentage: t.ogwPercentage,
+      },
+    ];
+  });
 }
 
 // ── Events ───────────────────────────────────────────────────────────────────

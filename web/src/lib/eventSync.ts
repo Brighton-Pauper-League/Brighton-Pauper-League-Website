@@ -1,4 +1,5 @@
 import { createClient } from "@sanity/client";
+import { aggregateSeason, type SeasonStageInput } from "./seasonScoring";
 
 // Runs on every "event" document publish, triggered from the shared
 // /api/revalidate webhook (Sanity's free plan caps webhooks at two, both
@@ -28,11 +29,6 @@ interface SanityEventResult {
   omwPercentage?: number | null;
   gwPercentage?: number | null;
   ogwPercentage?: number | null;
-}
-
-// 3 points for a win, 1 for a draw — not a field admins enter.
-function resultPoints(r: Pick<SanityEventResult, "wins" | "draws">): number {
-  return r.wins * 3 + r.draws;
 }
 
 interface SanityEvent {
@@ -70,59 +66,48 @@ async function computeUniqueSlug(eventId: string, title: string, eventDate: stri
   return candidate;
 }
 
-function round2(n: number): number {
-  return Math.round(n * 100) / 100;
+// Maps an event's results array into the shared scoring module's stage shape.
+function toStageResults(results: SanityEventResult[]) {
+  return results.map((r) => ({
+    playerRef: r.player._ref,
+    wins: r.wins,
+    draws: r.draws,
+    losses: r.losses,
+    omwPercentage: r.omwPercentage,
+    gwPercentage: r.gwPercentage,
+    ogwPercentage: r.ogwPercentage,
+  }));
 }
 
-interface PlayerAccumulator {
-  matchesPlayed: number;
-  wins: number;
-  draws: number;
-  losses: number;
-  points: number;
-  omwSum: number;
-  omwCount: number;
-  gwSum: number;
-  gwCount: number;
-  ogwSum: number;
-  ogwCount: number;
-}
+async function syncSeasonStandings(
+  seasonId: string,
+  currentEventId: string,
+  currentEventDate: string,
+  currentEventResults: SanityEventResult[],
+) {
+  const otherEvents: { _id: string; eventDate: string; results?: SanityEventResult[] }[] =
+    await writeClient.fetch(
+      `*[_type == "event" && season._ref == $seasonId && _id != $currentEventId && defined(results)]{ _id, eventDate, results }`,
+      { seasonId, currentEventId }
+    );
 
-function emptyAccumulator(): PlayerAccumulator {
-  return { matchesPlayed: 0, wins: 0, draws: 0, losses: 0, points: 0, omwSum: 0, omwCount: 0, gwSum: 0, gwCount: 0, ogwSum: 0, ogwCount: 0 };
-}
+  const stages: SeasonStageInput[] = [
+    ...otherEvents.map((e) => ({
+      eventId: e._id,
+      eventDate: e.eventDate,
+      results: toStageResults(e.results ?? []),
+    })),
+    {
+      eventId: currentEventId,
+      eventDate: currentEventDate,
+      results: toStageResults(currentEventResults),
+    },
+  ];
 
-async function syncSeasonStandings(seasonId: string, currentEventId: string, currentEventResults: SanityEventResult[]) {
-  const otherEvents: { results?: SanityEventResult[] }[] = await writeClient.fetch(
-    `*[_type == "event" && season._ref == $seasonId && _id != $currentEventId && defined(results)]{ results }`,
-    { seasonId, currentEventId }
-  );
-
-  const allResults = [...otherEvents.flatMap((e) => e.results ?? []), ...currentEventResults];
-
-  const byPlayer = new Map<string, PlayerAccumulator>();
-  for (const r of allResults) {
-    const key = r.player._ref;
-    const acc = byPlayer.get(key) ?? emptyAccumulator();
-    acc.matchesPlayed += r.wins + r.draws + r.losses;
-    acc.wins += r.wins;
-    acc.draws += r.draws;
-    acc.losses += r.losses;
-    acc.points += resultPoints(r);
-    if (r.omwPercentage != null) {
-      acc.omwSum += r.omwPercentage;
-      acc.omwCount += 1;
-    }
-    if (r.gwPercentage != null) {
-      acc.gwSum += r.gwPercentage;
-      acc.gwCount += 1;
-    }
-    if (r.ogwPercentage != null) {
-      acc.ogwSum += r.ogwPercentage;
-      acc.ogwCount += 1;
-    }
-    byPlayer.set(key, acc);
-  }
+  // Live running total: no drop. The final "drop worst two" table is computed
+  // at read time (data.ts getStandings) once the season's end date passes.
+  const totals = aggregateSeason(stages, { dropWorstTwo: false });
+  const byPlayer = new Map(totals.map((t) => [t.playerRef, t]));
 
   const existing: { _id: string; playerRef: string }[] = await writeClient.fetch(
     `*[_type == "playerSeasonStats" && season._ref == $seasonId && !(_id in path("drafts.**"))]{ _id, "playerRef": player._ref }`,
@@ -158,9 +143,9 @@ async function syncSeasonStandings(seasonId: string, currentEventId: string, cur
         draws: acc.draws,
         losses: acc.losses,
         points: acc.points,
-        ...(acc.omwCount ? { omwPercentage: round2(acc.omwSum / acc.omwCount) } : {}),
-        ...(acc.gwCount ? { gwPercentage: round2(acc.gwSum / acc.gwCount) } : {}),
-        ...(acc.ogwCount ? { ogwPercentage: round2(acc.ogwSum / acc.ogwCount) } : {}),
+        ...(acc.omwPercentage != null ? { omwPercentage: acc.omwPercentage } : {}),
+        ...(acc.gwPercentage != null ? { gwPercentage: acc.gwPercentage } : {}),
+        ...(acc.ogwPercentage != null ? { ogwPercentage: acc.ogwPercentage } : {}),
       })
     );
     remainingExisting.delete(playerRef);
@@ -197,6 +182,6 @@ export async function syncEventOnPublish(eventId: string): Promise<void> {
   }
 
   if (event.season?._ref) {
-    await syncSeasonStandings(event.season._ref, event._id, event.results ?? []);
+    await syncSeasonStandings(event.season._ref, event._id, event.eventDate, event.results ?? []);
   }
 }

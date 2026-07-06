@@ -188,7 +188,7 @@ export default async function Home() {
           <div className="flex-1 flex items-center">
             <div className="bg-white p-12 rounded-3xl flex flex-col gap-6 w-full">
               <h3 className="font-(family-name:--font-young-serif) text-5xl text-primary-blue">
-                Dice Saloon
+                Dice Saloon Singles
               </h3>
               <p className="font-(family-name:--font-bricolage-grotesque) text-lg text-black">
                 88 London Rd, Brighton and Hove, Brighton BN1 4JF
@@ -233,7 +233,7 @@ export default async function Home() {
                     Tuesdays
                   </h3>
                   <p className="font-(family-name:--font-bricolage-grotesque) font-bold text-lg text-secondary-yellow">
-                    2nd & 4th Tuesday of the month
+                    Every other Tuesday
                   </p>
                   <p className="font-(family-name:--font-bricolage-grotesque) text-lg text-light-purple">
                     6:45pm onwards
@@ -252,7 +252,7 @@ export default async function Home() {
                     Tuesdays
                   </h3>
                   <p className="font-(family-name:--font-bricolage-grotesque) font-bold text-lg text-secondary-yellow">
-                    1st & 3rd Tuesday of the month
+                    On the Tuesdays in between
                   </p>
                   <p className="font-(family-name:--font-bricolage-grotesque) text-lg text-light-purple">
                     6:45pm onwards
@@ -307,7 +307,7 @@ export default async function Home() {
                 Casual Nights
               </h3>
               <p className="font-(family-name:--font-bricolage-grotesque) text-base text-black/70 w-full">
-                Relaxed play, deck testing, and trading. No standings pressure.
+                Relaxed play, deck testing, and trading. Not recorded on the standings.
               </p>
             </div>
 
@@ -360,25 +360,25 @@ export default async function Home() {
                 <div className="flex gap-3 items-start">
                   <span className="text-secondary-yellow text-2xl leading-none">•</span>
                   <p className="font-(family-name:--font-bricolage-grotesque) text-lg text-white">
-                    3 seasons per year
+                    3 seasons a year - Spring, Summer &amp; Winter
                   </p>
                 </div>
                 <div className="flex gap-3 items-start">
                   <span className="text-secondary-yellow text-2xl leading-none">•</span>
                   <p className="font-(family-name:--font-bricolage-grotesque) text-lg text-white">
-                    Each season lasts ~6 league nights
+                    7-8 fortnightly Swiss stages per season
                   </p>
                 </div>
                 <div className="flex gap-3 items-start">
                   <span className="text-secondary-yellow text-2xl leading-none">•</span>
                   <p className="font-(family-name:--font-bricolage-grotesque) text-lg text-white">
-                    Standings based on W/L/D and attendance
+                    Win 3, Draw 1, Loss 0 - worst two results dropped
                   </p>
                 </div>
                 <div className="flex gap-3 items-start">
                   <span className="text-secondary-yellow text-2xl leading-none">•</span>
                   <p className="font-(family-name:--font-bricolage-grotesque) text-lg text-white">
-                    End-of-season Top 8 invitational
+                    OMW% tiebreaks and a Top 8 single-elimination bracket
                   </p>
                 </div>
               </div>

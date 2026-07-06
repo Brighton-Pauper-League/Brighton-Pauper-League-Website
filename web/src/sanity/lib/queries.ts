@@ -73,6 +73,40 @@ export const STANDINGS_BY_SEASON_QUERY = defineQuery(`
   }
 `)
 
+// Just the season's end date, used to decide whether standings should show the
+// live running total or the final "drop worst two" table.
+export const SEASON_END_DATE_QUERY = defineQuery(`
+  *[_type == "season" && _id == $seasonId][0].endDate
+`)
+
+// Every non-cancelled event in a season that has results entered — the raw
+// per-stage material for computing the final dropped standings at read time.
+// The player projection mirrors STANDINGS_BY_SEASON_QUERY so rows are identical.
+export const COMPLETED_SEASON_EVENTS_QUERY = defineQuery(`
+  *[_type == "event" && season._ref == $seasonId && isCancelled != true && defined(results)] {
+    _id,
+    eventDate,
+    results[] {
+      wins,
+      draws,
+      losses,
+      omwPercentage,
+      gwPercentage,
+      ogwPercentage,
+      player-> {
+        _id,
+        name,
+        nickname,
+        pseudonym,
+        isAnonymised,
+        isActive,
+        isPublic,
+        slug
+      }
+    }
+  }
+`)
+
 // ── Events ────────────────────────────────────────────────────────────────────
 
 export const UPCOMING_EVENTS_QUERY = defineQuery(`
