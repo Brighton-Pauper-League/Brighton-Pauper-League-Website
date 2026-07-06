@@ -17,22 +17,15 @@ export default function VolunteerPage() {
             Volunteer
           </h1>
           <p className="font-(family-name:--font-bricolage-grotesque) text-xl text-black/70 max-w-200">
-            Our Pauper league is proudly run by a group of dedicated volunteers! Please contact us if you would like to join and let us know what you’re specifically hoping to help with :)            <a
+            Our Pauper league is proudly run by a group of dedicated volunteers! Whilst we&apos;re not looking for any volunteers at this time, please contact us if you would like register your interest and let us know what you’re specifically hoping to help with :)<a
               href="mailto:contact@brightonpauperleague.com?subject=Volunteering enquiry"
               className="border-b-2 border-primary-blue text-primary-blue font-semibold hover:border-darker-blue hover:text-darker-blue transition-colors"
             >
               contact@brightonpauperleague.com
-            </a>
+            </a><br />
+            Do note that all volunteers must be 18+.
           </p>
-          <div className="flex flex-col gap-2">
-            <h2 className="font-(family-name:--font-young-serif) text-2xl md:text-3xl text-dark-brown">
-              Requirements
-            </h2>
-            <ul className="font-(family-name:--font-bricolage-grotesque) text-xl text-black/70 list-disc list-inside flex flex-col gap-1">
-              <li>Over 18</li>
-              <li>Proficient with computers</li>
-            </ul>
-          </div>
+
         </div>
       </main>
       <Footer />

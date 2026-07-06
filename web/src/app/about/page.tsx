@@ -47,6 +47,7 @@ export default function AboutPage() {
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 520px"
+                  loading={"eager"}
                 />
               </div>
               <p className="font-(family-name:--font-bricolage-grotesque) text-sm text-black/40 mt-3">
