@@ -26,7 +26,7 @@ export default async function Home() {
       <Navbar/>
 
       {/* Hero Section */}
-      <div className="relative bg-primary-blue min-h-[calc(100vh-72px)] lg:max-h-[calc(100vh-72px)] w-full flex items-center py-16 lg:py-0 overflow-hidden">
+      <div className="relative bg-primary-blue min-h-[calc(100vh-72px)] w-full flex items-center py-16 lg:py-20">
         <div className="max-w-360 mx-auto px-6 md:px-12 lg:px-20 w-full flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16">
           {/* Hero Content */}
           <div className="flex flex-col gap-6 lg:gap-8 items-center lg:items-start text-center lg:text-left max-w-200 min-w-0">
@@ -162,6 +162,7 @@ export default async function Home() {
                 Pauper is an eternal Magic: The Gathering format where you play with only common cards. This includes old, new and downshifted cards, as well as powerful cards banned in other formats
               </p>
               <p className="font-(family-name:--font-bricolage-grotesque) text-xl text-black leading-relaxed">
+                It's a format loved globally for being wallet friendly, accessible, with a high skill ceiling.
                 It&#39;s widely beloved for being budget-friendly while remaining incredibly skill-intensive. It allows
                 players to play powerful, iconic cards without the massive price tags of other competitive formats.
               </p>
