@@ -11,7 +11,6 @@ const staticRoutes = [
   "/standings",
   "/players",
   "/loaner-decks",
-  "/rules",
   "/code-of-conduct",
   "/privacy",
   "/volunteer",

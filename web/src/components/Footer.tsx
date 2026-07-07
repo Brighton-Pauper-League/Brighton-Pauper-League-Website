@@ -84,7 +84,7 @@ export async function Footer() {
               Brighton Pauper League
             </h3>
             <p className="font-[family-name:var(--font-bricolage-grotesque)] text-base text-white/60 leading-normal">
-              An independent community of Magic: The Gathering players in Brighton, UK. Established by players, for players.
+              The home of Magic: The Gathering Pauper in Brighton, Sussex UK. A player-led & focussed community.
             </p>
             {settings?.socialLinks && (
               <SocialLinks links={settings.socialLinks} />
@@ -126,8 +126,8 @@ export async function Footer() {
               <Link href="/loaner-decks" className="font-[family-name:var(--font-bricolage-grotesque)] text-base text-white/80 hover:text-white transition-colors">
                 Loaner Decks
               </Link>
-              <Link href="/rules" className="font-[family-name:var(--font-bricolage-grotesque)] text-base text-white/80 hover:text-white transition-colors">
-                Rules
+              <Link href="/code-of-conduct" className="font-[family-name:var(--font-bricolage-grotesque)] text-base text-white/80 hover:text-white transition-colors">
+                Code of Conduct
               </Link>
             </div>
 

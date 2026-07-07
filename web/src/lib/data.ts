@@ -178,7 +178,7 @@ function computeFinalStandings(
 export async function getUpcomingEvents(limit = 3): Promise<EventListItem[]> {
   const { data } = await sanityFetch({
     query: UPCOMING_EVENTS_QUERY,
-    params: { limit },
+    params: { limit, today: getTodayString() },
   });
   return (data as EventListItem[] | null) ?? [];
 }
@@ -189,7 +189,10 @@ export async function getAllEvents(): Promise<EventListItem[]> {
 }
 
 export async function getPastEvents(): Promise<EventListItem[]> {
-  const { data } = await sanityFetch({ query: PAST_EVENTS_QUERY });
+  const { data } = await sanityFetch({
+    query: PAST_EVENTS_QUERY,
+    params: { today: getTodayString() },
+  });
   return (data as EventListItem[] | null) ?? [];
 }
 

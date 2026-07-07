@@ -159,12 +159,11 @@ export default async function Home() {
 
             <div className="flex flex-col gap-8">
               <p className="font-(family-name:--font-bricolage-grotesque) text-xl text-black leading-relaxed">
-                Pauper is an eternal Magic: The Gathering format where you play with only common cards. This includes old, new and downshifted cards, as well as powerful cards banned in other formats
+                Pauper is a 60 card, eternal Magic: The Gathering format where you play with only common cards. This includes old, new and downshifted cards, as well as powerful cards banned in other formats
               </p>
               <p className="font-(family-name:--font-bricolage-grotesque) text-xl text-black leading-relaxed">
-                It's a format loved globally for being wallet friendly, accessible, with a high skill ceiling.
-                It&#39;s widely beloved for being budget-friendly while remaining incredibly skill-intensive. It allows
-                players to play powerful, iconic cards without the massive price tags of other competitive formats.
+                It&#39;s a format loved globally for being wallet friendly, accessible, with a high skill ceiling. Games are usually played best-of-three over 50 minutes, and you can bring a sideboard of 15 cards to get an edge in your match.
+
               </p>
 
               {/* Callout Card */}
@@ -205,7 +204,7 @@ export default async function Home() {
               </div>
 
               <p className="font-(family-name:--font-bricolage-grotesque) text-sm text-black/60">
-                We are an independent league - not officially affiliated with Dice Saloon, just grateful to call it
+                We are an independent league - not officially affiliated with Dice Saloon, but grateful to call it
                 home.
               </p>
             </div>
@@ -408,11 +407,10 @@ export default async function Home() {
               <div
                   className="bg-white/5 border border-white/10 p-8 rounded-2xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200 cursor-pointer">
                 <h3 className="font-(family-name:--font-young-serif) text-2xl text-white mb-3">
-                  Accessible Competitive Play
+                  Accessible Competitive and Casual Play
                 </h3>
                 <p className="font-(family-name:--font-bricolage-grotesque) text-base text-white/70">
-                  Everyone deserves the chance to compete at a high level. Pauper keeps costs low without sacrificing
-                  skill or strategy.
+                  We believe Pauper is a fantastic form of entertainment, and should be available for anyone to access. We host our events with this ethos.
                 </p>
               </div>
 
@@ -422,8 +420,7 @@ export default async function Home() {
                   Inclusive & Community-Focused
                 </h3>
                 <p className="font-(family-name:--font-bricolage-grotesque) text-base text-white/70">
-                  We welcome players of all backgrounds and skill levels. Respect, sportsmanship, and fun are
-                  non-negotiable.
+                  We feel very lucky to have met each other through this game, and strive to foster that welcoming environment for others.
                 </p>
               </div>
 
@@ -433,7 +430,7 @@ export default async function Home() {
                   100% Non-Profit
                 </h3>
                 <p className="font-(family-name:--font-bricolage-grotesque) text-base text-white/70">
-                  Run entirely by volunteers. Every penny goes back into prize support, loaner decks, and the community.
+                  Brighton Pauper League is wholly volunteer run. As a team we crowdsource decks, prizes and everything else that goes into running these special events.
                 </p>
               </div>
             </div>
@@ -515,11 +512,10 @@ export default async function Home() {
           <div className="flex-1 flex flex-col gap-12">
             <div className="max-w-200">
               <h2 className="font-(family-name:--font-young-serif) text-4xl md:text-5xl lg:text-[72px] xl:text-[80px] 2xl:text-[88px] text-dark-brown leading-none mb-8">
-                No deck? No problem.
+                Decks available.
               </h2>
               <p className="font-(family-name:--font-bricolage-grotesque) text-xl text-dark-brown/80 leading-relaxed">
-                We maintain a library of competitive loaner decks available to borrow at every event. Come empty-handed
-                and leave with a full deck box.
+                We have built a library of fun and competitive loaner decks available to borrow at every event. Come along and experience different styles of gameplay as much as you like.
               </p>
             </div>
 
@@ -533,10 +529,10 @@ export default async function Home() {
                 </div>
                 <div>
                   <h3 className="font-(family-name:--font-young-serif) text-2xl text-dark-brown mb-2">
-                    Pick a deck
+                    Choose your deck
                   </h3>
                   <p className="font-(family-name:--font-bricolage-grotesque) text-base text-dark-brown/70">
-                    Browse our collection and choose a strategy that fits your playstyle.
+                    alk with our experienced players about what you'd like to try.
                   </p>
                 </div>
               </div>
@@ -552,14 +548,13 @@ export default async function Home() {
                     Play & return
                   </h3>
                   <p className="font-(family-name:--font-bricolage-grotesque) text-base text-dark-brown/70">
-                    Use it for the event and return it at the end of the night. It&#39;s that simple.
+                    Play the deck all night, and return when you're done.
                   </p>
                 </div>
               </div>
 
               <p className="font-(family-name:--font-bricolage-grotesque) text-sm text-dark-brown/60 mt-4">
-                All loaner decks are tournament-legal and competitively viable. Decks are updated regularly to reflect
-                the current meta.
+                All decks in the library are tournament-legal and a examined regularly to keep them competitively viable.
               </p>
             </div>
           </div>
@@ -651,35 +646,18 @@ export default async function Home() {
 
       {/* Rules Section */}
       <section className="bg-primary-blue px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y 2xl:py-[10rem]">
-        <div className="max-w-360 mx-auto grid grid-cols-1 md:grid-cols-3 gap-16">
+        <div className="max-w-360 mx-auto grid grid-cols-1 md:grid-cols-2 gap-16">
           {/* Code of Conduct */}
           <div className="flex flex-col gap-6">
             <h3 className="font-(family-name:--font-young-serif) text-2xl md:text-[32px] text-secondary-yellow">
               Code of Conduct
             </h3>
             <p className="font-(family-name:--font-bricolage-grotesque) text-base text-light-purple leading-relaxed">
-              We maintain a welcoming, respectful environment for all players. Harassment, discrimination, and
-              unsportsmanlike conduct will not be tolerated.
+              We believe a safe environment for all players makes for good play. Harassment, discrimination, and
+              unkind behaviour will not be tolerated.
             </p>
             <Link
                 href="/code-of-conduct"
-                className="border-b-2 border-secondary-yellow text-secondary-yellow font-(family-name:--font-bricolage-grotesque) font-semibold text-base pb-1 w-fit hover:border-[#d09602] hover:text-[#d09602] transition-colors"
-            >
-              Read more
-            </Link>
-          </div>
-
-          {/* League Rules */}
-          <div className="flex flex-col gap-6">
-            <h3 className="font-(family-name:--font-young-serif) text-2xl md:text-[32px] text-secondary-yellow">
-              League Rules
-            </h3>
-            <p className="font-(family-name:--font-bricolage-grotesque) text-base text-light-purple leading-relaxed">
-              League nights run Swiss rounds with REL Casual enforcement. Match points determine standings, with
-              official MTG tiebreakers.
-            </p>
-            <Link
-                href="/rules"
                 className="border-b-2 border-secondary-yellow text-secondary-yellow font-(family-name:--font-bricolage-grotesque) font-semibold text-base pb-1 w-fit hover:border-[#d09602] hover:text-[#d09602] transition-colors"
             >
               Read more
@@ -721,7 +699,7 @@ export default async function Home() {
                 </p>
               </div>
               <p className="font-(family-name:--font-bricolage-grotesque) text-sm text-white/60">
-                Season 1 Recap: Alex Morgan&#39;s Championship Run
+                Our first video.
               </p>
             </div>
 
@@ -783,8 +761,9 @@ export default async function Home() {
               Want to help?
             </h2>
             <p className="font-(family-name:--font-bricolage-grotesque) text-xl text-dark-brown/80 leading-relaxed">
-              The league runs entirely on volunteer power. Whether you want to judge, create content, or just help set
-              up, we&#39;d love to have you on the team.
+              Our Pauper league is proudly run by a group of dedicated volunteers! Whilst we&#39;re not looking for any
+              volunteers at this time, please get in touch if you&#39;d like to register your interest and let us know
+              what you&#39;re specifically hoping to help with.
             </p>
           </div>
 
@@ -855,6 +834,7 @@ export default async function Home() {
             >
               contact@brightonpauperleague.com
             </a>
+            . Please note that all volunteers must be 18+.
           </p>
         </div>
       </section>

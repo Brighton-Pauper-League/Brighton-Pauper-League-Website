@@ -110,7 +110,7 @@ export const COMPLETED_SEASON_EVENTS_QUERY = defineQuery(`
 // ── Events ────────────────────────────────────────────────────────────────────
 
 export const UPCOMING_EVENTS_QUERY = defineQuery(`
-  *[_type == "event" && isCancelled != true && dateTime(eventDate) >= dateTime(now())]
+  *[_type == "event" && isCancelled != true && dateTime(eventDate) >= dateTime($today + "T00:00:00Z")]
     | order(eventDate asc) [0...$limit] {
     _id,
     title,
@@ -137,7 +137,7 @@ export const ALL_EVENTS_QUERY = defineQuery(`
 `)
 
 export const PAST_EVENTS_QUERY = defineQuery(`
-  *[_type == "event" && dateTime(eventDate) < dateTime(now())]
+  *[_type == "event" && dateTime(eventDate) < dateTime($today + "T00:00:00Z")]
     | order(eventDate desc) {
     _id,
     title,
