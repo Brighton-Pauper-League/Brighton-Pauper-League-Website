@@ -34,10 +34,10 @@ export default async function Home() {
               Brighton Pauper League
             </h1>
             <p className="font-(family-name:--font-bricolage-grotesque) font-medium text-xl md:text-2xl lg:text-[32px] xl:text-[36px] 2xl:text-[40px] text-light-purple leading-tight">
-              Accessible, community-led Pauper Magic
+              Home of Pauper in Sussexx
             </p>
             <p className="font-(family-name:--font-bricolage-grotesque) text-base lg:text-lg text-white/80 max-w-150">
-              Open to everyone, run by players, for players. High-skill competitive Magic on a budget.
+              Open to all, run by players, for players. Competitive Magic with common cards.
             </p>
 
             {/* CTA Buttons */}
@@ -97,7 +97,7 @@ export default async function Home() {
                     New Players
                   </h3>
                   <p className="font-(family-name:--font-bricolage-grotesque) text-base text-black/70">
-                    A welcoming environment to learn the ropes. We have loaner decks available if you&#39;re just starting
+                    A friendly place to learn the ropes and meet new people. We have a deck library available if you&#39;re just starting
                     out.
                   </p>
                 </div>
@@ -118,7 +118,7 @@ export default async function Home() {
                     Returning Players
                   </h3>
                   <p className="font-(family-name:--font-bricolage-grotesque) text-base text-black/70">
-                    Jump back into the game at a relaxed pace. Friendly faces and a deep love for the cardboard.
+                    Rejoin the common scene at a relaxed pace. Find your new community of players waiting for you.
                   </p>
                 </div>
               </div>
@@ -144,7 +144,7 @@ export default async function Home() {
                     Seasoned Grinders
                   </h3>
                   <p className="font-(family-name:--font-bricolage-grotesque) text-base text-black/70">
-                    A competitive league with full standings, seasonal prizes, and a healthy meta to solve.
+                    Competitive play with other experienced play is available here. Prizes up for grabs!
                   </p>
                 </div>
               </div>
@@ -159,8 +159,7 @@ export default async function Home() {
 
             <div className="flex flex-col gap-8">
               <p className="font-(family-name:--font-bricolage-grotesque) text-xl text-black leading-relaxed">
-                Pauper is a unique Magic: The Gathering format where every card in your deck must have been printed at
-                common rarity at some point in its history.
+                Pauper is an eternal Magic: The Gathering format where you play with only common cards. This includes old, new and downshifted cards, as well as powerful cards banned in other formats
               </p>
               <p className="font-(family-name:--font-bricolage-grotesque) text-xl text-black leading-relaxed">
                 It&#39;s widely beloved for being budget-friendly while remaining incredibly skill-intensive. It allows
