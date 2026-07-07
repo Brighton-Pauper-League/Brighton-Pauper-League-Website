@@ -34,7 +34,7 @@ export default async function Home() {
               Brighton Pauper League
             </h1>
             <p className="font-(family-name:--font-bricolage-grotesque) font-medium text-xl md:text-2xl lg:text-[32px] xl:text-[36px] 2xl:text-[40px] text-light-purple leading-tight">
-              Home of Pauper in Sussexx
+              Home of Pauper in Sussex
             </p>
             <p className="font-(family-name:--font-bricolage-grotesque) text-base lg:text-lg text-white/80 max-w-150">
               Open to all, run by players, for players. Competitive Magic with common cards.
