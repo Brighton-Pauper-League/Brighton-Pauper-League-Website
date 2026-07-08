@@ -532,7 +532,7 @@ export default async function Home() {
                     Choose your deck
                   </h3>
                   <p className="font-(family-name:--font-bricolage-grotesque) text-base text-dark-brown/70">
-                    alk with our experienced players about what you'd like to try.
+                    Talk with our experienced players about what you'd like to try.
                   </p>
                 </div>
               </div>
