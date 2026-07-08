@@ -144,7 +144,7 @@ export default async function Home() {
                     Seasoned Grinders
                   </h3>
                   <p className="font-(family-name:--font-bricolage-grotesque) text-base text-black/70">
-                    Competitive play with other experienced play is available here. Prizes up for grabs!
+                    Competitive play with other experienced players is available here. Prizes up for grabs!
                   </p>
                 </div>
               </div>
