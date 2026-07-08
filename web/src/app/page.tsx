@@ -683,7 +683,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Media Section */}
+      /* {/* Media Section */}
       <section className="bg-dark-brown px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y 2xl:py-[10rem]">
         <div className="max-w-360 mx-auto flex flex-col gap-12">
           <h2 className="font-(family-name:--font-young-serif) text-3xl md:text-4xl lg:text-[56px] xl:text-[64px] 2xl:text-[72px] text-white leading-tight">
@@ -751,7 +751,7 @@ export default async function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */
 
       {/* Get Involved Section */}
       <section className="bg-sage-green px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y 2xl:py-[10rem]">
