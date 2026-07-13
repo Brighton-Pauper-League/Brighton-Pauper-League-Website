@@ -122,10 +122,16 @@ export default function AboutPage() {
           <div className="max-w-360 mx-auto flex flex-col lg:flex-row gap-12 lg:gap-20 items-center">
             <div className="w-full lg:w-110 shrink-0">
               <div className="relative aspect-square rounded-2xl overflow-hidden bg-primary-blue/30">
-                {/* placeholder — replace with a group photo */}
+                <Image
+                    src="/penultimate-casuals.JPG"
+                    alt="A scorching tournament a few days before our first league night"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 440px"
+                />
               </div>
               <p className="font-(family-name:--font-bricolage-grotesque) text-sm text-white/40 mt-3">
-                A photo from our very first league night — where it all began.
+                A scorching tournament a few days before our first league night
               </p>
             </div>
 

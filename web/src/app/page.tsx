@@ -683,7 +683,7 @@ export default async function Home() {
         </div>
       </section>
 
-      /* {/* Media Section */}
+      {/* Media Section - temporarily hidden
       <section className="bg-dark-brown px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y 2xl:py-[10rem]">
         <div className="max-w-360 mx-auto flex flex-col gap-12">
           <h2 className="font-(family-name:--font-young-serif) text-3xl md:text-4xl lg:text-[56px] xl:text-[64px] 2xl:text-[72px] text-white leading-tight">
@@ -691,7 +691,6 @@ export default async function Home() {
           </h2>
 
           <div className="flex flex-col lg:flex-row gap-10">
-            {/* Left - Feature Video */}
             <div className="w-full lg:w-190 flex flex-col gap-4">
               <div className="bg-dark-card h-100 rounded-3xl flex items-center justify-center px-6">
                 <p className="font-(family-name:--font-bricolage-grotesque) text-white/50 text-center">
@@ -703,7 +702,6 @@ export default async function Home() {
               </p>
             </div>
 
-            {/* Right - Social Feed */}
             <div className="flex-1 flex flex-col gap-8">
               <div className="grid grid-cols-3 gap-4">
                 <div className="bg-dark-card aspect-square rounded-xl flex items-center justify-center px-2">
@@ -727,7 +725,6 @@ export default async function Home() {
                 Follow us on social media for event updates, deck techs, tournament coverage, and community highlights.
               </p>
 
-              {/* Social Buttons */}
               <div className="flex flex-wrap gap-4">
                 <Link
                     href="https://instagram.com/brightonpauperleague"
@@ -751,7 +748,8 @@ export default async function Home() {
             </div>
           </div>
         </div>
-      </section> */
+      </section>
+      */}
 
       {/* Get Involved Section */}
       <section className="bg-sage-green px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y 2xl:py-[10rem]">
