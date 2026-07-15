@@ -3,6 +3,7 @@ import {useClient} from 'sanity'
 import {DownloadIcon} from '@sanity/icons'
 import {toPng} from 'html-to-image'
 import {toCsv} from '../tools/archetypeExport'
+import {LOGO_DATA_URI} from './logoDataUri'
 
 // A document action, scoped to `event`, that exports a single event's results
 // (with the deck archetype played) as either a CSV or a shareable PNG image.
@@ -92,28 +93,47 @@ function ResultsGraphic({event, ranked}: {event: EventDoc; ranked: ResultRow[]})
       style={{
         width: 720,
         boxSizing: 'border-box',
-        padding: '32px 40px 40px',
+        padding: '32px 40px 28px',
         background: '#241c4f',
         color: '#ffffff',
         fontFamily: 'system-ui, -apple-system, "Segoe UI", sans-serif',
       }}
     >
-      <div style={{marginBottom: 24}}>
-        <div style={{fontSize: 14, letterSpacing: 2, textTransform: 'uppercase', color: '#f5c542'}}>
-          {event.season ?? 'Brighton Pauper League'}
-        </div>
-        <div style={{fontSize: 30, fontWeight: 700, lineHeight: 1.15, marginTop: 6}}>
-          {event.title ?? 'Event results'}
-        </div>
-        {event.eventDate && (
-          <div style={{fontSize: 15, color: 'rgba(255,255,255,0.6)', marginTop: 4}}>
-            {new Date(event.eventDate).toLocaleDateString('en-GB', {
-              day: 'numeric',
-              month: 'long',
-              year: 'numeric',
-            })}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+          gap: 24,
+          marginBottom: 24,
+        }}
+      >
+        <div>
+          <div
+            style={{fontSize: 14, letterSpacing: 2, textTransform: 'uppercase', color: '#f5c542'}}
+          >
+            {event.season ?? 'Brighton Pauper League'}
           </div>
-        )}
+          <div style={{fontSize: 30, fontWeight: 700, lineHeight: 1.15, marginTop: 6}}>
+            {event.title ?? 'Event results'}
+          </div>
+          {event.eventDate && (
+            <div style={{fontSize: 15, color: 'rgba(255,255,255,0.6)', marginTop: 4}}>
+              {new Date(event.eventDate).toLocaleDateString('en-GB', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+              })}
+            </div>
+          )}
+        </div>
+        <img
+          src={LOGO_DATA_URI}
+          alt="Brighton Pauper League"
+          width={72}
+          height={72}
+          style={{width: 72, height: 72, borderRadius: 12, flexShrink: 0}}
+        />
       </div>
 
       <table style={{width: '100%', borderCollapse: 'collapse', fontSize: 15}}>
@@ -147,6 +167,21 @@ function ResultsGraphic({event, ranked}: {event: EventDoc; ranked: ResultRow[]})
           ))}
         </tbody>
       </table>
+
+      <div
+        style={{
+          marginTop: 24,
+          paddingTop: 16,
+          borderTop: '1px solid rgba(255,255,255,0.15)',
+          textAlign: 'center',
+          fontSize: 13,
+          letterSpacing: 2,
+          textTransform: 'uppercase',
+          color: '#f5c542',
+        }}
+      >
+        Brighton Pauper League
+      </div>
     </div>
   )
 }
