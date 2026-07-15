@@ -256,10 +256,18 @@ export function exportEventResultsAction(props: {id: string; type: string}) {
   }, [event, baseName])
 
   const handleImage = useCallback(async () => {
-    if (!graphicRef.current) return
+    const node = graphicRef.current
+    if (!node) return
     setMessage('')
     try {
-      const dataUrl = await toPng(graphicRef.current, {pixelRatio: 2, backgroundColor: '#241c4f'})
+      // Capture the graphic's full content box (scrollWidth/Height), so a
+      // narrower, scrolled preview still renders the whole card.
+      const dataUrl = await toPng(node, {
+        pixelRatio: 2,
+        backgroundColor: '#241c4f',
+        width: node.scrollWidth,
+        height: node.scrollHeight,
+      })
       triggerDownload(dataUrl, `${baseName}.png`)
     } catch {
       setMessage('Could not generate the image. Please try again.')
@@ -295,9 +303,11 @@ export function exportEventResultsAction(props: {id: string; type: string}) {
                 results card.
               </p>
 
-              {/* Preview — this same node is what gets captured to PNG. */}
+              {/* Preview — this same node is what gets captured to PNG. The
+                  wrapper is pinned to the graphic's width so a narrower dialog
+                  scrolls it rather than clipping the capture. */}
               <div style={{overflow: 'auto', borderRadius: 8}}>
-                <div ref={graphicRef}>
+                <div ref={graphicRef} style={{width: 720}}>
                   <ResultsGraphic event={event} ranked={ranked} />
                 </div>
               </div>
