@@ -2,7 +2,12 @@ import type { Metadata } from "next";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { StandingsView } from "@/components/StandingsView";
-import { getActiveSeason, getAllSeasons, getStandings } from "@/lib/data";
+import {
+  getActiveSeason,
+  getAllSeasons,
+  getSeasonEvents,
+  getStandings,
+} from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Standings",
@@ -15,7 +20,12 @@ export default async function StandingsPage() {
     getActiveSeason(),
     getAllSeasons(),
   ]);
-  const rows = activeSeason ? await getStandings(activeSeason._id) : [];
+  const [rows, stages] = activeSeason
+    ? await Promise.all([
+        getStandings(activeSeason._id),
+        getSeasonEvents(activeSeason._id),
+      ])
+    : [[], []];
 
   return (
     <>
@@ -25,6 +35,7 @@ export default async function StandingsPage() {
           season={activeSeason}
           rows={rows}
           seasons={seasons}
+          stages={stages}
           heading="Standings"
           intro="No season is currently active. Pick a season to view its final standings."
         />

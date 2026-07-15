@@ -83,8 +83,8 @@ export const player = defineType({
       name: 'isPublic',
       title: 'Show on members page',
       type: 'boolean',
-      description: 'When off, this player is hidden from the members page and player cards — does not affect standings',
-      initialValue: true,
+      description: 'When off, this player is hidden from the members page and player cards — does not affect standings. New players start hidden until you switch this on.',
+      initialValue: false,
     }),
 
     // ── League status ─────────────────────────────────────────────────────

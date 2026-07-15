@@ -5,9 +5,8 @@ import type { PortableTextBlock } from "@portabletext/react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PortableTextBody } from "@/components/PortableTextBody";
-import { MtgCard } from "@/components/MtgCard";
+import { DeckCardsSection } from "@/components/DeckCardsSection";
 import { getLoanerDeckBySlug, getLoanerDeckSlugs } from "@/lib/data";
-import type { DeckCard } from "@/lib/types";
 
 export async function generateStaticParams() {
   const slugs = await getLoanerDeckSlugs();
@@ -26,110 +25,6 @@ export async function generateMetadata({
     title: deck.name,
     description: `View the card list and primer for ${deck.name}, available to borrow at any Brighton Pauper League event.`,
   };
-}
-
-const CATEGORIES = [
-  "Creature",
-  "Instant",
-  "Sorcery",
-  "Enchantment",
-  "Artifact",
-  "Land",
-] as const;
-
-type Category = (typeof CATEGORIES)[number] | "Other";
-
-const CATEGORY_LABEL: Record<Category, string> = {
-  Creature: "Creatures",
-  Instant: "Instants",
-  Sorcery: "Sorceries",
-  Enchantment: "Enchantments",
-  Artifact: "Artifacts",
-  Land: "Lands",
-  Other: "Other",
-};
-
-function getCategory(typeLine: string | null | undefined): Category {
-  if (!typeLine) return "Other";
-  for (const cat of CATEGORIES) {
-    if (typeLine.includes(cat)) return cat;
-  }
-  return "Other";
-}
-
-function CardGrid({ cards }: { cards: DeckCard[] }) {
-  return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
-      {cards.map((card, i) => (
-        <MtgCard
-          key={`${card.cardName}-${i}`}
-          cardName={card.cardName}
-          imageUri={card.imageUri ?? null}
-          imageUriBack={card.imageUriBack ?? null}
-          quantity={card.quantity}
-          quantityOwned={card.quantityOwned}
-        />
-      ))}
-    </div>
-  );
-}
-
-function CardSection({
-  title,
-  cards,
-  grouped = false,
-}: {
-  title: string;
-  cards: DeckCard[];
-  grouped?: boolean;
-}) {
-  const total = cards.reduce((sum, c) => sum + c.quantity, 0);
-  const owned = cards.reduce((sum, c) => sum + c.quantityOwned, 0);
-  const missing = total - owned;
-
-  const groups: [Category, DeckCard[]][] = grouped
-    ? ([...CATEGORIES, "Other"] as Category[])
-        .map((cat) => [cat, cards.filter((c) => getCategory(c.typeLine) === cat)] as [Category, DeckCard[]])
-        .filter(([, catCards]) => catCards.length > 0)
-    : [];
-
-  const showGroups = groups.length > 1 || (groups.length === 1 && groups[0][0] !== "Other");
-
-  return (
-    <section>
-      <div className="flex items-baseline gap-3 mb-8">
-        <h2 className="font-(family-name:--font-young-serif) text-2xl md:text-3xl text-dark-brown">
-          {title}
-        </h2>
-        <span className="font-(family-name:--font-bricolage-grotesque) text-sm text-black/50">
-          {total} cards
-          {missing > 0 && (
-            <span className="ml-2 text-red-placeholder font-semibold">
-              · {missing} missing
-            </span>
-          )}
-        </span>
-      </div>
-
-      {showGroups ? (
-        <div className="flex flex-col gap-10">
-          {groups.map(([cat, catCards]) => {
-            const catTotal = catCards.reduce((sum, c) => sum + c.quantity, 0);
-            return (
-              <div key={cat}>
-                <h3 className="font-(family-name:--font-bricolage-grotesque) font-semibold text-sm uppercase tracking-widest text-black/40 mb-4">
-                  {CATEGORY_LABEL[cat]} ({catTotal})
-                </h3>
-                <CardGrid cards={catCards} />
-              </div>
-            );
-          })}
-        </div>
-      ) : (
-        <CardGrid cards={cards} />
-      )}
-    </section>
-  );
 }
 
 export default async function DeckDetailPage({
@@ -190,13 +85,8 @@ export default async function DeckDetailPage({
 
       {/* Cards */}
       <section className="bg-light-purple px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y">
-        <div className="max-w-360 mx-auto flex flex-col gap-16">
-          {mainboard.length > 0 && (
-            <CardSection title="Mainboard" cards={mainboard} grouped />
-          )}
-          {sideboard.length > 0 && (
-            <CardSection title="Sideboard" cards={sideboard} />
-          )}
+        <div className="max-w-360 mx-auto">
+          <DeckCardsSection mainboard={mainboard} sideboard={sideboard} />
         </div>
       </section>
 

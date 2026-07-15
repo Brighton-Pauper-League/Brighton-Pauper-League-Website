@@ -15,6 +15,7 @@ import {
   POST_SLUGS_QUERY,
   PUBLIC_PLAYERS_QUERY,
   SEASON_BY_NUMBER_QUERY,
+  SEASON_EVENTS_QUERY,
   SEASON_END_DATE_QUERY,
   COMPLETED_SEASON_EVENTS_QUERY,
   SITE_SETTINGS_QUERY,
@@ -36,6 +37,7 @@ import type {
   Post,
   PostListItem,
   Season,
+  SeasonStage,
   SiteSettings,
   StandingsRow,
 } from "./types";
@@ -76,6 +78,15 @@ export async function getSeasonByNumber(seasonNumber: number): Promise<Season | 
     params: { seasonNumber },
   });
   return (data as Season | null) ?? null;
+}
+
+// The season's events, oldest first — rendered as the numbered stage list.
+export async function getSeasonEvents(seasonId: string): Promise<SeasonStage[]> {
+  const { data } = await sanityFetch({
+    query: SEASON_EVENTS_QUERY,
+    params: { seasonId },
+  });
+  return (data as SeasonStage[] | null) ?? [];
 }
 
 // ── Standings ──────────────────────────────────────────────────────────────

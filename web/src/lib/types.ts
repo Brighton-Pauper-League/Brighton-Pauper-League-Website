@@ -1,4 +1,4 @@
-import type { StandingsRow } from "./standings";
+import type { StandingsPlayer, StandingsRow } from "./standings";
 
 export type { StandingsRow };
 
@@ -20,6 +20,18 @@ export interface Season {
   startDate: string;
   endDate: string;
   description?: string;
+  // Set once the top-8 finals have been played. Carries the anonymisation
+  // fields so the winner display can honour a pseudonym.
+  winner?: StandingsPlayer | null;
+}
+
+// One event night in a season. Stage numbers are derived from date order
+// (earliest = Stage 1), so no stage field is stored on the event.
+export interface SeasonStage {
+  _id: string;
+  title: string;
+  slug: string | null;
+  eventDate: string;
 }
 
 export interface EventListItem {

@@ -4,6 +4,7 @@ import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemaTypes'
 import {structure} from './structure'
 import {importDecklistAction} from './documentActions/importDecklist'
+import {exportEventResultsAction} from './documentActions/exportEventResults'
 import {archetypeExportTool} from './tools/archetypeExport'
 import {adminGuideTool} from './tools/adminGuide'
 
@@ -23,9 +24,14 @@ export default defineConfig({
   },
 
   document: {
-    actions: (prev, ctx) =>
-      ctx.schemaType === 'loanerDeck'
-        ? [prev[0], importDecklistAction, ...prev.slice(1)]
-        : prev,
+    actions: (prev, ctx) => {
+      if (ctx.schemaType === 'loanerDeck') {
+        return [prev[0], importDecklistAction, ...prev.slice(1)]
+      }
+      if (ctx.schemaType === 'event') {
+        return [prev[0], exportEventResultsAction, ...prev.slice(1)]
+      }
+      return prev
+    },
   },
 })

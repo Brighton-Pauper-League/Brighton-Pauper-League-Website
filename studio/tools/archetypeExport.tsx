@@ -33,11 +33,11 @@ const QUERY = `*[_type == "event" && defined(results)] | order(eventDate asc){
 
 // Wrap in quotes (and double any internal quotes) when a value contains a
 // comma, quote, or newline — otherwise it would break the CSV row.
-function csvEscape(value: string): string {
+export function csvEscape(value: string): string {
   return /[",\n\r]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value
 }
 
-function toCsv(rows: string[][]): string {
+export function toCsv(rows: string[][]): string {
   return rows.map((row) => row.map(csvEscape).join(',')).join('\r\n')
 }
 

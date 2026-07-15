@@ -1,3 +1,4 @@
+import React from "react";
 import Link from "next/link";
 import {
   sortStandings,
@@ -25,11 +26,15 @@ export function StandingsTable({
   rows,
   variant = "full",
   maxRows,
+  top8Cut = false,
   emptyMessage = "No standings have been recorded for this season yet.",
 }: {
   rows: StandingsRow[];
   variant?: "preview" | "full";
   maxRows?: number;
+  // When true, draw a "Top 8 cut" divider after the 8th row — the eight players
+  // who advance to the finals. Only meaningful on completed seasons.
+  top8Cut?: boolean;
   emptyMessage?: string;
 }) {
   const sorted = sortStandings(rows);
@@ -40,6 +45,8 @@ export function StandingsTable({
   }
 
   const isFull = variant === "full";
+  // Column count for the full-width cut divider row.
+  const columnCount = isFull ? 10 : 4;
 
   return (
     <div className="bg-white rounded-2xl overflow-x-auto border border-[rgba(0,74,173,0.13)]">
@@ -74,8 +81,20 @@ export function StandingsTable({
         <tbody>
           {display.map((row, index) => {
             const profilePath = playerProfilePath(row.player);
+            const showCut = top8Cut && index === 8;
             return (
-            <tr key={row._id} className="border-t border-[rgba(0,74,173,0.13)]">
+            <React.Fragment key={row._id}>
+            {showCut && (
+              <tr className="border-t-2 border-primary-blue/40">
+                <td
+                  colSpan={columnCount}
+                  className="px-4 py-2 font-(family-name:--font-bricolage-grotesque) font-extrabold text-xs text-primary-blue uppercase tracking-widest bg-[rgba(0,74,173,0.06)]"
+                >
+                  Top 8 cut
+                </td>
+              </tr>
+            )}
+            <tr className="border-t border-[rgba(0,74,173,0.13)]">
               <td className={`${CELL_CLASS} font-bold text-lg`}>{index + 1}</td>
               <td className={`${CELL_CLASS} text-base`}>
                 {profilePath ? (
@@ -108,6 +127,7 @@ export function StandingsTable({
               {isFull && <td className={`${CELL_CLASS} text-right`}>{formatPct(row.gwPercentage)}</td>}
               {isFull && <td className={`${CELL_CLASS} text-right`}>{formatPct(row.ogwPercentage)}</td>}
             </tr>
+            </React.Fragment>
             );
           })}
         </tbody>

@@ -43,7 +43,29 @@ export const SEASON_BY_NUMBER_QUERY = defineQuery(`
     seasonNumber,
     startDate,
     endDate,
-    description
+    description,
+    winner-> {
+      _id,
+      name,
+      nickname,
+      pseudonym,
+      isAnonymised,
+      isActive,
+      isPublic,
+      slug
+    }
+  }
+`)
+
+// Every non-cancelled event in a season, oldest first. Used to build the
+// numbered "stage" list in the season sidebar (Stage 1 = earliest event).
+export const SEASON_EVENTS_QUERY = defineQuery(`
+  *[_type == "event" && season._ref == $seasonId && isCancelled != true]
+    | order(eventDate asc) {
+    _id,
+    title,
+    "slug": slug.current,
+    eventDate
   }
 `)
 

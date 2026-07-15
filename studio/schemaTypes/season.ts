@@ -39,6 +39,14 @@ export const season = defineType({
       type: 'text',
       rows: 3,
     }),
+    defineField({
+      name: 'winner',
+      title: 'Season Winner',
+      type: 'reference',
+      to: [{ type: 'player' }],
+      description:
+        'Overall season winner, decided by the top-8 finals. Leave empty until the finals have been played.',
+    }),
   ],
   preview: {
     select: {
