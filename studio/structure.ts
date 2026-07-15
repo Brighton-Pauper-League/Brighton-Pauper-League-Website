@@ -10,8 +10,12 @@ import {
   TagIcon,
 } from '@sanity/icons'
 
-export const structure = (S: StructureBuilder) =>
-  S.list()
+export const structure = (S: StructureBuilder) => {
+  // Boundary between "upcoming" and "past", fixed at Studio load time (a reload
+  // recomputes it). Passed as a param so the filters don't depend on GROQ now().
+  const now = new Date().toISOString()
+
+  return S.list()
     .title('Content')
     .items([
       // ── League Management ─────────────────────────────────────────────
@@ -57,9 +61,50 @@ export const structure = (S: StructureBuilder) =>
         .title('Events')
         .icon(CalendarIcon)
         .child(
-          S.documentTypeList('event')
+          S.list()
             .title('Events')
-            .defaultOrdering([{ field: 'eventDate', direction: 'desc' }]),
+            .items([
+              // Upcoming: not cancelled, dated today or later — oldest first so
+              // the next event to happen sits at the top.
+              S.listItem()
+                .title('Upcoming')
+                .icon(CalendarIcon)
+                .child(
+                  S.documentTypeList('event')
+                    .title('Upcoming Events')
+                    .filter(
+                      '_type == "event" && isCancelled != true && dateTime(eventDate) >= dateTime($now)',
+                    )
+                    .params({ now })
+                    .defaultOrdering([{ field: 'eventDate', direction: 'asc' }]),
+                ),
+
+              // Past: not cancelled, already happened — newest first. Completed
+              // events live here, out of the way but still editable for results.
+              S.listItem()
+                .title('Past')
+                .icon(CalendarIcon)
+                .child(
+                  S.documentTypeList('event')
+                    .title('Past Events')
+                    .filter(
+                      '_type == "event" && isCancelled != true && dateTime(eventDate) < dateTime($now)',
+                    )
+                    .params({ now })
+                    .defaultOrdering([{ field: 'eventDate', direction: 'desc' }]),
+                ),
+
+              // Cancelled: flagged regardless of date.
+              S.listItem()
+                .title('Cancelled')
+                .icon(CalendarIcon)
+                .child(
+                  S.documentTypeList('event')
+                    .title('Cancelled Events')
+                    .filter('_type == "event" && isCancelled == true')
+                    .defaultOrdering([{ field: 'eventDate', direction: 'desc' }]),
+                ),
+            ]),
         ),
 
       S.listItem()
@@ -85,3 +130,4 @@ export const structure = (S: StructureBuilder) =>
             .title('Site Settings'),
         ),
     ])
+}
