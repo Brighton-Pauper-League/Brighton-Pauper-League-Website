@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
-export const metadata: Metadata = {
-  title: "About | Brighton Pauper League",
-  description: "An independent, community-led Pauper Magic league in Brighton, UK — run by players, for players.",
-};
+export const metadata: Metadata = buildMetadata({
+  title: "About",
+  description:
+    "An independent, community-led Pauper Magic league in Brighton, UK — run by players, for players.",
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

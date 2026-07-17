@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
-export const metadata: Metadata = {
-  title: "Privacy & Data | Brighton Pauper League",
+export const metadata: Metadata = buildMetadata({
+  title: "Privacy & Data",
   description:
     "How the Brighton Pauper League collects, uses, stores, and protects your personal data under UK GDPR.",
-};
+  path: "/privacy",
+});
 
 const LAST_UPDATED = "6 July 2026";
 const CONTACT_EMAIL = "contact@brightonpauperleague.com";

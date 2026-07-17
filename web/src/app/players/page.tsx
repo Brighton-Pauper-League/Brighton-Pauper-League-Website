@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { MemberCard } from "@/components/MemberCard";
 import { EmptyState } from "@/components/EmptyState";
 import { getPublicPlayers } from "@/lib/data";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "Members",
   description: "Meet the players of the Brighton Pauper League.",
-};
+  path: "/players",
+});
 
 export default async function PlayersPage() {
   const players = await getPublicPlayers();

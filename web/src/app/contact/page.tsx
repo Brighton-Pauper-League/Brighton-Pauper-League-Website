@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
-export const metadata: Metadata = {
-  title: "Contact | Brighton Pauper League",
+export const metadata: Metadata = buildMetadata({
+  title: "Contact",
   description: "Get in touch with the Brighton Pauper League.",
-};
+  path: "/contact",
+});
 
 export default function ContactPage() {
   return (

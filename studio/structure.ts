@@ -8,6 +8,7 @@ import {
   CogIcon,
   StackIcon,
   TagIcon,
+  LinkIcon,
 } from '@sanity/icons'
 
 export const structure = (S: StructureBuilder) => {
@@ -116,6 +117,15 @@ export const structure = (S: StructureBuilder) => {
         .title('Loaner Decks')
         .icon(StackIcon)
         .child(S.documentTypeList('loanerDeck').title('Loaner Decks')),
+
+      S.listItem()
+        .title('Resources')
+        .icon(LinkIcon)
+        .child(
+          S.documentTypeList('resource')
+            .title('Resources')
+            .defaultOrdering([{ field: 'title', direction: 'asc' }]),
+        ),
 
       S.divider(),
 

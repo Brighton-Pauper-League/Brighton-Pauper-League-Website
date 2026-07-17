@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -24,12 +25,13 @@ export async function generateMetadata({
   const seasonNumber = parseSeasonNumber(season);
   const found = seasonNumber ? await getSeasonByNumber(seasonNumber) : null;
 
-  return {
+  return buildMetadata({
     title: found ? `${found.name} Standings` : "Season Standings",
     description: found
       ? `Final standings for ${found.name} of the Brighton Pauper League.`
       : "Historical season standings for the Brighton Pauper League.",
-  };
+    path: `/standings/${season}`,
+  });
 }
 
 export default async function SeasonStandingsPage({

@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { EventList } from "@/components/EventList";
 import { getPastEvents } from "@/lib/data";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "Past Events",
   description: "A history of Brighton Pauper League nights and events.",
-};
+  path: "/events/past",
+});
 
 export default async function PastEventsPage() {
   const events = await getPastEvents();

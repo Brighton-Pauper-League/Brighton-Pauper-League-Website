@@ -114,6 +114,11 @@ export const player = defineType({
       rows: 3,
       description: 'Internal notes about the player',
     }),
+    defineField({
+      name: 'seo',
+      title: 'SEO',
+      type: 'seo',
+    }),
   ],
   preview: {
     select: {

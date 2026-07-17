@@ -24,6 +24,11 @@ import {
   LOANER_DECKS_QUERY,
   LOANER_DECK_BY_SLUG_QUERY,
   LOANER_DECK_SLUGS_QUERY,
+  RESOURCES_QUERY,
+  INDEXABLE_POST_SLUGS_QUERY,
+  INDEXABLE_PLAYER_SLUGS_QUERY,
+  INDEXABLE_EVENT_SLUGS_QUERY,
+  INDEXABLE_LOANER_DECK_SLUGS_QUERY,
 } from "@/sanity/lib/queries";
 import { getTodayString, type StandingsPlayer } from "./standings";
 import { aggregateSeason, type SeasonStageInput } from "./seasonScoring";
@@ -36,6 +41,7 @@ import type {
   PlayerProfile,
   Post,
   PostListItem,
+  Resource,
   Season,
   SeasonStage,
   SiteSettings,
@@ -284,5 +290,39 @@ export async function getLoanerDeckBySlug(slug: string): Promise<LoanerDeckDetai
 
 export async function getLoanerDeckSlugs(): Promise<string[]> {
   const data = await client.fetch(LOANER_DECK_SLUGS_QUERY);
+  return (data as string[] | null) ?? [];
+}
+
+// ── Resources ────────────────────────────────────────────────────────────────
+
+export async function getResources(): Promise<Resource[]> {
+  const { data } = await sanityFetch({ query: RESOURCES_QUERY });
+  return (data as Resource[] | null) ?? [];
+}
+
+// ── Sitemap ──────────────────────────────────────────────────────────────────
+
+// Slugs eligible for the sitemap: hidden-from-search pages are filtered out at
+// the query level, so this is not interchangeable with the getXSlugs helpers
+// above that feed generateStaticParams. Uses the plain client rather than
+// sanityFetch because the sitemap is a build-time route with no live updates.
+
+export async function getIndexablePostSlugs(): Promise<string[]> {
+  const data = await client.fetch(INDEXABLE_POST_SLUGS_QUERY);
+  return (data as string[] | null) ?? [];
+}
+
+export async function getIndexablePlayerSlugs(): Promise<string[]> {
+  const data = await client.fetch(INDEXABLE_PLAYER_SLUGS_QUERY);
+  return (data as string[] | null) ?? [];
+}
+
+export async function getIndexableEventSlugs(): Promise<string[]> {
+  const data = await client.fetch(INDEXABLE_EVENT_SLUGS_QUERY);
+  return (data as string[] | null) ?? [];
+}
+
+export async function getIndexableLoanerDeckSlugs(): Promise<string[]> {
+  const data = await client.fetch(INDEXABLE_LOANER_DECK_SLUGS_QUERY);
   return (data as string[] | null) ?? [];
 }

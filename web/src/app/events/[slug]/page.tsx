@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import { buildMetadata, resolveSeo } from "@/lib/seo";
+import { eventJsonLd } from "@/lib/jsonLd";
+import { JsonLd } from "@/components/JsonLd";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -22,21 +25,16 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const event = await getEventBySlug(slug);
-  if (!event) return { title: "Event not found" };
+  if (!event) return { title: "Event not found", robots: { index: false } };
 
-  const ogImage = event.featuredImage?.asset
-    ? urlFor(event.featuredImage).width(1200).height(630).fit("crop").url()
-    : undefined;
-
-  return {
-    title: event.title,
-    description: event.description ?? `${event.title} — Brighton Pauper League`,
-    openGraph: {
+  return buildMetadata(
+    resolveSeo(event.seo, {
       title: event.title,
-      description: event.description ?? undefined,
-      images: ogImage ? [{ url: ogImage }] : undefined,
-    },
-  };
+      description: event.description ?? `${event.title} — Brighton Pauper League`,
+      path: `/events/${slug}`,
+      fallbackImage: event.featuredImage,
+    })
+  );
 }
 
 export default async function EventPage({
@@ -56,6 +54,7 @@ export default async function EventPage({
 
   return (
     <>
+      <JsonLd data={eventJsonLd(event, `/events/${slug}`)} />
       <Navbar />
       <main className="bg-off-white min-h-[60vh]">
 

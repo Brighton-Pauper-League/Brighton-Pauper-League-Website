@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
-export const metadata: Metadata = {
-  title: "Volunteer | Brighton Pauper League",
-  description: "Help run the Brighton Pauper League — judging, content creation, event support, and deck donation.",
-};
+export const metadata: Metadata = buildMetadata({
+  title: "Volunteer",
+  description:
+    "Help run the Brighton Pauper League — judging, content creation, event support, and deck donation.",
+  path: "/volunteer",
+});
 
 export default function VolunteerPage() {
   return (

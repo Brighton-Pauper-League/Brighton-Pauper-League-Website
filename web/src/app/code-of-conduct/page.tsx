@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
-export const metadata: Metadata = {
-  title: "Code of Conduct | Brighton Pauper League",
-  description: "Our commitment to a welcoming, respectful environment for all Brighton Pauper League players.",
-};
+export const metadata: Metadata = buildMetadata({
+  title: "Code of Conduct",
+  description:
+    "Our commitment to a welcoming, respectful environment for all Brighton Pauper League players.",
+  path: "/code-of-conduct",
+});
 
 export default function CodeOfConductPage() {
   return (

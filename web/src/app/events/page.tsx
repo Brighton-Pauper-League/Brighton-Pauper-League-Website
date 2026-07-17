@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { EventList } from "@/components/EventList";
 import { getUpcomingEvents } from "@/lib/data";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "Events",
   description:
     "Upcoming league nights, casual evenings, and events for the Brighton Pauper League.",
-};
+  path: "/events",
+});
 
 export default async function EventsPage() {
   const upcoming = await getUpcomingEvents(20);

@@ -209,6 +209,11 @@ export const loanerDeck = defineType({
       of: [defineArrayMember({type: 'string'})],
       options: {layout: 'tags'},
     }),
+    defineField({
+      name: 'seo',
+      title: 'SEO',
+      type: 'seo',
+    }),
   ],
   preview: {
     select: {

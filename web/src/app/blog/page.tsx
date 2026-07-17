@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PostList } from "@/components/PostList";
 import { getAllPosts } from "@/lib/data";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "Blog",
   description:
     "News, deck techs, tournament coverage, and community highlights from the Brighton Pauper League.",
-};
+  path: "/blog",
+});
 
 export default async function BlogPage() {
   const posts = await getAllPosts();

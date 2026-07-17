@@ -130,6 +130,11 @@ export const post = defineType({
       description: 'Show this post prominently on the blog page',
       initialValue: false,
     }),
+    defineField({
+      name: 'seo',
+      title: 'SEO',
+      type: 'seo',
+    }),
   ],
   preview: {
     select: {

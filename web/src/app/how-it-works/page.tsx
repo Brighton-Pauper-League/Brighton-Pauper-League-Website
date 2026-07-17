@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
-export const metadata: Metadata = {
-  title: "How It Works | Brighton Pauper League",
+export const metadata: Metadata = buildMetadata({
+  title: "How It Works",
   description:
     "How the Brighton Pauper League works - three seasons a year, fortnightly Swiss stages, match points, OMW% tiebreakers, and the end-of-season Top 8 bracket.",
-};
+  path: "/how-it-works",
+});
 
 export default function HowItWorksPage() {
   return (

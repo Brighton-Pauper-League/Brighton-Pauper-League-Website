@@ -6,8 +6,13 @@ import { playerSeasonStats } from './playerSeasonStats'
 import { archetype } from './archetype'
 import { siteSettings } from './siteSettings'
 import { loanerDeck } from './loanerDeck'
+import { resource } from './resource'
+import { seo } from './objects/seo'
 
 export const schemaTypes = [
+  // Reusable objects
+  seo,
+
   // Site configuration
   siteSettings,
 
@@ -15,6 +20,7 @@ export const schemaTypes = [
   event,
   post,
   loanerDeck,
+  resource,
 
   // League management
   season,

@@ -13,6 +13,18 @@ export interface SanityImage {
 
 export type { SeasonStatus, EventStatus } from "./dates";
 
+/**
+ * The reusable `seo` object attached to every document type with a public URL.
+ * Every field is optional — blank means "derive it from the document's content".
+ * Consumed by resolveSeo/buildMetadata in ./seo.
+ */
+export interface SeoFields {
+  metaTitle?: string;
+  metaDescription?: string;
+  shareImage?: SanityImage;
+  hideFromSearch?: boolean;
+}
+
 export interface Season {
   _id: string;
   name: string;
@@ -64,6 +76,7 @@ export interface EventDetail extends EventListItem {
   registrationLink?: string;
   season?: { _id: string; name: string; seasonNumber: number } | null;
   results?: EventResult[];
+  seo?: SeoFields;
 }
 
 export interface PostListItem {
@@ -81,6 +94,7 @@ export interface PostListItem {
 export interface Post extends PostListItem {
   // Portable Text blocks — rendered by PortableTextBody.
   body?: unknown[];
+  seo?: SeoFields;
 }
 
 export interface PlayerCard {
@@ -97,6 +111,7 @@ export interface PlayerCard {
 
 export interface PlayerProfile extends PlayerCard {
   joinDate?: string;
+  seo?: SeoFields;
 }
 
 export interface SocialLinks {
@@ -108,6 +123,19 @@ export interface SocialLinks {
 
 export interface SiteSettings {
   socialLinks?: SocialLinks;
+  seo?: SeoFields;
+}
+
+// ── Resources ────────────────────────────────────────────────────────────────
+
+// An external link on /resources. `tags` is stored but not rendered yet.
+export interface Resource {
+  _id: string;
+  title: string;
+  url: string;
+  description: string;
+  tags?: string[];
+  _createdAt: string;
 }
 
 // ── Loaner Decks ─────────────────────────────────────────────────────────────
@@ -134,4 +162,5 @@ export interface LoanerDeckListItem {
 export interface LoanerDeckDetail extends LoanerDeckListItem {
   primer?: unknown[];
   donors?: string[];
+  seo?: SeoFields;
 }

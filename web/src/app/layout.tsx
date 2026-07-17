@@ -4,6 +4,10 @@ import { cookies, draftMode } from "next/headers";
 import { SanityLive } from "@/sanity/lib/live";
 import { VisualEditing } from "next-sanity/visual-editing";
 import { siteUrl } from "@/lib/site";
+import { buildMetadata, siteConfig } from "@/lib/seo";
+import { organizationJsonLd } from "@/lib/jsonLd";
+import { getSiteSettings } from "@/lib/data";
+import { JsonLd } from "@/components/JsonLd";
 import { CONSENT_COOKIE, parseConsent } from "@/lib/consent";
 import { ConsentProvider } from "@/components/consent/ConsentProvider";
 import { GoogleAnalytics } from "@/components/consent/GoogleAnalytics";
@@ -29,53 +33,18 @@ const inter = Inter({
   display: "swap",
 });
 
-const siteName = "Brighton Pauper League";
-const description =
-  "Accessible, community-led Pauper Magic — open to everyone, run by players, for players.";
-
+// The root's own metadata: the shared Open Graph/Twitter/canonical block from
+// buildMetadata, plus the fields only a root layout can set (metadataBase and
+// the title template that every child page's title flows through).
 export const metadata: Metadata = {
+  ...buildMetadata({ path: "/" }),
   metadataBase: new URL(siteUrl),
   title: {
-    default: siteName,
-    template: `%s | ${siteName}`,
+    default: siteConfig.name,
+    template: `%s | ${siteConfig.name}`,
   },
-  description,
-  applicationName: siteName,
-  keywords: [
-    "Pauper",
-    "Magic: The Gathering",
-    "MTG",
-    "Brighton",
-    "league",
-    "Dice Saloon",
-    "competitive Pauper",
-  ],
-  alternates: {
-    canonical: "/",
-  },
-  icons: {
-    icon: "/favicon.ico",
-  },
-  openGraph: {
-    type: "website",
-    siteName,
-    title: siteName,
-    description,
-    url: siteUrl,
-    locale: "en_GB",
-    images: [
-      {
-        url: "/logo.webp",
-        alt: siteName,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: siteName,
-    description,
-    images: ["/logo.webp"],
-  },
+  applicationName: siteConfig.name,
+  keywords: [...siteConfig.keywords],
 };
 
 export default async function RootLayout({
@@ -87,12 +56,15 @@ export default async function RootLayout({
   const initialConsent = parseConsent(consentCookie);
   const initialAnalyticsConsent = initialConsent?.analytics ?? false;
 
+  const siteSettings = await getSiteSettings();
+
   return (
     <html
       lang="en"
       className={`${youngSerif.variable} ${bricolageGrotesque.variable} ${inter.variable} h-full antialiased overflow-x-hidden`}
     >
       <body className="min-h-full flex flex-col overflow-x-hidden">
+        <JsonLd data={organizationJsonLd(siteSettings?.socialLinks)} />
         <ConsentProvider initialConsent={initialConsent}>
           {children}
           <SanityLive />

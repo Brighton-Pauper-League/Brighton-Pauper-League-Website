@@ -126,6 +126,9 @@ export async function Footer() {
               <Link href="/loaner-decks" className="font-[family-name:var(--font-bricolage-grotesque)] text-base text-white/80 hover:text-white transition-colors">
                 Loaner Decks
               </Link>
+              <Link href="/resources" className="font-[family-name:var(--font-bricolage-grotesque)] text-base text-white/80 hover:text-white transition-colors">
+                Resources
+              </Link>
               <Link href="/code-of-conduct" className="font-[family-name:var(--font-bricolage-grotesque)] text-base text-white/80 hover:text-white transition-colors">
                 Code of Conduct
               </Link>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { buildMetadata, resolveSeo } from "@/lib/seo";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { PortableTextBlock } from "@portabletext/react";
@@ -20,11 +21,15 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const deck = await getLoanerDeckBySlug(slug);
-  if (!deck) return { title: "Deck not found" };
-  return {
-    title: deck.name,
-    description: `View the card list and primer for ${deck.name}, available to borrow at any Brighton Pauper League event.`,
-  };
+  if (!deck) return { title: "Deck not found", robots: { index: false } };
+
+  return buildMetadata(
+    resolveSeo(deck.seo, {
+      title: deck.name,
+      description: `View the card list and primer for ${deck.name}, available to borrow at any Brighton Pauper League event.`,
+      path: `/loaner-decks/${slug}`,
+    })
+  );
 }
 
 export default async function DeckDetailPage({

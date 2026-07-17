@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { buildMetadata, resolveSeo } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -17,24 +18,19 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
-  if (!post) return { title: "Post not found" };
+  if (!post) return { title: "Post not found", robots: { index: false } };
 
-  const ogImage = post.featuredImage?.asset
-    ? urlFor(post.featuredImage).width(1200).height(630).fit("crop").url()
-    : undefined;
-
-  return {
-    title: post.title,
-    description: post.excerpt,
-    openGraph: {
-      type: "article",
+  return buildMetadata(
+    resolveSeo(post.seo, {
       title: post.title,
       description: post.excerpt,
+      path: `/blog/${slug}`,
+      type: "article",
       publishedTime: post.publishedAt,
       authors: [post.author],
-      images: ogImage ? [{ url: ogImage }] : undefined,
-    },
-  };
+      fallbackImage: post.featuredImage,
+    })
+  );
 }
 
 export default async function BlogPostPage({

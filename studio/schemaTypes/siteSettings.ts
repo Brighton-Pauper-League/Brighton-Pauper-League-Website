@@ -34,6 +34,13 @@ export const siteSettings = defineType({
         }),
       ],
     }),
+    defineField({
+      name: 'seo',
+      title: 'Default SEO',
+      type: 'seo',
+      description:
+        'Site-wide fallbacks. Used on the home page and anywhere a page has no SEO of its own.',
+    }),
   ],
   preview: {
     select: {},

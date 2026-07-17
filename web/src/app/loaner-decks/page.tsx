@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { DeckCard } from "@/components/DeckCard";
 import { EmptyState } from "@/components/EmptyState";
 import { getLoanerDecks } from "@/lib/data";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "Loaner Decks",
   description:
     "Borrow a competitive, tournament-legal Pauper deck at any Brighton Pauper League event. Free to use — just ask on the night.",
-};
+  path: "/loaner-decks",
+});
 
 export default async function LoanerDecksPage() {
   const decks = await getLoanerDecks();

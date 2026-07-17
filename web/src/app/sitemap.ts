@@ -1,16 +1,24 @@
 import type { MetadataRoute } from "next";
 import { siteUrl } from "@/lib/site";
-import { getPostSlugs, getPlayerSlugs, getAllSeasons } from "@/lib/data";
+import {
+  getIndexablePostSlugs,
+  getIndexablePlayerSlugs,
+  getIndexableEventSlugs,
+  getIndexableLoanerDeckSlugs,
+  getAllSeasons,
+} from "@/lib/data";
 
 const staticRoutes = [
   "",
   "/about",
   "/how-it-works",
   "/events",
+  "/events/past",
   "/blog",
   "/standings",
   "/players",
   "/loaner-decks",
+  "/resources",
   "/code-of-conduct",
   "/privacy",
   "/volunteer",
@@ -18,11 +26,14 @@ const staticRoutes = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [postSlugs, playerSlugs, seasons] = await Promise.all([
-    getPostSlugs(),
-    getPlayerSlugs(),
-    getAllSeasons(),
-  ]);
+  const [postSlugs, playerSlugs, eventSlugs, deckSlugs, seasons] =
+    await Promise.all([
+      getIndexablePostSlugs(),
+      getIndexablePlayerSlugs(),
+      getIndexableEventSlugs(),
+      getIndexableLoanerDeckSlugs(),
+      getAllSeasons(),
+    ]);
 
   const static_: MetadataRoute.Sitemap = staticRoutes.map((path) => ({
     url: `${siteUrl}${path}`,
@@ -42,11 +53,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
+  const events: MetadataRoute.Sitemap = eventSlugs.map((slug) => ({
+    url: `${siteUrl}/events/${slug}`,
+    changeFrequency: "monthly",
+    priority: 0.5,
+  }));
+
+  const decks: MetadataRoute.Sitemap = deckSlugs.map((slug) => ({
+    url: `${siteUrl}/loaner-decks/${slug}`,
+    changeFrequency: "monthly",
+    priority: 0.5,
+  }));
+
   const standingsArchive: MetadataRoute.Sitemap = seasons.map((season) => ({
     url: `${siteUrl}/standings/${season.seasonNumber}`,
     changeFrequency: "monthly",
     priority: 0.6,
   }));
 
-  return [...static_, ...posts, ...players, ...standingsArchive];
+  return [
+    ...static_,
+    ...posts,
+    ...players,
+    ...events,
+    ...decks,
+    ...standingsArchive,
+  ];
 }

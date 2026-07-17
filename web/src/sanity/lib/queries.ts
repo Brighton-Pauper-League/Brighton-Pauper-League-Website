@@ -200,7 +200,8 @@ export const EVENT_BY_SLUG_QUERY = defineQuery(`
       draws,
       losses,
       "points": wins * 3 + draws
-    }
+    },
+    seo
   }
 `)
 
@@ -235,7 +236,8 @@ export const PLAYER_BY_SLUG_QUERY = defineQuery(`
     slug,
     image,
     bio,
-    joinDate
+    joinDate,
+    seo
   }
 `)
 
@@ -270,7 +272,8 @@ export const POST_BY_SLUG_QUERY = defineQuery(`
     featuredImage,
     tags,
     featured,
-    body
+    body,
+    seo
   }
 `)
 
@@ -282,7 +285,8 @@ export const POST_SLUGS_QUERY = defineQuery(`
 
 export const SITE_SETTINGS_QUERY = defineQuery(`
   *[_type == "siteSettings"][0] {
-    socialLinks
+    socialLinks,
+    seo
   }
 `)
 
@@ -308,10 +312,50 @@ export const LOANER_DECK_BY_SLUG_QUERY = defineQuery(`
     cards[]{ cardName, quantity, quantityOwned, isSideboard, imageUri, imageUriBack, typeLine },
     "isComplete": !defined(cards[quantityOwned < quantity][0]),
     primer,
-    donors
+    donors,
+    seo
   }
 `)
 
 export const LOANER_DECK_SLUGS_QUERY = defineQuery(`
   *[_type == "loanerDeck" && isHidden != true && defined(slug.current)].slug.current
+`)
+
+// ── Resources ─────────────────────────────────────────────────────────────────
+
+// The reader chooses the sort order on the page, so this returns everything in a
+// stable order (title) and lets the client re-sort. `_createdAt` is projected so
+// the "newest/oldest" options have something to sort on without a schema field.
+export const RESOURCES_QUERY = defineQuery(`
+  *[_type == "resource"] | order(title asc) {
+    _id,
+    title,
+    url,
+    description,
+    tags,
+    _createdAt
+  }
+`)
+
+// ── Sitemap ───────────────────────────────────────────────────────────────────
+
+// Slug queries scoped to what belongs in the sitemap: pages an editor has hidden
+// from search (seo.hideFromSearch) are excluded, so the sitemap never advertises
+// a URL whose page carries a noindex tag. These stay separate from the plain
+// *_SLUGS_QUERY above, which feed generateStaticParams and must still build the
+// hidden pages so they remain reachable by direct link.
+export const INDEXABLE_POST_SLUGS_QUERY = defineQuery(`
+  *[_type == "post" && defined(slug.current) && seo.hideFromSearch != true].slug.current
+`)
+
+export const INDEXABLE_PLAYER_SLUGS_QUERY = defineQuery(`
+  *[_type == "player" && isPublic == true && isAnonymised != true && defined(slug.current) && seo.hideFromSearch != true].slug.current
+`)
+
+export const INDEXABLE_EVENT_SLUGS_QUERY = defineQuery(`
+  *[_type == "event" && defined(slug.current) && seo.hideFromSearch != true].slug.current
+`)
+
+export const INDEXABLE_LOANER_DECK_SLUGS_QUERY = defineQuery(`
+  *[_type == "loanerDeck" && isHidden != true && defined(slug.current) && seo.hideFromSearch != true].slug.current
 `)

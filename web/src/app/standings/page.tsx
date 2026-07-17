@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { StandingsView } from "@/components/StandingsView";
@@ -9,11 +10,12 @@ import {
   getStandings,
 } from "@/lib/data";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "Standings",
   description:
     "Current season standings with official MTG tiebreakers (Points, OMW%, GW%, OGW%) for the Brighton Pauper League.",
-};
+  path: "/standings",
+});
 
 export default async function StandingsPage() {
   const [activeSeason, seasons] = await Promise.all([

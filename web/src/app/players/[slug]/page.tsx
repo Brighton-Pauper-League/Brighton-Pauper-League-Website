@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { buildMetadata, resolveSeo } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -21,22 +22,18 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const player = await getPlayerBySlug(slug);
-  if (!player) return { title: "Player not found" };
+  if (!player) return { title: "Player not found", robots: { index: false } };
 
   const displayName = playerDisplayName(player);
-  const ogImage = player.image?.asset
-    ? urlFor(player.image).width(1200).height(630).fit("crop").url()
-    : undefined;
 
-  return {
-    title: displayName,
-    description: player.bio ?? `${displayName} — Brighton Pauper League member.`,
-    openGraph: {
+  return buildMetadata(
+    resolveSeo(player.seo, {
       title: displayName,
-      description: player.bio ?? undefined,
-      images: ogImage ? [{ url: ogImage }] : undefined,
-    },
-  };
+      description: player.bio ?? `${displayName} — Brighton Pauper League member.`,
+      path: `/players/${slug}`,
+      fallbackImage: player.image,
+    })
+  );
 }
 
 export default async function PlayerProfilePage({

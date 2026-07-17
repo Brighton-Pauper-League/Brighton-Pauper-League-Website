@@ -174,6 +174,11 @@ export const event = defineType({
         },
       ],
     }),
+    defineField({
+      name: 'seo',
+      title: 'SEO',
+      type: 'seo',
+    }),
   ],
   preview: {
     select: {
