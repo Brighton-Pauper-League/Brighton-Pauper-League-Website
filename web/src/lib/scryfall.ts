@@ -28,6 +28,16 @@ export interface CardImageResult {
   typeLine?: string;
 }
 
+// Scryfall serves every size of a card image from the same path, with the size
+// as the first segment (small/normal/large/png/art_crop/border_crop). We only
+// store the portrait `normal` image, so derive the landscape `art_crop` — used
+// as the loaner-deck header banner — by swapping that segment. Returns null when
+// the URL is missing or is not a recognisable Scryfall image URL.
+export function scryfallArtCrop(normalUri?: string | null): string | null {
+  if (!normalUri || !normalUri.includes("/normal/")) return null;
+  return normalUri.replace("/normal/", "/art_crop/");
+}
+
 function extractFaces(card: ScryfallCard): CardImageResult | null {
   // For DFCs, use the front face type line; fall back to the card-level type line.
   const typeLine = card.card_faces?.[0]?.type_line ?? card.type_line;

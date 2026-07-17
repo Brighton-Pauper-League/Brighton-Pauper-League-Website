@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { buildMetadata, resolveSeo } from "@/lib/seo";
+import Image from "next/image";
 import Link from "next/link";
+import { scryfallArtCrop } from "@/lib/scryfall";
 import { notFound } from "next/navigation";
 import type { PortableTextBlock } from "@portabletext/react";
 import { Navbar } from "@/components/Navbar";
@@ -44,6 +46,8 @@ export default async function DeckDetailPage({
   const mainboard = deck.cards.filter((c) => !c.isSideboard);
   const sideboard = deck.cards.filter((c) => c.isSideboard);
 
+  const heroArt = scryfallArtCrop(deck.featuredCardImageUri);
+
   const hasPrimer = Array.isArray(deck.primer) && deck.primer.length > 0;
   const hasDonors = Array.isArray(deck.donors) && deck.donors.length > 0;
 
@@ -51,9 +55,22 @@ export default async function DeckDetailPage({
     <>
       <Navbar />
 
-      {/* Hero */}
-      <div className="bg-primary-blue px-6 md:px-12 lg:px-20 py-16 md:py-24">
-        <div className="max-w-360 mx-auto flex flex-col gap-4">
+      {/* Hero — the featured card's art crop, under a blue gradient */}
+      <div className="relative overflow-hidden bg-primary-blue px-6 md:px-12 lg:px-20 py-16 md:py-24">
+        {heroArt && (
+          <>
+            <Image
+              src={heroArt}
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-primary-blue via-primary-blue/85 to-primary-blue/50" />
+          </>
+        )}
+        <div className="relative z-10 max-w-360 mx-auto flex flex-col gap-4">
           <Link
             href="/loaner-decks"
             className="font-(family-name:--font-bricolage-grotesque) text-sm text-white/60 hover:text-white transition-colors w-fit"
