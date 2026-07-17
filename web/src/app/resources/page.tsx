@@ -25,8 +25,7 @@ export default async function ResourcesPage() {
             Resources
           </h1>
           <p className="font-(family-name:--font-bricolage-grotesque) text-xl text-white/80 max-w-200">
-            Handy links for Pauper players — format rules, deck databases and the
-            tools we lean on. If you know of something that belongs here, let us
+            Useful links for Magic players. If you know of something that belongs here, let us
             know.
           </p>
         </div>
