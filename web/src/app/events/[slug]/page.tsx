@@ -50,7 +50,11 @@ export default async function EventPage({
     ? urlFor(event.featuredImage).width(1600).height(800).fit("crop").url()
     : null;
 
-  const isPast = new Date(event.eventDate).getTime() < Date.now();
+  // Derived from the shared helper so the "now" comparison lives in lib/dates
+  // rather than being an impure Date call in render. "upcoming" gates the
+  // registration link, which shouldn't show once an event has started.
+  const status = getEventStatus(event.eventDate, event.isCancelled);
+  const isUpcoming = status === "upcoming";
 
   return (
     <>
@@ -89,7 +93,7 @@ export default async function EventPage({
               {/* Main content */}
               <div className="flex-1 flex flex-col gap-6">
                 <div className="flex flex-wrap items-center gap-3">
-                  <EventStatusBadge status={getEventStatus(event.eventDate, event.isCancelled)} />
+                  <EventStatusBadge status={status} />
                   {event.season && (
                     <Link
                       href={`/standings/${event.season.seasonNumber}`}
@@ -114,7 +118,7 @@ export default async function EventPage({
                   </p>
                 )}
 
-                {!isPast && event.registrationLink && (
+                {isUpcoming && event.registrationLink && (
                   <a
                     href={event.registrationLink}
                     target="_blank"
