@@ -26,7 +26,7 @@ export default async function Home() {
       <Navbar/>
 
       {/* Hero Section */}
-      <div className="relative bg-primary-blue min-h-[calc(100vh-72px)] w-full flex items-center py-16 lg:py-20">
+      <div className="relative bg-primary-blue min-h-[calc(100dvh-var(--spacing-header))] w-full flex items-center py-16 lg:py-20">
         <div className="max-w-360 mx-auto px-6 md:px-12 lg:px-20 w-full flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16">
           {/* Hero Content */}
           <div className="flex flex-col gap-6 lg:gap-8 items-center lg:items-start text-center lg:text-left max-w-200 min-w-0">
@@ -181,7 +181,7 @@ export default async function Home() {
       </section>
 
       {/* When/Where Section */}
-      <section className="bg-primary-blue px-6 md:px-12 lg:px-20 lg:min-h-screen flex items-center">
+      <section className="bg-primary-blue px-6 md:px-12 lg:px-20 lg:min-h-[calc(100dvh-var(--spacing-header))] flex items-center">
         <div className="max-w-360 mx-auto flex flex-col lg:flex-row gap-10 py-20 w-full">
           {/* Left - Location */}
           <div className="flex-1 flex items-center">

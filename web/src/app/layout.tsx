@@ -61,9 +61,9 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${youngSerif.variable} ${bricolageGrotesque.variable} ${inter.variable} h-full antialiased overflow-x-hidden`}
+      className={`${youngSerif.variable} ${bricolageGrotesque.variable} ${inter.variable} h-full antialiased overflow-x-clip`}
     >
-      <body className="min-h-full flex flex-col overflow-x-hidden">
+      <body className="min-h-full flex flex-col overflow-x-clip">
         <JsonLd data={organizationJsonLd(siteSettings?.socialLinks)} />
         <ConsentProvider initialConsent={initialConsent}>
           {children}

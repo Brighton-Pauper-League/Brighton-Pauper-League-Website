@@ -17,7 +17,7 @@ export function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 bg-[#004aad] text-white">
-      <div className="h-[72px] px-6 md:px-12 lg:px-20 flex items-center justify-between">
+      <div className="h-header px-6 md:px-12 lg:px-20 flex items-center justify-between">
         {/* Logo/Brand */}
         <Link
           href="/"
@@ -85,7 +85,7 @@ export function Navbar() {
       {open && (
         <div
           id="mobile-menu"
-          className="lg:hidden border-t border-white/15 px-6 md:px-12 py-4 flex flex-col gap-1"
+          className="lg:hidden border-t border-white/15 px-6 md:px-12 py-4 flex flex-col gap-1 max-h-[calc(100dvh-var(--spacing-header))] overflow-y-auto overscroll-contain"
         >
           {NAV_LINKS.map((link) => (
             <Link

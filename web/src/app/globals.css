@@ -30,6 +30,15 @@
   
   /* Container */
   --width-container: 90rem;      /* 1440px */
+
+  /* Sticky header height - single source of truth for the navbar and for any
+     section that needs to fill the viewport beneath it */
+  --spacing-header: 4.5rem;      /* 72px */
+}
+
+html {
+  /* Anchor targets must clear the sticky header rather than scroll under it */
+  scroll-padding-top: var(--spacing-header);
 }
 
 /* Utility classes for fonts */
