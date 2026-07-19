@@ -48,8 +48,13 @@ export default async function DeckDetailPage({
 
   const heroArt = scryfallArtCrop(deck.featuredCardImageUri);
 
-  const hasPrimer = Array.isArray(deck.primer) && deck.primer.length > 0;
+  const hasIntro = Array.isArray(deck.introText) && deck.introText.length > 0;
+  const hasPrimer = Array.isArray(deck.deckPrimer) && deck.deckPrimer.length > 0;
   const hasDonors = Array.isArray(deck.donors) && deck.donors.length > 0;
+
+  // Mainboard and sideboard entries are kept separate on purpose — a card can be
+  // short in one zone but not the other.
+  const missingCards = deck.cards.filter((c) => c.quantityOwned < c.quantity);
 
   return (
     <>
@@ -93,14 +98,14 @@ export default async function DeckDetailPage({
         </div>
       </div>
 
-      {/* Primer */}
-      {hasPrimer && (
+      {/* Intro */}
+      {hasIntro && (
         <section className="bg-off-white px-6 md:px-12 lg:px-20 py-16 md:py-24">
           <div className="max-w-200 mx-auto flex flex-col gap-6">
             <h2 className="font-(family-name:--font-young-serif) text-2xl md:text-3xl lg:text-[40px] text-dark-brown">
               About this deck
             </h2>
-            <PortableTextBody value={deck.primer as PortableTextBlock[]} />
+            <PortableTextBody value={deck.introText as PortableTextBlock[]} />
           </div>
         </section>
       )}
@@ -112,25 +117,60 @@ export default async function DeckDetailPage({
         </div>
       </section>
 
+      {/* Deck Primer / Sideboard Guide */}
+      {hasPrimer && (
+        <section className="bg-off-white px-6 md:px-12 lg:px-20 py-16 md:py-24">
+          <div className="max-w-200 mx-auto flex flex-col gap-6">
+            <h2 className="font-(family-name:--font-young-serif) text-2xl md:text-3xl lg:text-[40px] text-dark-brown">
+              Deck Primer
+            </h2>
+            <PortableTextBody value={deck.deckPrimer as PortableTextBlock[]} />
+          </div>
+        </section>
+      )}
+
       {/* Donate CTA */}
       {!deck.isComplete && (
         <section id="donate" className="bg-off-white px-6 md:px-12 lg:px-20 py-16 md:py-24">
-          <div className="max-w-360 mx-auto flex flex-col sm:flex-row sm:items-center gap-6">
-            <div className="flex flex-col gap-2 flex-1">
-              <h2 className="font-(family-name:--font-young-serif) text-2xl md:text-3xl text-dark-brown">
-                Help complete this deck
-              </h2>
-              <p className="font-(family-name:--font-bricolage-grotesque) text-black/60 text-lg">
-                This deck is missing some cards. If you have spare copies you
-                would be happy to donate, we would love to hear from you.
-              </p>
+          <div className="max-w-360 mx-auto flex flex-col gap-8">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-6">
+              <div className="flex flex-col gap-2 flex-1">
+                <h2 className="font-(family-name:--font-young-serif) text-2xl md:text-3xl text-dark-brown">
+                  Help complete this deck
+                </h2>
+                <p className="font-(family-name:--font-bricolage-grotesque) text-black/60 text-lg">
+                  This deck is missing some cards. If you have spare copies you
+                  would be happy to donate, we would love to hear from you.
+                </p>
+              </div>
+              <a
+                href={`mailto:contact@brightonpauperleague.com?subject=${encodeURIComponent(`Donating cards for ${deck.name}`)}`}
+                className="shrink-0 inline-flex items-center justify-center px-6 py-3 rounded font-(family-name:--font-bricolage-grotesque) font-extrabold text-sm uppercase bg-primary-blue text-white hover:bg-primary-blue/90 transition-colors"
+              >
+                Donate cards
+              </a>
             </div>
-            <a
-              href={`mailto:contact@brightonpauperleague.com?subject=${encodeURIComponent(`Donating cards for ${deck.name}`)}`}
-              className="shrink-0 inline-flex items-center justify-center px-6 py-3 rounded font-(family-name:--font-bricolage-grotesque) font-extrabold text-sm uppercase bg-primary-blue text-white hover:bg-primary-blue/90 transition-colors"
-            >
-              Donate cards
-            </a>
+
+            {missingCards.length > 0 && (
+              <div className="flex flex-col gap-3">
+                <h3 className="font-(family-name:--font-bricolage-grotesque) font-extrabold text-xs uppercase text-black/50">
+                  Cards still needed
+                </h3>
+                <ul className="flex flex-wrap gap-2">
+                  {missingCards.map((card, i) => (
+                    <li
+                      key={`${card.cardName}-${card.isSideboard}-${i}`}
+                      className="bg-red-placeholder text-white font-(family-name:--font-bricolage-grotesque) text-sm px-3 py-1 rounded"
+                    >
+                      <span className="font-extrabold">
+                        ×{card.quantity - card.quantityOwned}
+                      </span>{" "}
+                      {card.cardName}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </section>
       )}

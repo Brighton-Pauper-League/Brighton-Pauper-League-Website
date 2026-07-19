@@ -311,7 +311,8 @@ export const LOANER_DECK_BY_SLUG_QUERY = defineQuery(`
     featuredCardImageUri,
     cards[]{ cardName, quantity, quantityOwned, isSideboard, imageUri, imageUriBack, typeLine },
     "isComplete": !defined(cards[quantityOwned < quantity][0]),
-    primer,
+    introText,
+    deckPrimer,
     donors,
     seo
   }

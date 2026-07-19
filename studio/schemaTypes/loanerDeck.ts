@@ -1,6 +1,48 @@
 import {defineType, defineField, defineArrayMember} from 'sanity'
 import {StackIcon} from '@sanity/icons'
 
+// Shared rich-text shape used by both Intro Text and the Deck Primer.
+const richTextMembers = [
+  defineArrayMember({
+    type: 'block',
+    styles: [
+      {title: 'Normal', value: 'normal'},
+      {title: 'Heading 2', value: 'h2'},
+      {title: 'Heading 3', value: 'h3'},
+      {title: 'Quote', value: 'blockquote'},
+    ],
+    marks: {
+      decorators: [
+        {title: 'Strong', value: 'strong'},
+        {title: 'Emphasis', value: 'em'},
+        {title: 'Code', value: 'code'},
+      ],
+      annotations: [
+        defineArrayMember({
+          name: 'link',
+          type: 'object',
+          title: 'Link',
+          fields: [
+            defineField({
+              name: 'href',
+              type: 'url',
+              validation: (rule) => rule.uri({scheme: ['http', 'https']}),
+            }),
+          ],
+        }),
+      ],
+    },
+  }),
+  defineArrayMember({
+    type: 'image',
+    options: {hotspot: true},
+    fields: [
+      defineField({name: 'alt', type: 'string', title: 'Alternative Text'}),
+      defineField({name: 'caption', type: 'string', title: 'Caption'}),
+    ],
+  }),
+]
+
 export const loanerDeck = defineType({
   name: 'loanerDeck',
   title: 'Loaner Deck',
@@ -73,50 +115,11 @@ export const loanerDeck = defineType({
       hidden: true,
     }),
     defineField({
-      name: 'primer',
-      title: 'Deck Primer',
+      name: 'introText',
+      title: 'Intro Text',
       type: 'array',
-      description: 'Guide to playing this deck. Displayed at the top of the deck page.',
-      of: [
-        defineArrayMember({
-          type: 'block',
-          styles: [
-            {title: 'Normal', value: 'normal'},
-            {title: 'Heading 2', value: 'h2'},
-            {title: 'Heading 3', value: 'h3'},
-            {title: 'Quote', value: 'blockquote'},
-          ],
-          marks: {
-            decorators: [
-              {title: 'Strong', value: 'strong'},
-              {title: 'Emphasis', value: 'em'},
-              {title: 'Code', value: 'code'},
-            ],
-            annotations: [
-              defineArrayMember({
-                name: 'link',
-                type: 'object',
-                title: 'Link',
-                fields: [
-                  defineField({
-                    name: 'href',
-                    type: 'url',
-                    validation: (rule) => rule.uri({scheme: ['http', 'https']}),
-                  }),
-                ],
-              }),
-            ],
-          },
-        }),
-        defineArrayMember({
-          type: 'image',
-          options: {hotspot: true},
-          fields: [
-            defineField({name: 'alt', type: 'string', title: 'Alternative Text'}),
-            defineField({name: 'caption', type: 'string', title: 'Caption'}),
-          ],
-        }),
-      ],
+      description: 'Short introduction to this deck. Displayed at the top of the deck page.',
+      of: richTextMembers,
     }),
     defineField({
       name: 'cards',
@@ -200,6 +203,14 @@ export const loanerDeck = defineType({
           },
         }),
       ],
+    }),
+    defineField({
+      name: 'deckPrimer',
+      title: 'Deck Primer / Sideboard Guide',
+      type: 'array',
+      description:
+        'Guide to playing and sideboarding with this deck. Displayed below the card images. Omitted from the deck page if left empty.',
+      of: richTextMembers,
     }),
     defineField({
       name: 'donors',

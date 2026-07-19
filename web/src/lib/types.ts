@@ -160,7 +160,8 @@ export interface LoanerDeckListItem {
 }
 
 export interface LoanerDeckDetail extends LoanerDeckListItem {
-  primer?: unknown[];
+  introText?: unknown[];
+  deckPrimer?: unknown[];
   donors?: string[];
   seo?: SeoFields;
 }
