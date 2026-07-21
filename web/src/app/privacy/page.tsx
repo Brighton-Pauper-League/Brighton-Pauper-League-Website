@@ -282,8 +282,8 @@ export default function PrivacyPage() {
                 In particular, if you would prefer your name not to appear
                 publicly, you can ask us to anonymise your results and remove
                 your public profile, and we will do so. To exercise any of your
-                rights, contact the data controller at <ContactLink /> with the
-                subject line &ldquo;{CONTACT_SUBJECT}&rdquo;.
+                rights, contact the data controller at <ContactLink />{" "}
+                with the subject line &ldquo;{CONTACT_SUBJECT}&rdquo;.
               </p>
             </Section>
 
@@ -318,8 +318,8 @@ export default function PrivacyPage() {
             <Section id="complaints" title="Complaints and contact">
               <p>
                 If you have any concerns about how we handle your data, please
-                contact the data controller first at <ContactLink /> using the
-                subject line &ldquo;{CONTACT_SUBJECT}&rdquo;, and we will do our
+                contact the data controller first at <ContactLink />{" "}
+                using the subject line &ldquo;{CONTACT_SUBJECT}&rdquo;, and we will do our
                 best to resolve them.
               </p>
               <p>
