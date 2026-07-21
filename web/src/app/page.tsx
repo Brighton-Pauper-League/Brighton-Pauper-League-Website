@@ -557,6 +557,13 @@ export default async function Home() {
                 All decks in the library are tournament-legal and a examined regularly to keep them competitively viable.
               </p>
             </div>
+
+            <Link
+                href="/loaner-decks"
+                className="border-b-2 border-dark-brown text-dark-brown font-(family-name:--font-bricolage-grotesque) font-semibold text-lg pb-1 w-fit hover:border-primary-blue hover:text-primary-blue transition-colors"
+            >
+              Browse the deck library →
+            </Link>
           </div>
 
           <div className="w-full lg:w-150 h-auto shrink-0">
