@@ -11,6 +11,16 @@ export function DeckCard({ deck, imageUri }: DeckCardProps) {
   const mainboard = deck.cards.filter((c) => !c.isSideboard);
   const cardCount = mainboard.reduce((sum, c) => sum + c.quantity, 0);
 
+  // A sideboard is only usable in a match if it is a full 15, so anything short
+  // of that is presented as "bring your own" rather than a partial count.
+  const sideboardCount = deck.cards
+    .filter((c) => c.isSideboard)
+    .reduce((sum, c) => sum + c.quantity, 0);
+  const sideboardLabel =
+    sideboardCount >= 15
+      ? `${sideboardCount} cards sideboard`
+      : "Bring your own sideboard!";
+
   return (
     <Link
       href={`/loaner-decks/${deck.slug.current}`}
@@ -48,7 +58,7 @@ export function DeckCard({ deck, imageUri }: DeckCardProps) {
           )}
         </div>
         <p className="font-(family-name:--font-bricolage-grotesque) text-sm text-black/50">
-          {cardCount} cards
+          {cardCount} cards &middot; {sideboardLabel}
         </p>
       </div>
     </Link>
