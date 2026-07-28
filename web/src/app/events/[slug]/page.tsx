@@ -163,8 +163,8 @@ export default async function EventPage({
                       <tr className="bg-primary-blue/10">
                         <th className="px-4 py-3 text-left font-(family-name:--font-bricolage-grotesque) font-extrabold text-xs text-primary-blue uppercase">Player</th>
                         <th className="px-4 py-3 text-right font-(family-name:--font-bricolage-grotesque) font-extrabold text-xs text-primary-blue uppercase">W</th>
-                        <th className="px-4 py-3 text-right font-(family-name:--font-bricolage-grotesque) font-extrabold text-xs text-primary-blue uppercase">D</th>
                         <th className="px-4 py-3 text-right font-(family-name:--font-bricolage-grotesque) font-extrabold text-xs text-primary-blue uppercase">L</th>
+                        <th className="px-4 py-3 text-right font-(family-name:--font-bricolage-grotesque) font-extrabold text-xs text-primary-blue uppercase">D</th>
                         <th className="px-4 py-3 text-right font-(family-name:--font-bricolage-grotesque) font-extrabold text-xs text-primary-blue uppercase">Pts</th>
                       </tr>
                     </thead>
@@ -177,8 +177,8 @@ export default async function EventPage({
                               {playerDisplayName(result.player)}
                             </td>
                             <td className="px-4 py-3 text-right font-(family-name:--font-bricolage-grotesque) text-dark-brown">{result.wins}</td>
-                            <td className="px-4 py-3 text-right font-(family-name:--font-bricolage-grotesque) text-dark-brown">{result.draws}</td>
                             <td className="px-4 py-3 text-right font-(family-name:--font-bricolage-grotesque) text-dark-brown">{result.losses}</td>
+                            <td className="px-4 py-3 text-right font-(family-name:--font-bricolage-grotesque) text-dark-brown">{result.draws}</td>
                             <td className="px-4 py-3 text-right font-(family-name:--font-bricolage-grotesque) font-bold text-primary-blue">{result.points}</td>
                           </tr>
                         ))}

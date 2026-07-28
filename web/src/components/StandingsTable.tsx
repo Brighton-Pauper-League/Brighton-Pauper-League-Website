@@ -10,7 +10,7 @@ import { EmptyState } from "./EmptyState";
 
 // One standings component, two looks:
 //  - "preview" (homepage): Rank · Player · Points · W-L-D, top N rows
-//  - "full" (standings pages): adds played/W/D/L and the OMW%/GW%/OGW% tiebreakers
+//  - "full" (standings pages): adds played/W/L/D and the OMW%/GW%/OGW% tiebreakers
 // Rows are always sorted by the MTG tiebreaker hierarchy via sortStandings, so
 // callers can pass raw data in any order.
 
@@ -57,8 +57,8 @@ export function StandingsTable({
             <th className={`${HEAD_CLASS} text-left`}>Player</th>
             {isFull && <th className={`${HEAD_CLASS} text-right`} title="Matches played">P</th>}
             {isFull && <th className={`${HEAD_CLASS} text-right`} title="Wins">W</th>}
-            {isFull && <th className={`${HEAD_CLASS} text-right`} title="Draws">D</th>}
             {isFull && <th className={`${HEAD_CLASS} text-right`} title="Losses">L</th>}
+            {isFull && <th className={`${HEAD_CLASS} text-right`} title="Draws">D</th>}
             <th className={`${HEAD_CLASS} text-right`}>Points</th>
             {!isFull && <th className={`${HEAD_CLASS} text-right`}>W-L-D</th>}
             {isFull && (
@@ -113,8 +113,8 @@ export function StandingsTable({
               </td>
               {isFull && <td className={`${CELL_CLASS} text-right`}>{row.matchesPlayed}</td>}
               {isFull && <td className={`${CELL_CLASS} text-right`}>{row.wins}</td>}
-              {isFull && <td className={`${CELL_CLASS} text-right`}>{row.draws}</td>}
               {isFull && <td className={`${CELL_CLASS} text-right`}>{row.losses}</td>}
+              {isFull && <td className={`${CELL_CLASS} text-right`}>{row.draws}</td>}
               <td className={`${CELL_CLASS} text-right font-bold text-lg text-primary-blue`}>
                 {row.points}
               </td>
