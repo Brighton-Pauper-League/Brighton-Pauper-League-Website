@@ -142,7 +142,7 @@ function ResultsGraphic({event, ranked}: {event: EventDoc; ranked: ResultRow[]})
             <th style={{padding: '8px 8px', width: 40}}>#</th>
             <th style={{padding: '8px 8px'}}>Player</th>
             <th style={{padding: '8px 8px'}}>Archetype</th>
-            <th style={{padding: '8px 8px', width: 80, textAlign: 'center'}}>W-D-L</th>
+            <th style={{padding: '8px 8px', width: 80, textAlign: 'center'}}>W-L-D</th>
             <th style={{padding: '8px 8px', width: 50, textAlign: 'right'}}>Pts</th>
           </tr>
         </thead>
@@ -160,7 +160,7 @@ function ResultsGraphic({event, ranked}: {event: EventDoc; ranked: ResultRow[]})
                 {r.archetype ?? '—'}
               </td>
               <td style={{padding: '8px 8px', textAlign: 'center', color: 'rgba(255,255,255,0.85)'}}>
-                {r.wins ?? 0}-{r.draws ?? 0}-{r.losses ?? 0}
+                {r.wins ?? 0}-{r.losses ?? 0}-{r.draws ?? 0}
               </td>
               <td style={{padding: '8px 8px', textAlign: 'right', fontWeight: 700}}>{points(r)}</td>
             </tr>

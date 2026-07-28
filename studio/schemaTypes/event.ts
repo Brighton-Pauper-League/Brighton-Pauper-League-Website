@@ -119,15 +119,15 @@ export const event = defineType({
               initialValue: 0,
             }),
             defineField({
-              name: 'draws',
-              title: 'Draws',
+              name: 'losses',
+              title: 'Losses',
               type: 'number',
               validation: (rule) => rule.required().integer().min(0),
               initialValue: 0,
             }),
             defineField({
-              name: 'losses',
-              title: 'Losses',
+              name: 'draws',
+              title: 'Draws',
               type: 'number',
               validation: (rule) => rule.required().integer().min(0),
               initialValue: 0,
@@ -159,12 +159,12 @@ export const event = defineType({
               playerName: 'player.name',
               archetype: 'deckArchetype.name',
               wins: 'wins',
-              draws: 'draws',
               losses: 'losses',
+              draws: 'draws',
             },
-            prepare({ playerName, archetype, wins, draws, losses }) {
+            prepare({ playerName, archetype, wins, losses, draws }) {
               const points = (wins ?? 0) * 3 + (draws ?? 0)
-              const record = `${wins}W / ${draws}D / ${losses}L — ${points} pts`
+              const record = `${wins}W / ${losses}L / ${draws}D — ${points} pts`
               return {
                 title: playerName ?? 'Unknown player',
                 subtitle: archetype ? `${archetype} · ${record}` : record,
