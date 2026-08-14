@@ -3,6 +3,8 @@ import type { Season, SeasonStage, StandingsRow } from "@/lib/types";
 import { formatSeasonRange, getSeasonStatus, type SeasonStatus } from "@/lib/dates";
 import { playerDisplayName, playerProfilePath } from "@/lib/standings";
 import { StandingsTable } from "./StandingsTable";
+import { ArchetypeChart } from "./ArchetypeChart";
+import type { ArchetypeCount } from "@/lib/archetypeStats";
 
 const SEASON_STATUS_LABEL: Record<SeasonStatus, string> = {
   upcoming: "Upcoming",
@@ -123,6 +125,7 @@ export function StandingsView({
   stages = [],
   heading = "Standings",
   intro,
+  archetypeCounts = [],
 }: {
   season: Season | null;
   rows: StandingsRow[];
@@ -130,6 +133,7 @@ export function StandingsView({
   stages?: SeasonStage[];
   heading?: string;
   intro?: string;
+  archetypeCounts?: ArchetypeCount[];
 }) {
   const isCompleted =
     season != null &&
@@ -162,6 +166,17 @@ export function StandingsView({
         {season?.winner && <WinnerBanner winner={season.winner} />}
 
         <StandingsTable rows={rows} variant="full" top8Cut={top8Cut} />
+
+        {archetypeCounts.length > 0 && (
+          <div className="flex flex-col gap-6">
+            <h2 className="font-(family-name:--font-young-serif) text-3xl text-dark-brown">
+              Archetypes Played This Season
+            </h2>
+            <div className="bg-white rounded-2xl p-6 border border-black/5">
+              <ArchetypeChart data={archetypeCounts} title="Archetypes Played This Season" />
+            </div>
+          </div>
+        )}
       </div>
 
       <aside className="lg:w-[320px] flex flex-col gap-8 flex-shrink-0">

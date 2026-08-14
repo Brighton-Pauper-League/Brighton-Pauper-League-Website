@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { StandingsView } from "@/components/StandingsView";
 import {
   getAllSeasons,
+  getSeasonArchetypeCounts,
   getSeasonByNumber,
   getSeasonEvents,
   getStandings,
@@ -49,16 +50,23 @@ export default async function SeasonStandingsPage({
   ]);
   if (!seasonDoc) notFound();
 
-  const [rows, stages] = await Promise.all([
+  const [rows, stages, archetypeCounts] = await Promise.all([
     getStandings(seasonDoc._id),
     getSeasonEvents(seasonDoc._id),
+    getSeasonArchetypeCounts(seasonDoc._id),
   ]);
 
   return (
     <>
       <Navbar />
       <main className="bg-off-white px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-section-y min-h-[60vh]">
-        <StandingsView season={seasonDoc} rows={rows} seasons={seasons} stages={stages} />
+        <StandingsView
+          season={seasonDoc}
+          rows={rows}
+          seasons={seasons}
+          stages={stages}
+          archetypeCounts={archetypeCounts}
+        />
       </main>
       <Footer />
     </>

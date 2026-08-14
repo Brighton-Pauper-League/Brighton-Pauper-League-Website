@@ -57,6 +57,12 @@ export interface EventListItem {
   isCancelled?: boolean;
 }
 
+export interface ArchetypeRef {
+  _id: string;
+  name: string;
+  colors?: string | null;
+}
+
 export interface EventResult {
   player: {
     _id: string;
@@ -65,6 +71,7 @@ export interface EventResult {
     pseudonym?: string | null;
     isAnonymised?: boolean;
   };
+  archetype?: ArchetypeRef | null;
   wins: number;
   draws: number;
   losses: number;

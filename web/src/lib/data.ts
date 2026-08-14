@@ -32,7 +32,9 @@ import {
 } from "@/sanity/lib/queries";
 import { getTodayString, type StandingsPlayer } from "./standings";
 import { aggregateSeason, type SeasonStageInput } from "./seasonScoring";
+import { countArchetypes, type ArchetypeCount } from "./archetypeStats";
 import type {
+  ArchetypeRef,
   EventDetail,
   EventListItem,
   LoanerDeckDetail,
@@ -104,6 +106,7 @@ interface CompletedSeasonEventResult {
   omwPercentage?: number | null;
   gwPercentage?: number | null;
   ogwPercentage?: number | null;
+  archetype?: ArchetypeRef | null;
   player: StandingsPlayer | null;
 }
 
@@ -141,6 +144,21 @@ export async function getStandings(seasonId: string): Promise<StandingsRow[]> {
     params: { seasonId },
   });
   return computeFinalStandings(seasonId, (data as CompletedSeasonEvent[] | null) ?? []);
+}
+
+
+// Cumulative archetype breakdown across every completed event in a season.
+// Deliberately independent of getStandings's live/final branching — always
+// reflects whichever events have results recorded so far, so an in-progress
+// season shows a partial breakdown rather than withholding the chart until
+// the season ends.
+export async function getSeasonArchetypeCounts(seasonId: string): Promise<ArchetypeCount[]> {
+  const { data } = await sanityFetch({
+    query: COMPLETED_SEASON_EVENTS_QUERY,
+    params: { seasonId },
+  });
+  const events = (data as CompletedSeasonEvent[] | null) ?? [];
+  return countArchetypes(events.flatMap((event) => event.results ?? []));
 }
 
 /** Builds the dropped final standings rows from a completed season's events. */

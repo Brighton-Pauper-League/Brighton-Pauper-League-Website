@@ -115,6 +115,7 @@ export const COMPLETED_SEASON_EVENTS_QUERY = defineQuery(`
       omwPercentage,
       gwPercentage,
       ogwPercentage,
+      "archetype": deckArchetype-> { _id, name, colors },
       player-> {
         _id,
         name,
@@ -196,6 +197,7 @@ export const EVENT_BY_SLUG_QUERY = defineQuery(`
         pseudonym,
         isAnonymised
       },
+      "archetype": deckArchetype-> { _id, name, colors },
       wins,
       draws,
       losses,

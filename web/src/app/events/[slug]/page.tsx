@@ -8,6 +8,7 @@ import { notFound } from "next/navigation";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { EventStatusBadge } from "@/components/EventStatusBadge";
+import { EventArchetypeSection } from "@/components/EventArchetypeSection";
 import { getEventBySlug, getEventSlugs } from "@/lib/data";
 import { playerDisplayName } from "@/lib/standings";
 import { urlFor } from "@/sanity/lib/image";
@@ -186,6 +187,15 @@ export default async function EventPage({
                   </table>
                 </div>
               </div>
+            )}
+
+            {event.results && event.results.length > 0 && (
+              <EventArchetypeSection
+                title={event.title}
+                eventDate={event.eventDate}
+                slug={slug}
+                results={event.results}
+              />
             )}
           </div>
         </div>

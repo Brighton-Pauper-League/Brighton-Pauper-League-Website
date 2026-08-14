@@ -6,6 +6,7 @@ import { StandingsView } from "@/components/StandingsView";
 import {
   getActiveSeason,
   getAllSeasons,
+  getSeasonArchetypeCounts,
   getSeasonEvents,
   getStandings,
 } from "@/lib/data";
@@ -22,12 +23,13 @@ export default async function StandingsPage() {
     getActiveSeason(),
     getAllSeasons(),
   ]);
-  const [rows, stages] = activeSeason
+  const [rows, stages, archetypeCounts] = activeSeason
     ? await Promise.all([
         getStandings(activeSeason._id),
         getSeasonEvents(activeSeason._id),
+        getSeasonArchetypeCounts(activeSeason._id),
       ])
-    : [[], []];
+    : [[], [], []];
 
   return (
     <>
@@ -38,6 +40,7 @@ export default async function StandingsPage() {
           rows={rows}
           seasons={seasons}
           stages={stages}
+          archetypeCounts={archetypeCounts}
           heading="Standings"
           intro="No season is currently active. Pick a season to view its final standings."
         />
