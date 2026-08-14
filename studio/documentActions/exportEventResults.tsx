@@ -69,6 +69,111 @@ function rankResults(results: ResultRow[]): ResultRow[] {
   })
 }
 
+// Same golden-angle hue rotation used on the public site's archetype charts
+// (web/src/lib/archetypeColors.ts) — duplicated here since Studio and the web
+// app are separate packages. Keep the two in sync if this is retuned.
+const GOLDEN_ANGLE = 137.50776
+const BASE_HUE = 205
+const LIGHTNESS_CYCLE = [46, 60, 36]
+const SATURATION_CYCLE = [65, 55, 75]
+const UNASSIGNED_COLOR = '#8a8a94'
+
+function colorForIndex(index: number): string {
+  const hue = (BASE_HUE + index * GOLDEN_ANGLE) % 360
+  const lightness = LIGHTNESS_CYCLE[index % LIGHTNESS_CYCLE.length]
+  const saturation = SATURATION_CYCLE[index % SATURATION_CYCLE.length]
+  return `hsl(${hue.toFixed(1)}, ${saturation}%, ${lightness}%)`
+}
+
+interface ArchetypeSlice {
+  name: string
+  count: number
+  percentage: number
+  color: string
+}
+
+function computeArchetypeSlices(results: ResultRow[]): ArchetypeSlice[] {
+  const counts = new Map<string, number>()
+  for (const r of results) {
+    const name = r.archetype ?? 'No archetype recorded'
+    counts.set(name, (counts.get(name) ?? 0) + 1)
+  }
+  const total = results.length
+  const sorted = Array.from(counts.entries())
+    .map(([name, count]) => ({name, count, percentage: total > 0 ? (count / total) * 100 : 0}))
+    .sort((a, b) => b.count - a.count)
+
+  let colorIndex = 0
+  return sorted.map((slice) => ({
+    ...slice,
+    color:
+      slice.name === 'No archetype recorded' ? UNASSIGNED_COLOR : colorForIndex(colorIndex++),
+  }))
+}
+
+function polarToCartesian(cx: number, cy: number, r: number, angleDeg: number) {
+  const angleRad = ((angleDeg - 90) * Math.PI) / 180
+  return {x: cx + r * Math.cos(angleRad), y: cy + r * Math.sin(angleRad)}
+}
+
+function describeSlice(cx: number, cy: number, r: number, startAngle: number, endAngle: number): string {
+  // A full-circle single-slice pie has no valid arc sweep; draw a circle instead.
+  if (endAngle - startAngle >= 359.999) {
+    return `M ${cx} ${cy - r} A ${r} ${r} 0 1 0 ${cx - 0.01} ${cy - r} Z`
+  }
+  const start = polarToCartesian(cx, cy, r, endAngle)
+  const end = polarToCartesian(cx, cy, r, startAngle)
+  const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1'
+  return `M ${cx} ${cy} L ${start.x} ${start.y} A ${r} ${r} 0 ${largeArcFlag} 0 ${end.x} ${end.y} Z`
+}
+
+function ArchetypePieChart({slices}: {slices: ArchetypeSlice[]}) {
+  const cx = 90
+  const cy = 90
+  const r = 84
+  let cumulativeAngle = 0
+
+  return (
+    <div style={{display: 'flex', alignItems: 'center', gap: 24}}>
+      <svg width={180} height={180} viewBox="0 0 180 180" style={{flexShrink: 0}}>
+        {slices.map((slice) => {
+          const startAngle = cumulativeAngle
+          const endAngle = cumulativeAngle + (slice.percentage / 100) * 360
+          cumulativeAngle = endAngle
+          return (
+            <path
+              key={slice.name}
+              d={describeSlice(cx, cy, r, startAngle, endAngle)}
+              fill={slice.color}
+              stroke="#241c4f"
+              strokeWidth={2}
+            />
+          )
+        })}
+      </svg>
+      <div style={{display: 'flex', flexDirection: 'column', gap: 6, flex: 1}}>
+        {slices.map((slice) => (
+          <div key={slice.name} style={{display: 'flex', alignItems: 'center', gap: 8, fontSize: 13}}>
+            <span
+              style={{
+                width: 10,
+                height: 10,
+                borderRadius: '50%',
+                background: slice.color,
+                flexShrink: 0,
+              }}
+            />
+            <span style={{flex: 1, color: 'rgba(255,255,255,0.85)'}}>{slice.name}</span>
+            <span style={{color: 'rgba(255,255,255,0.55)'}}>
+              {slice.count} · {slice.percentage.toFixed(1)}%
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function slugify(value: string): string {
   return value
     .toLowerCase()
@@ -88,6 +193,7 @@ function triggerDownload(href: string, filename: string): void {
 // ── Results graphic (captured to PNG) ─────────────────────────────────────────
 
 function ResultsGraphic({event, ranked}: {event: EventDoc; ranked: ResultRow[]}) {
+  const slices = computeArchetypeSlices(ranked)
   return (
     <div
       style={{
@@ -167,6 +273,29 @@ function ResultsGraphic({event, ranked}: {event: EventDoc; ranked: ResultRow[]})
           ))}
         </tbody>
       </table>
+
+      {slices.length > 0 && (
+        <div
+          style={{
+            marginTop: 24,
+            paddingTop: 20,
+            borderTop: '1px solid rgba(255,255,255,0.15)',
+          }}
+        >
+          <div
+            style={{
+              fontSize: 13,
+              letterSpacing: 1,
+              textTransform: 'uppercase',
+              color: 'rgba(255,255,255,0.55)',
+              marginBottom: 12,
+            }}
+          >
+            Archetypes Played
+          </div>
+          <ArchetypePieChart slices={slices} />
+        </div>
+      )}
 
       <div
         style={{

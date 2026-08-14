@@ -6,9 +6,9 @@ import { Footer } from "@/components/Footer";
 import { StandingsView } from "@/components/StandingsView";
 import {
   getAllSeasons,
-  getSeasonArchetypeCounts,
   getSeasonByNumber,
   getSeasonEvents,
+  getSeasonMetagameTable,
   getStandings,
 } from "@/lib/data";
 
@@ -50,10 +50,10 @@ export default async function SeasonStandingsPage({
   ]);
   if (!seasonDoc) notFound();
 
-  const [rows, stages, archetypeCounts] = await Promise.all([
+  const [rows, stages, metagameRows] = await Promise.all([
     getStandings(seasonDoc._id),
     getSeasonEvents(seasonDoc._id),
-    getSeasonArchetypeCounts(seasonDoc._id),
+    getSeasonMetagameTable(seasonDoc._id),
   ]);
 
   return (
@@ -65,7 +65,7 @@ export default async function SeasonStandingsPage({
           rows={rows}
           seasons={seasons}
           stages={stages}
-          archetypeCounts={archetypeCounts}
+          metagameRows={metagameRows}
         />
       </main>
       <Footer />

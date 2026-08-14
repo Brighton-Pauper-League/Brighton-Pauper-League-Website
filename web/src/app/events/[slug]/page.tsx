@@ -190,12 +190,7 @@ export default async function EventPage({
             )}
 
             {event.results && event.results.length > 0 && (
-              <EventArchetypeSection
-                title={event.title}
-                eventDate={event.eventDate}
-                slug={slug}
-                results={event.results}
-              />
+              <EventArchetypeSection results={event.results} />
             )}
           </div>
         </div>

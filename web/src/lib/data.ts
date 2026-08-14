@@ -32,7 +32,7 @@ import {
 } from "@/sanity/lib/queries";
 import { getTodayString, type StandingsPlayer } from "./standings";
 import { aggregateSeason, type SeasonStageInput } from "./seasonScoring";
-import { countArchetypes, type ArchetypeCount } from "./archetypeStats";
+import { computeMetagameTable, type MetagameRow } from "./metagameStats";
 import type {
   ArchetypeRef,
   EventDetail,
@@ -146,19 +146,19 @@ export async function getStandings(seasonId: string): Promise<StandingsRow[]> {
   return computeFinalStandings(seasonId, (data as CompletedSeasonEvent[] | null) ?? []);
 }
 
-
-// Cumulative archetype breakdown across every completed event in a season.
-// Deliberately independent of getStandings's live/final branching — always
-// reflects whichever events have results recorded so far, so an in-progress
-// season shows a partial breakdown rather than withholding the chart until
-// the season ends.
-export async function getSeasonArchetypeCounts(seasonId: string): Promise<ArchetypeCount[]> {
+// Per-archetype metagame breakdown across every completed event in a
+// season (entries, Top 8 appearances, wins, conversion). Deliberately
+// independent of getStandings's live/final branching — always reflects
+// whichever events have results recorded so far, so an in-progress season
+// shows a partial breakdown rather than withholding the table until the
+// season ends.
+export async function getSeasonMetagameTable(seasonId: string): Promise<MetagameRow[]> {
   const { data } = await sanityFetch({
     query: COMPLETED_SEASON_EVENTS_QUERY,
     params: { seasonId },
   });
   const events = (data as CompletedSeasonEvent[] | null) ?? [];
-  return countArchetypes(events.flatMap((event) => event.results ?? []));
+  return computeMetagameTable(events);
 }
 
 /** Builds the dropped final standings rows from a completed season's events. */

@@ -13,7 +13,6 @@
     "@sanity/client": "^7.23.0",
     "@sanity/image-url": "^2.1.1",
     "@sanity/visual-editing": "^5.4.4",
-    "html-to-image": "^1.11.13",
     "next": "16.2.9",
     "next-sanity": "^13.1.1",
     "react": "^19.2.7",

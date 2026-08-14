@@ -1,29 +1,23 @@
-// Real archetype data rarely has the `colors` (WUBRG) field populated, even
-// when the name implies one (e.g. "Grixis Affinity", "Boros Tribe"), so
-// slice colors are assigned per distinct archetype instead: a deterministic
-// hash of the archetype's id picks a hue, kept at a fixed saturation/
-// lightness for legibility. Same archetype -> same color everywhere (event
-// and season charts alike), without depending on data entry in Studio.
+// Slice colors are assigned by position within a chart's sorted archetype
+// list, using the golden-angle hue rotation (a standard trick for spreading
+// N arbitrary categorical colors around the wheel with minimal clustering,
+// since consecutive hues 137.5° apart never re-converge). Lightness and
+// saturation also cycle on a short period so hue-adjacent slices (which can
+// still land close together for larger N) stay visually separable. This
+// trades cross-chart color stability (the same archetype can get a
+// different color on the event page vs. the season page, since ranking
+// differs) for maximum distinctness within whichever chart is on screen.
 
-const UNASSIGNED_COLOR = "#b0b0b6";
-const SATURATION = 62;
-const LIGHTNESS = 46;
+const GOLDEN_ANGLE = 137.50776;
+const BASE_HUE = 205;
+const LIGHTNESS_CYCLE = [46, 60, 36];
+const SATURATION_CYCLE = [65, 55, 75];
 
-function hashString(value: string): number {
-  let hash = 0;
-  for (let i = 0; i < value.length; i++) {
-    hash = (hash << 5) - hash + value.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash);
-}
+export const UNASSIGNED_COLOR = "#a8a8ae";
 
-/**
- * Deterministically derives a display color for an archetype from a stable
- * key (its `_id`), or a neutral grey for the "no archetype recorded" bucket.
- */
-export function getArchetypeColor(key: string | null | undefined): string {
-  if (!key) return UNASSIGNED_COLOR;
-  const hue = hashString(key) % 360;
-  return `hsl(${hue}, ${SATURATION}%, ${LIGHTNESS}%)`;
+export function getColorForIndex(index: number): string {
+  const hue = (BASE_HUE + index * GOLDEN_ANGLE) % 360;
+  const lightness = LIGHTNESS_CYCLE[index % LIGHTNESS_CYCLE.length];
+  const saturation = SATURATION_CYCLE[index % SATURATION_CYCLE.length];
+  return `hsl(${hue.toFixed(1)}, ${saturation}%, ${lightness}%)`;
 }

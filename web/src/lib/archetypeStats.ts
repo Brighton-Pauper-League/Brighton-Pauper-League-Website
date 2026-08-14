@@ -1,4 +1,4 @@
-import { getArchetypeColor } from "./archetypeColors";
+import { getColorForIndex, UNASSIGNED_COLOR } from "./archetypeColors";
 import type { ArchetypeRef } from "./types";
 
 export interface ArchetypeCount {
@@ -33,13 +33,21 @@ export function countArchetypes(
 
   const total = results.length;
 
-  return Array.from(counts.entries())
+  const sorted = Array.from(counts.entries())
     .map(([key, { name, count }]) => ({
       key,
       name,
-      color: getArchetypeColor(key === UNASSIGNED_KEY ? null : key),
       count,
       percentage: total > 0 ? (count / total) * 100 : 0,
     }))
     .sort((a, b) => b.count - a.count);
+
+  // Colors are assigned by position in the sorted list (see archetypeColors)
+  // so slices in this specific chart are maximally spread, rather than by a
+  // stable per-archetype identity.
+  let colorIndex = 0;
+  return sorted.map((entry) => ({
+    ...entry,
+    color: entry.key === UNASSIGNED_KEY ? UNASSIGNED_COLOR : getColorForIndex(colorIndex++),
+  }));
 }
