@@ -163,6 +163,7 @@ export default async function EventPage({
                     <thead>
                       <tr className="bg-primary-blue/10">
                         <th className="px-4 py-3 text-left font-(family-name:--font-bricolage-grotesque) font-extrabold text-xs text-primary-blue uppercase">Player</th>
+                        <th className="hidden lg:table-cell px-4 py-3 text-left font-(family-name:--font-bricolage-grotesque) font-extrabold text-xs text-primary-blue uppercase">Deck</th>
                         <th className="px-4 py-3 text-right font-(family-name:--font-bricolage-grotesque) font-extrabold text-xs text-primary-blue uppercase">W</th>
                         <th className="px-4 py-3 text-right font-(family-name:--font-bricolage-grotesque) font-extrabold text-xs text-primary-blue uppercase">L</th>
                         <th className="px-4 py-3 text-right font-(family-name:--font-bricolage-grotesque) font-extrabold text-xs text-primary-blue uppercase">D</th>
@@ -176,6 +177,14 @@ export default async function EventPage({
                           <tr key={i} className="border-t border-black/5">
                             <td className="px-4 py-3 font-(family-name:--font-bricolage-grotesque) text-dark-brown">
                               {playerDisplayName(result.player)}
+                              {result.archetype?.name && (
+                                <span className="lg:hidden block text-sm text-black/50">
+                                  {result.archetype.name}
+                                </span>
+                              )}
+                            </td>
+                            <td className="hidden lg:table-cell px-4 py-3 font-(family-name:--font-bricolage-grotesque) text-black/70">
+                              {result.archetype?.name ?? "—"}
                             </td>
                             <td className="px-4 py-3 text-right font-(family-name:--font-bricolage-grotesque) text-dark-brown">{result.wins}</td>
                             <td className="px-4 py-3 text-right font-(family-name:--font-bricolage-grotesque) text-dark-brown">{result.losses}</td>
