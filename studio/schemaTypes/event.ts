@@ -87,6 +87,15 @@ export const event = defineType({
       type: 'url',
     }),
     defineField({
+      name: 'discordEventId',
+      title: 'Discord Event ID',
+      type: 'string',
+      readOnly: true,
+      hidden: true,
+      description:
+        'ID of the linked Discord scheduled event. Set automatically by the Discord sync job. Do not edit manually.',
+    }),
+    defineField({
       name: 'results',
       title: 'Event Results',
       type: 'array',
