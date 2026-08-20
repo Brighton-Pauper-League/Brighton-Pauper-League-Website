@@ -47,15 +47,34 @@ interface DiscordScheduledEvent {
   status: number;
 }
 
-function discordRequest(path: string, init?: RequestInit) {
-  return fetch(`${DISCORD_API}${path}`, {
-    ...init,
-    headers: {
-      Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
-      "Content-Type": "application/json",
-      ...init?.headers,
-    },
-  });
+const MAX_RATE_LIMIT_RETRIES = 5;
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+// Guild scheduled event creation carries a much stricter, undocumented rate
+// limit than the general Discord API, so syncing several events in one run
+// reliably hits 429s. Discord's response tells us exactly how long to wait
+// (retry_after, in seconds), so back off and retry rather than failing.
+async function discordRequest(path: string, init?: RequestInit): Promise<Response> {
+  for (let attempt = 0; attempt <= MAX_RATE_LIMIT_RETRIES; attempt++) {
+    const res = await fetch(`${DISCORD_API}${path}`, {
+      ...init,
+      headers: {
+        Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
+        "Content-Type": "application/json",
+        ...init?.headers,
+      },
+    });
+
+    if (res.status !== 429 || attempt === MAX_RATE_LIMIT_RETRIES) return res;
+
+    const body = await res.clone().json().catch(() => null);
+    const retryAfterSeconds = typeof body?.retry_after === "number" ? body.retry_after : 1;
+    await sleep(retryAfterSeconds * 1000);
+  }
+  throw new Error("unreachable");
 }
 
 function eventUrl(slug: string | undefined) {
