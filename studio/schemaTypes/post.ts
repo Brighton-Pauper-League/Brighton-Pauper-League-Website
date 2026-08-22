@@ -1,5 +1,5 @@
 import { defineType, defineField, defineArrayMember } from 'sanity'
-import { DocumentTextIcon } from '@sanity/icons'
+import { DocumentTextIcon, PlayIcon } from '@sanity/icons'
 
 export const post = defineType({
   name: 'post',
@@ -111,6 +111,34 @@ export const post = defineType({
               title: 'Caption',
             }),
           ],
+        }),
+        defineArrayMember({
+          name: 'youtube',
+          type: 'object',
+          title: 'YouTube Video',
+          icon: PlayIcon,
+          fields: [
+            defineField({
+              name: 'url',
+              title: 'YouTube URL',
+              type: 'url',
+              validation: (rule) =>
+                rule
+                  .required()
+                  .uri({ scheme: ['http', 'https'] })
+                  .custom((value) =>
+                    value && /(?:youtube\.com|youtu\.be)\//.test(value)
+                      ? true
+                      : 'Must be a YouTube URL',
+                  ),
+            }),
+          ],
+          preview: {
+            select: { url: 'url' },
+            prepare({ url }) {
+              return { title: 'YouTube Video', subtitle: url }
+            },
+          },
         }),
       ],
     }),
