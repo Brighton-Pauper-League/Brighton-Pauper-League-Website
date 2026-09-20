@@ -714,27 +714,17 @@ export default async function Home() {
 
           <div className="flex flex-col lg:flex-row gap-10">
             <div className="w-full lg:w-190 flex flex-col gap-4">
-              <Link
-                  href={featuredVideo.url ?? "#"}
-                  target="_blank"
-                  className="group relative h-100 rounded-3xl overflow-hidden bg-dark-card block"
-              >
+              <div className="relative aspect-video rounded-3xl overflow-hidden bg-dark-card">
                 {featuredVideoId && (
-                  <Image
-                      src={`https://img.youtube.com/vi/${featuredVideoId}/hqdefault.jpg`}
-                      alt={featuredVideo.title ?? "Featured video thumbnail"}
-                      fill
-                      className="object-cover"
+                  <iframe
+                      src={`https://www.youtube-nocookie.com/embed/${featuredVideoId}`}
+                      title={featuredVideo.title ?? "Featured video"}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                      className="absolute inset-0 w-full h-full"
                   />
                 )}
-                <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
-                  <div className="w-16 h-16 rounded-full bg-secondary-yellow flex items-center justify-center">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                      <path d="M6 4L20 12L6 20V4Z" fill="#3a2320" />
-                    </svg>
-                  </div>
-                </div>
-              </Link>
+              </div>
               <p className="font-(family-name:--font-bricolage-grotesque) text-sm text-white/60">
                 {featuredVideo.title}
               </p>
