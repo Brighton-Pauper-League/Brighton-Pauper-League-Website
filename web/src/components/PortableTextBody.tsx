@@ -7,19 +7,12 @@ import {
 } from "@portabletext/react";
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityImage } from "@/lib/types";
+import { getYoutubeVideoId } from "@/lib/youtube";
 
 type WithChildren = { children?: ReactNode };
 type LinkValue = { href?: string };
 type ImageValue = SanityImage & { caption?: string };
 type YoutubeValue = { url?: string };
-
-// Matches youtu.be/<id>, youtube.com/watch?v=<id>, and youtube.com/embed/<id>.
-function getYoutubeVideoId(url: string): string | null {
-  const match = url.match(
-    /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([\w-]{11})/,
-  );
-  return match ? match[1] : null;
-}
 
 // Renders Sanity Portable Text (blog post bodies) with styles matching the
 // site's typography. Block images use the same alt/caption fields defined on

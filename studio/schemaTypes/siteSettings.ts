@@ -8,6 +8,36 @@ export const siteSettings = defineType({
   icon: CogIcon,
   fields: [
     defineField({
+      name: 'featuredVideo',
+      title: 'Featured Video',
+      description: 'The video shown in the "Follow the League" section on the home page.',
+      type: 'object',
+      fields: [
+        defineField({
+          name: 'url',
+          title: 'YouTube URL',
+          type: 'url',
+          initialValue: 'https://youtu.be/3LrSl0kk2JE?si=Kj5mliuV4bn_TdZv',
+          validation: (rule) =>
+            rule
+              .required()
+              .uri({ scheme: ['http', 'https'] })
+              .custom((value) =>
+                value && /(?:youtube\.com|youtu\.be)\//.test(value)
+                  ? true
+                  : 'Must be a YouTube URL',
+              ),
+        }),
+        defineField({
+          name: 'title',
+          title: 'Title',
+          type: 'string',
+          initialValue: 'Grixis Affinity Vs Naya Gates - MTG Pauper Gameplay',
+          validation: (rule) => rule.required(),
+        }),
+      ],
+    }),
+    defineField({
       name: 'socialLinks',
       title: 'Social Media Links',
       type: 'object',

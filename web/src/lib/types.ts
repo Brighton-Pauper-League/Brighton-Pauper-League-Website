@@ -128,7 +128,13 @@ export interface SocialLinks {
   facebook?: string;
 }
 
+export interface FeaturedVideo {
+  url?: string;
+  title?: string;
+}
+
 export interface SiteSettings {
+  featuredVideo?: FeaturedVideo;
   socialLinks?: SocialLinks;
   seo?: SeoFields;
 }

@@ -11,15 +11,30 @@ import {
   getStandings,
   getUpcomingEvents,
   getPastSeasons,
+  getSiteSettings,
 } from "@/lib/data";
+import { getYoutubeVideoId } from "@/lib/youtube";
+
+const DEFAULT_FEATURED_VIDEO = {
+  url: "https://youtu.be/3LrSl0kk2JE?si=Kj5mliuV4bn_TdZv",
+  title: "Grixis Affinity Vs Naya Gates - MTG Pauper Gameplay",
+};
 
 export default async function Home() {
   const activeSeason = await getActiveSeason();
-  const [upcomingEvents, pastSeasons, standings] = await Promise.all([
+  const [upcomingEvents, pastSeasons, standings, siteSettings] = await Promise.all([
     getUpcomingEvents(3),
     getPastSeasons(),
     activeSeason ? getStandings(activeSeason._id) : Promise.resolve([]),
+    getSiteSettings(),
   ]);
+
+  const featuredVideo = siteSettings?.featuredVideo?.url
+    ? siteSettings.featuredVideo
+    : DEFAULT_FEATURED_VIDEO;
+  const featuredVideoId = featuredVideo.url
+    ? getYoutubeVideoId(featuredVideo.url)
+    : null;
 
   return (
     <>
@@ -699,32 +714,57 @@ export default async function Home() {
 
           <div className="flex flex-col lg:flex-row gap-10">
             <div className="w-full lg:w-190 flex flex-col gap-4">
-              <div className="bg-dark-card h-100 rounded-3xl flex items-center justify-center px-6">
-                <p className="font-(family-name:--font-bricolage-grotesque) text-white/50 text-center">
-                  YouTube thumbnail here :)
-                </p>
-              </div>
+              <Link
+                  href={featuredVideo.url ?? "#"}
+                  target="_blank"
+                  className="group relative h-100 rounded-3xl overflow-hidden bg-dark-card block"
+              >
+                {featuredVideoId && (
+                  <Image
+                      src={`https://img.youtube.com/vi/${featuredVideoId}/hqdefault.jpg`}
+                      alt={featuredVideo.title ?? "Featured video thumbnail"}
+                      fill
+                      className="object-cover"
+                  />
+                )}
+                <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
+                  <div className="w-16 h-16 rounded-full bg-secondary-yellow flex items-center justify-center">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M6 4L20 12L6 20V4Z" fill="#3a2320" />
+                    </svg>
+                  </div>
+                </div>
+              </Link>
               <p className="font-(family-name:--font-bricolage-grotesque) text-sm text-white/60">
-                Our first video.
+                {featuredVideo.title}
               </p>
             </div>
 
             <div className="flex-1 flex flex-col gap-8">
               <div className="grid grid-cols-3 gap-4">
-                <div className="bg-dark-card aspect-square rounded-xl flex items-center justify-center px-2">
-                  <p className="font-(family-name:--font-bricolage-grotesque) text-white/50 text-xs text-center">
-                    Event photo
-                  </p>
+                <div className="relative aspect-square rounded-xl overflow-hidden bg-dark-card">
+                  <Image
+                      src="/neils-farewell.jpg"
+                      alt="Founding member Neil's last Pauper Tuesday"
+                      fill
+                      className="object-cover"
+                  />
                 </div>
-                <div className="bg-dark-card aspect-square rounded-xl flex items-center justify-center px-2">
-                  <p className="font-(family-name:--font-bricolage-grotesque) text-white/50 text-xs text-center">
-                    Event photo
-                  </p>
+                <div className="relative aspect-square rounded-xl overflow-hidden bg-dark-card">
+                  <Image
+                      src="/top-8.jpg"
+                      alt="Top-8 at a tournament on the 17/05/26"
+                      fill
+                      className="object-cover"
+                  />
                 </div>
-                <div className="bg-dark-card aspect-square rounded-xl flex items-center justify-center px-2">
-                  <p className="font-(family-name:--font-bricolage-grotesque) text-white/50 text-xs text-center">
-                    Event photo
-                  </p>
+                <div className="relative aspect-square rounded-xl overflow-hidden bg-dark-card">
+                  <Image
+                      src="/penultimate-casuals.JPG"
+                      alt="A scorching tournament a few days before our first league night"
+                      fill
+                      className="object-cover"
+                  />
                 </div>
               </div>
 
