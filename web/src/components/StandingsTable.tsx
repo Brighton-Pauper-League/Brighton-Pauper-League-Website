@@ -55,11 +55,12 @@ export function StandingsTable({
           <tr className="bg-[rgba(0,74,173,0.13)]">
             <th className={`${HEAD_CLASS} text-left w-16`}>Rank</th>
             <th className={`${HEAD_CLASS} text-left`}>Player</th>
-            {isFull && <th className={`${HEAD_CLASS} text-right`} title="Matches played">P</th>}
+            {isFull && <th className={`${HEAD_CLASS} text-right`}>Points</th>}
             {isFull && <th className={`${HEAD_CLASS} text-right`} title="Wins">W</th>}
             {isFull && <th className={`${HEAD_CLASS} text-right`} title="Losses">L</th>}
             {isFull && <th className={`${HEAD_CLASS} text-right`} title="Draws">D</th>}
-            <th className={`${HEAD_CLASS} text-right`}>Points</th>
+            {isFull && <th className={`${HEAD_CLASS} text-right`} title="Matches played">P</th>}
+            {!isFull && <th className={`${HEAD_CLASS} text-right`}>Points</th>}
             {!isFull && <th className={`${HEAD_CLASS} text-right`}>W-L-D</th>}
             {isFull && (
               <th className={`${HEAD_CLASS} text-right`} title="Opponent Match Win %">
@@ -111,13 +112,20 @@ export function StandingsTable({
                   <span className="ml-2 text-xs text-black/40 uppercase">inactive</span>
                 )}
               </td>
-              {isFull && <td className={`${CELL_CLASS} text-right`}>{row.matchesPlayed}</td>}
+              {isFull && (
+                <td className={`${CELL_CLASS} text-right font-bold text-lg text-primary-blue`}>
+                  {row.points}
+                </td>
+              )}
               {isFull && <td className={`${CELL_CLASS} text-right`}>{row.wins}</td>}
               {isFull && <td className={`${CELL_CLASS} text-right`}>{row.losses}</td>}
               {isFull && <td className={`${CELL_CLASS} text-right`}>{row.draws}</td>}
-              <td className={`${CELL_CLASS} text-right font-bold text-lg text-primary-blue`}>
-                {row.points}
-              </td>
+              {isFull && <td className={`${CELL_CLASS} text-right`}>{row.matchesPlayed}</td>}
+              {!isFull && (
+                <td className={`${CELL_CLASS} text-right font-bold text-lg text-primary-blue`}>
+                  {row.points}
+                </td>
+              )}
               {!isFull && (
                 <td className={`${CELL_CLASS} text-right text-base text-dark-brown/70`}>
                   {row.wins}-{row.losses}-{row.draws}
