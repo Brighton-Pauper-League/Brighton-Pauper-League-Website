@@ -131,6 +131,29 @@ Results**. You get two options:
 Both use the event's entered results, ranked by the usual tiebreakers. An event
 with no results yet has nothing to export.
 
+There is also a second image, an **archetype card**, showing the share of each
+archetype played at that event. As on the website, players appear by nickname,
+or by pseudonym when anonymised, in the images and the CSV.
+
+### Exporting a season
+
+On a season, open the **menu next to the Publish button (the chevron) → Export
+Season**. You get:
+
+- **Download standings image** - a shareable standings card for the whole season.
+  Once the season is complete it shows the final table (worst two results
+  dropped) with a gold line under 8th place marking the top 8 cut.
+- **Download archetype image** - the share of each archetype played across every
+  event in the season.
+- **Download CSV** - one row per player (rank, player, played, W, D, L, points,
+  OMW%, GW%, OGW%).
+
+The standings follow the same rule as the website: the **live running total**
+until the season's End Date has passed, then the **final table**. The dialog
+says which one you are exporting. Only **published** events are included, and
+players are shown by the name the site shows (nickname, or pseudonym when
+anonymised).
+
 ---
 
 ## How standings work

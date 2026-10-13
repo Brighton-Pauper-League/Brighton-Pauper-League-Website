@@ -1,9 +1,20 @@
 import React, {useCallback, useRef, useState} from 'react'
 import {useClient} from 'sanity'
 import {DownloadIcon} from '@sanity/icons'
-import {toPng} from 'html-to-image'
-import {toCsv} from '../tools/archetypeExport'
-import {LOGO_DATA_URI} from './logoDataUri'
+import {
+  ArchetypePieChart,
+  CARD_STYLE,
+  CARD_WIDTH,
+  CardFooter,
+  CardHeader,
+  PRIMARY_BUTTON_STYLE,
+  SECONDARY_BUTTON_STYLE,
+  capturePng,
+  computeArchetypeSlices,
+  downloadCsv,
+  slugify,
+  type ArchetypeSlice,
+} from './exportShared'
 
 // A document action, scoped to `event`, that exports a single event's results
 // (with the deck archetype played) as a CSV, and separately as two shareable
@@ -14,12 +25,6 @@ import {LOGO_DATA_URI} from './logoDataUri'
 // PNGs are produced by rendering a styled DOM node and capturing it with
 // html-to-image — the export runs in the browser, so a DOM capture is a
 // better fit than a server-side renderer.
-
-// Instagram recommends 1080px-wide story/reel assets; height is left to grow
-// with content (result count varies per event) rather than forced to the
-// full 1920 story height, so a small event doesn't get padded with empty
-// space and a large one doesn't get clipped.
-const CARD_WIDTH = 1080
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -51,7 +56,10 @@ const EVENT_QUERY = `*[_id in [$id, $draftId]]{
   eventDate,
   "season": season->name,
   results[]{
-    "player": player->name,
+    "player": select(
+      player->isAnonymised && defined(player->pseudonym) => player->pseudonym,
+      coalesce(player->nickname, player->name)
+    ),
     "archetype": deckArchetype->name,
     wins, draws, losses,
     omwPercentage, gwPercentage, ogwPercentage
@@ -77,197 +85,21 @@ function rankResults(results: ResultRow[]): ResultRow[] {
   })
 }
 
-// Same golden-angle hue rotation used on the public site's archetype charts
-// (web/src/lib/archetypeColors.ts) — duplicated here since Studio and the web
-// app are separate packages. Keep the two in sync if this is retuned.
-const GOLDEN_ANGLE = 137.50776
-const BASE_HUE = 205
-const LIGHTNESS_CYCLE = [46, 60, 36]
-const SATURATION_CYCLE = [65, 55, 75]
-const UNASSIGNED_COLOR = '#8a8a94'
-
-function colorForIndex(index: number): string {
-  const hue = (BASE_HUE + index * GOLDEN_ANGLE) % 360
-  const lightness = LIGHTNESS_CYCLE[index % LIGHTNESS_CYCLE.length]
-  const saturation = SATURATION_CYCLE[index % SATURATION_CYCLE.length]
-  return `hsl(${hue.toFixed(1)}, ${saturation}%, ${lightness}%)`
-}
-
-interface ArchetypeSlice {
-  name: string
-  count: number
-  percentage: number
-  color: string
-}
-
-function computeArchetypeSlices(results: ResultRow[]): ArchetypeSlice[] {
-  const counts = new Map<string, number>()
-  for (const r of results) {
-    const name = r.archetype ?? 'No archetype recorded'
-    counts.set(name, (counts.get(name) ?? 0) + 1)
-  }
-  const total = results.length
-  const sorted = Array.from(counts.entries())
-    .map(([name, count]) => ({name, count, percentage: total > 0 ? (count / total) * 100 : 0}))
-    .sort((a, b) => b.count - a.count)
-
-  let colorIndex = 0
-  return sorted.map((slice) => ({
-    ...slice,
-    color:
-      slice.name === 'No archetype recorded' ? UNASSIGNED_COLOR : colorForIndex(colorIndex++),
-  }))
-}
-
-function polarToCartesian(cx: number, cy: number, r: number, angleDeg: number) {
-  const angleRad = ((angleDeg - 90) * Math.PI) / 180
-  return {x: cx + r * Math.cos(angleRad), y: cy + r * Math.sin(angleRad)}
-}
-
-function describeSlice(cx: number, cy: number, r: number, startAngle: number, endAngle: number): string {
-  // A full-circle single-slice pie has no valid arc sweep; draw a circle instead.
-  if (endAngle - startAngle >= 359.999) {
-    return `M ${cx} ${cy - r} A ${r} ${r} 0 1 0 ${cx - 0.01} ${cy - r} Z`
-  }
-  const start = polarToCartesian(cx, cy, r, endAngle)
-  const end = polarToCartesian(cx, cy, r, startAngle)
-  const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1'
-  return `M ${cx} ${cy} L ${start.x} ${start.y} A ${r} ${r} 0 ${largeArcFlag} 0 ${end.x} ${end.y} Z`
-}
-
-// Hero-sized, stacked (chart above legend) rather than side-by-side, so it
-// reads clearly on a phone screen at story width.
-function ArchetypePieChart({slices}: {slices: ArchetypeSlice[]}) {
-  const size = 520
-  const cx = size / 2
-  const cy = size / 2
-  const r = size / 2 - 12
-  let cumulativeAngle = 0
-
+function EventCardHeader({event, eyebrow}: {event: EventDoc; eyebrow?: string}) {
+  const date = event.eventDate
+    ? new Date(event.eventDate).toLocaleDateString('en-GB', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      })
+    : null
   return (
-    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 40}}>
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{flexShrink: 0}}>
-        {slices.map((slice) => {
-          const startAngle = cumulativeAngle
-          const endAngle = cumulativeAngle + (slice.percentage / 100) * 360
-          cumulativeAngle = endAngle
-          return (
-            <path
-              key={slice.name}
-              d={describeSlice(cx, cy, r, startAngle, endAngle)}
-              fill={slice.color}
-              stroke="#241c4f"
-              strokeWidth={4}
-            />
-          )
-        })}
-      </svg>
-      <div style={{display: 'flex', flexDirection: 'column', gap: 14, width: '100%'}}>
-        {slices.map((slice) => (
-          <div key={slice.name} style={{display: 'flex', alignItems: 'center', gap: 14, fontSize: 24}}>
-            <span
-              style={{
-                width: 18,
-                height: 18,
-                borderRadius: '50%',
-                background: slice.color,
-                flexShrink: 0,
-              }}
-            />
-            <span style={{flex: 1, color: 'rgba(255,255,255,0.85)', fontWeight: 600}}>{slice.name}</span>
-            <span style={{color: 'rgba(255,255,255,0.55)'}}>
-              {slice.count} · {slice.percentage.toFixed(1)}%
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
+    <CardHeader
+      eyebrow={eyebrow ?? event.season ?? 'Brighton Pauper League'}
+      title={event.title ?? 'Event results'}
+      subtitle={date}
+    />
   )
-}
-
-function slugify(value: string): string {
-  return value
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
-
-function triggerDownload(href: string, filename: string): void {
-  const anchor = document.createElement('a')
-  anchor.href = href
-  anchor.download = filename
-  document.body.appendChild(anchor)
-  anchor.click()
-  document.body.removeChild(anchor)
-}
-
-// ── Shared card chrome ──────────────────────────────────────────────────────
-
-function CardHeader({event, eyebrow}: {event: EventDoc; eyebrow?: string}) {
-  return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'flex-start',
-        justifyContent: 'space-between',
-        gap: 32,
-        marginBottom: 40,
-      }}
-    >
-      <div>
-        <div style={{fontSize: 20, letterSpacing: 3, textTransform: 'uppercase', color: '#f5c542'}}>
-          {eyebrow ?? event.season ?? 'Brighton Pauper League'}
-        </div>
-        <div style={{fontSize: 46, fontWeight: 700, lineHeight: 1.15, marginTop: 10}}>
-          {event.title ?? 'Event results'}
-        </div>
-        {event.eventDate && (
-          <div style={{fontSize: 22, color: 'rgba(255,255,255,0.6)', marginTop: 8}}>
-            {new Date(event.eventDate).toLocaleDateString('en-GB', {
-              day: 'numeric',
-              month: 'long',
-              year: 'numeric',
-            })}
-          </div>
-        )}
-      </div>
-      <img
-        src={LOGO_DATA_URI}
-        alt="Brighton Pauper League"
-        width={110}
-        height={110}
-        style={{width: 110, height: 110, borderRadius: 18, flexShrink: 0}}
-      />
-    </div>
-  )
-}
-
-function CardFooter() {
-  return (
-    <div
-      style={{
-        marginTop: 40,
-        paddingTop: 24,
-        borderTop: '1px solid rgba(255,255,255,0.15)',
-        textAlign: 'center',
-        fontSize: 20,
-        letterSpacing: 3,
-        textTransform: 'uppercase',
-        color: '#f5c542',
-      }}
-    >
-      Brighton Pauper League
-    </div>
-  )
-}
-
-const CARD_STYLE: React.CSSProperties = {
-  width: CARD_WIDTH,
-  boxSizing: 'border-box',
-  padding: '56px 64px 48px',
-  background: '#241c4f',
-  color: '#ffffff',
-  fontFamily: 'system-ui, -apple-system, "Segoe UI", sans-serif',
 }
 
 // ── Results graphic (captured to PNG) ─────────────────────────────────────────
@@ -275,7 +107,7 @@ const CARD_STYLE: React.CSSProperties = {
 function ResultsGraphic({event, ranked}: {event: EventDoc; ranked: ResultRow[]}) {
   return (
     <div style={CARD_STYLE}>
-      <CardHeader event={event} />
+      <EventCardHeader event={event} />
 
       <table style={{width: '100%', borderCollapse: 'collapse', fontSize: 22}}>
         <thead>
@@ -319,33 +151,11 @@ function ResultsGraphic({event, ranked}: {event: EventDoc; ranked: ResultRow[]})
 function ArchetypeGraphic({event, slices}: {event: EventDoc; slices: ArchetypeSlice[]}) {
   return (
     <div style={CARD_STYLE}>
-      <CardHeader event={event} eyebrow="Archetypes Played" />
+      <EventCardHeader event={event} eyebrow="Archetypes Played" />
       <ArchetypePieChart slices={slices} />
       <CardFooter />
     </div>
   )
-}
-
-const PRIMARY_BUTTON_STYLE: React.CSSProperties = {
-  padding: '0.5rem 1rem',
-  borderRadius: '4px',
-  border: 'none',
-  background: '#2563eb',
-  color: '#fff',
-  cursor: 'pointer',
-  fontSize: '0.875rem',
-  fontWeight: 600,
-}
-
-const SECONDARY_BUTTON_STYLE: React.CSSProperties = {
-  padding: '0.5rem 1rem',
-  borderRadius: '4px',
-  border: '1px solid rgba(255,255,255,0.2)',
-  background: 'transparent',
-  color: 'inherit',
-  cursor: 'pointer',
-  fontSize: '0.875rem',
-  fontWeight: 600,
 }
 
 // ── Document Action ───────────────────────────────────────────────────────────
@@ -412,33 +222,15 @@ export function exportEventResultsAction(props: {id: string; type: string}) {
       String(r.losses ?? ''),
       String(points(r)),
     ])
-    const csv = toCsv([header, ...body])
-    const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'})
-    const url = URL.createObjectURL(blob)
-    triggerDownload(url, `${resultsBaseName}.csv`)
-    URL.revokeObjectURL(url)
+    downloadCsv([header, ...body], `${resultsBaseName}.csv`)
   }, [event, resultsBaseName])
 
-  const captureImage = useCallback(
-    async (node: HTMLDivElement | null, filename: string) => {
-      if (!node) return
-      setMessage('')
-      try {
-        // Capture the graphic's full content box (scrollWidth/Height), so a
-        // narrower, scrolled preview still renders the whole card.
-        const dataUrl = await toPng(node, {
-          pixelRatio: 2,
-          backgroundColor: '#241c4f',
-          width: node.scrollWidth,
-          height: node.scrollHeight,
-        })
-        triggerDownload(dataUrl, filename)
-      } catch {
-        setMessage('Could not generate the image. Please try again.')
-      }
-    },
-    [],
-  )
+  const captureImage = useCallback(async (node: HTMLDivElement | null, filename: string) => {
+    setMessage('')
+    if (!(await capturePng(node, filename))) {
+      setMessage('Could not generate the image. Please try again.')
+    }
+  }, [])
 
   const handleResultsImage = useCallback(
     () => captureImage(resultsRef.current, `${resultsBaseName}.png`),
