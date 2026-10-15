@@ -1,5 +1,5 @@
 import React, {useCallback, useRef, useState} from 'react'
-import {useClient} from 'sanity'
+import {useClient, type SanityClient} from 'sanity'
 import {DownloadIcon} from '@sanity/icons'
 import {aggregateSeason, type SeasonStageInput} from '../../web/src/lib/seasonScoring'
 import {
@@ -61,7 +61,7 @@ interface SeasonEventDoc {
   results: EventResultDoc[] | null
 }
 
-interface StandingRow {
+export interface StandingRow {
   rank: number
   player: string
   matchesPlayed: number
@@ -74,7 +74,7 @@ interface StandingRow {
   ogwPercentage: number | null
 }
 
-interface SeasonExport {
+export interface SeasonExport {
   name: string
   isComplete: boolean
   stageCount: number
@@ -99,7 +99,7 @@ const EVENTS_QUERY = `*[_type == "event" && season._ref == $id && isCancelled !=
 }`
 
 // The top 8 advance to the finals once a season is complete.
-const TOP_CUT = 8
+export const TOP_CUT = 8
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -185,6 +185,24 @@ function buildSeasonExport(season: SeasonDoc, events: SeasonEventDoc[]): SeasonE
   }
 }
 
+// Fetches the season and its published events and builds the export. Shared by
+// the season export and the bracket export so both seed from the same table.
+// Throws an Error with a user-facing message when there is nothing to export.
+export async function loadSeasonExport(client: SanityClient, id: string): Promise<SeasonExport> {
+  const [seasons, events]: [SeasonDoc[], SeasonEventDoc[]] = await Promise.all([
+    client.fetch(SEASON_QUERY, {id, draftId: `drafts.${id}`}),
+    client.fetch(EVENTS_QUERY, {id}),
+  ])
+  // Prefer the draft (latest, possibly unpublished edits) when it exists.
+  const season = seasons.find((s) => s._id.startsWith('drafts.')) ?? seasons[0] ?? null
+  if (!season) throw new Error('Could not find this season.')
+  const built = buildSeasonExport(season, events)
+  if (built.standings.length === 0) {
+    throw new Error('This season has no published event results to export.')
+  }
+  return built
+}
+
 function formatPercent(value: number | null): string {
   return value == null ? '' : String(value)
 }
@@ -241,6 +259,50 @@ function StandingsGraphic({data}: {data: SeasonExport}) {
   )
 }
 
+// The eight players who make the finals. Larger rows than the full table since
+// there are only eight, so it reads well on a phone.
+function TopEightGraphic({data}: {data: SeasonExport}) {
+  const subtitle = data.isComplete
+    ? `Final standings · the top ${TOP_CUT} advance to the finals`
+    : `Current top ${TOP_CUT} after ${data.stageCount} ${data.stageCount === 1 ? 'stage' : 'stages'}`
+
+  return (
+    <div style={CARD_STYLE}>
+      <CardHeader
+        eyebrow={data.isComplete ? 'Top 8 · Finals Qualifiers' : 'Top 8 · Current Standings'}
+        title={data.name}
+        subtitle={subtitle}
+      />
+
+      <div style={{display: 'flex', flexDirection: 'column', gap: 14}}>
+        {data.standings.slice(0, TOP_CUT).map((row) => (
+          <div
+            key={row.rank}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 24,
+              padding: '22px 28px',
+              borderRadius: 16,
+              background: 'rgba(255,255,255,0.07)',
+              fontSize: 32,
+            }}
+          >
+            <span style={{width: 48, color: '#f5c542', fontWeight: 700}}>{row.rank}</span>
+            <span style={{flex: 1, fontWeight: 700}}>{row.player}</span>
+            <span style={{color: 'rgba(255,255,255,0.7)', fontSize: 26}}>
+              {row.wins}-{row.losses}-{row.draws}
+            </span>
+            <span style={{width: 80, textAlign: 'right', fontWeight: 700}}>{row.points}</span>
+          </div>
+        ))}
+      </div>
+
+      <CardFooter />
+    </div>
+  )
+}
+
 function ArchetypeGraphic({data}: {data: SeasonExport}) {
   return (
     <div style={CARD_STYLE}>
@@ -260,6 +322,7 @@ function ArchetypeGraphic({data}: {data: SeasonExport}) {
 export function exportSeasonResultsAction(props: {id: string; type: string}) {
   const client = useClient({apiVersion: '2026-05-15'})
   const standingsRef = useRef<HTMLDivElement>(null)
+  const topEightRef = useRef<HTMLDivElement>(null)
   const archetypeRef = useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [data, setData] = useState<SeasonExport | null>(null)
@@ -272,24 +335,7 @@ export function exportSeasonResultsAction(props: {id: string; type: string}) {
     setMessage('')
     setData(null)
     try {
-      const [seasons, events]: [SeasonDoc[], SeasonEventDoc[]] = await Promise.all([
-        client.fetch(SEASON_QUERY, {id: props.id, draftId: `drafts.${props.id}`}),
-        client.fetch(EVENTS_QUERY, {id: props.id}),
-      ])
-      // Prefer the draft (latest, possibly unpublished edits) when it exists.
-      const season = seasons.find((s) => s._id.startsWith('drafts.')) ?? seasons[0] ?? null
-      if (!season) {
-        setStatus('error')
-        setMessage('Could not find this season.')
-        return
-      }
-      const built = buildSeasonExport(season, events)
-      if (built.standings.length === 0) {
-        setStatus('error')
-        setMessage('This season has no published event results to export.')
-        return
-      }
-      setData(built)
+      setData(await loadSeasonExport(client, props.id))
       setStatus('ready')
     } catch (err) {
       setStatus('error')
@@ -307,6 +353,7 @@ export function exportSeasonResultsAction(props: {id: string; type: string}) {
   const seasonSlug = data ? slugify(data.name) : 'season'
   const stateSlug = data?.isComplete ? 'final' : 'live'
   const standingsBaseName = `standings-${seasonSlug}-${stateSlug}`
+  const topEightBaseName = `top-8-${seasonSlug}-${stateSlug}`
   const archetypeBaseName = `archetypes-${seasonSlug}`
 
   const handleCsv = useCallback(() => {
@@ -381,6 +428,23 @@ export function exportSeasonResultsAction(props: {id: string; type: string}) {
                     style={PRIMARY_BUTTON_STYLE}
                   >
                     Download standings image
+                  </button>
+                </div>
+              </div>
+
+              <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
+                <span style={{fontSize: '0.8rem', fontWeight: 600, opacity: 0.7}}>Top 8 card</span>
+                <div style={{overflow: 'auto', maxHeight: 420, borderRadius: 8}}>
+                  <div ref={topEightRef} style={{width: CARD_WIDTH}}>
+                    <TopEightGraphic data={data} />
+                  </div>
+                </div>
+                <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+                  <button
+                    onClick={() => downloadImage(topEightRef.current, `${topEightBaseName}.png`)}
+                    style={PRIMARY_BUTTON_STYLE}
+                  >
+                    Download top 8 image
                   </button>
                 </div>
               </div>

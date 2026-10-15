@@ -6,6 +6,7 @@ import {structure} from './structure'
 import {importDecklistAction} from './documentActions/importDecklist'
 import {exportEventResultsAction} from './documentActions/exportEventResults'
 import {exportSeasonResultsAction} from './documentActions/exportSeasonResults'
+import {exportSeasonBracketAction} from './documentActions/exportSeasonBracket'
 import {archetypeExportTool} from './tools/archetypeExport'
 import {adminGuideTool} from './tools/adminGuide'
 
@@ -33,7 +34,7 @@ export default defineConfig({
         return [prev[0], exportEventResultsAction, ...prev.slice(1)]
       }
       if (ctx.schemaType === 'season') {
-        return [prev[0], exportSeasonResultsAction, ...prev.slice(1)]
+        return [prev[0], exportSeasonResultsAction, exportSeasonBracketAction, ...prev.slice(1)]
       }
       return prev
     },

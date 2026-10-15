@@ -143,6 +143,8 @@ Season**. You get:
 - **Download standings image** - a shareable standings card for the whole season.
   Once the season is complete it shows the final table (worst two results
   dropped) with a gold line under 8th place marking the top 8 cut.
+- **Download top 8 image** - the eight players who make the finals, with their
+  records and points.
 - **Download archetype image** - the share of each archetype played across every
   event in the season.
 - **Download CSV** - one row per player (rank, player, played, W, D, L, points,
@@ -153,6 +155,18 @@ until the season's End Date has passed, then the **final table**. The dialog
 says which one you are exporting. Only **published** events are included, and
 players are shown by the name the site shows (nickname, or pseudonym when
 anonymised).
+
+### Exporting the finals bracket
+
+On a season, open the **menu next to the Publish button → Export Bracket**. The
+top 8 in the standings are seeded 1v8, 2v7, 3v6 and 4v5. The 1v8 winner plays
+the 4v5 winner in the semi finals, and the 2v7 winner plays the 3v6 winner.
+
+Click a player to record them as the winner of a match (click again to clear
+it). Each round has its own image: quarter finals, semi finals and final. A
+round's image unlocks once the previous round's winners are picked, and the
+final image shows the champion. Results are only held while the dialog is open,
+so download the images before closing it.
 
 ---
 
