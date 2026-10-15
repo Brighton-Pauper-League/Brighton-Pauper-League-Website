@@ -3,7 +3,6 @@ import {useClient} from 'sanity'
 import {DownloadIcon} from '@sanity/icons'
 import {
   CARD_STYLE,
-  CARD_WIDTH,
   CardFooter,
   CardHeader,
   PRIMARY_BUTTON_STYLE,
@@ -84,13 +83,35 @@ function isRoundDecided(matches: Match[]): boolean {
 
 // ── Graphics (captured to PNG) ──────────────────────────────────────────────
 
+// The bracket is drawn left to right (quarter finals, semi finals, final) on a
+// wider canvas than the portrait cards, with connector lines joining each pair
+// of matches to the match they feed. Each image shows the whole bracket, but
+// only fills in rounds up to the one being exported: later rounds stay as
+// "TBD" slots, so a quarter final image never gives away the semi finalists.
+
+const BRACKET_WIDTH = 1600
+const BRACKET_PADDING = 64
+const COLUMN_WIDTH = 400
+const COLUMN_GAP = 136
+const ROW_HEIGHT = 56
+const MATCH_HEIGHT = ROW_HEIGHT * 2 + 2
+const SLOT_PITCH = 170
+const BRACKET_HEIGHT = SLOT_PITCH * 4
+
+// Quarter finals top to bottom. The two matches that feed the same semi final
+// must sit next to each other, so this is 1v8, 4v5, 2v7, 3v6 rather than the
+// 1v8, 2v7, 3v6, 4v5 order the seeds are usually listed in.
+const QUARTER_ORDER = ['qf1', 'qf4', 'qf2', 'qf3']
+
+const ROUND_INDEX: Record<Round, number> = {quarter: 0, semi: 1, final: 2}
+
 function PlayerRow({
   seed,
   name,
   outcome,
 }: {
-  seed: Seed
-  name: string
+  seed: Seed | null
+  name: string | null
   outcome: 'won' | 'lost' | 'pending'
 }) {
   return (
@@ -98,22 +119,35 @@ function PlayerRow({
       style={{
         display: 'flex',
         alignItems: 'center',
-        gap: 24,
-        padding: '22px 28px',
-        fontSize: 34,
+        gap: 12,
+        height: ROW_HEIGHT,
+        boxSizing: 'border-box',
+        padding: '0 16px',
+        fontSize: 24,
         fontWeight: outcome === 'won' ? 700 : 600,
         opacity: outcome === 'lost' ? 0.45 : 1,
         background: outcome === 'won' ? 'rgba(245,197,66,0.16)' : 'transparent',
       }}
     >
-      <span style={{width: 56, color: '#f5c542', fontWeight: 700}}>#{seed}</span>
-      <span style={{flex: 1}}>{name}</span>
+      <span style={{width: 36, color: '#f5c542', fontWeight: 700}}>{seed !== null ? `#${seed}` : ''}</span>
+      <span
+        style={{
+          flex: 1,
+          minWidth: 0,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          color: name === null ? 'rgba(255,255,255,0.35)' : undefined,
+        }}
+      >
+        {name ?? 'TBD'}
+      </span>
       {outcome !== 'pending' && (
         <span
           style={{
-            width: 56,
+            width: 28,
             textAlign: 'center',
-            fontSize: 26,
+            fontSize: 22,
             fontWeight: 700,
             color: outcome === 'won' ? '#f5c542' : 'rgba(255,255,255,0.7)',
           }}
@@ -125,46 +159,145 @@ function PlayerRow({
   )
 }
 
+function MatchBox({
+  data,
+  match,
+  top,
+  left,
+  show,
+}: {
+  data: SeasonExport
+  match: Match
+  top: number
+  left: number
+  // False for rounds beyond the one being exported: drawn as empty slots.
+  show: boolean
+}) {
+  const nameOf = (seed: Seed | null) => (show && seed !== null ? data.standings[seed - 1].player : null)
+  const outcomeFor = (seed: Seed | null) =>
+    !show || match.winner === null || seed === null ? 'pending' : match.winner === seed ? 'won' : 'lost'
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        top,
+        left,
+        width: COLUMN_WIDTH,
+        borderRadius: 12,
+        overflow: 'hidden',
+        background: 'rgba(255,255,255,0.07)',
+      }}
+    >
+      <PlayerRow seed={show ? match.a : null} name={nameOf(match.a)} outcome={outcomeFor(match.a)} />
+      <div style={{height: 2, background: 'rgba(255,255,255,0.12)'}} />
+      <PlayerRow seed={show ? match.b : null} name={nameOf(match.b)} outcome={outcomeFor(match.b)} />
+    </div>
+  )
+}
+
 function RoundGraphic({
   data,
   round,
-  matches,
+  bracket,
 }: {
   data: SeasonExport
   round: Round
-  matches: Match[]
+  bracket: Record<Round, Match[]>
 }) {
-  const nameOf = (seed: Seed) => data.standings[seed - 1].player
-  const decided = isRoundDecided(matches)
-  const champion = round === 'final' && matches[0].winner !== null ? matches[0].winner : null
+  const through = ROUND_INDEX[round]
+  const decided = isRoundDecided(bracket[round])
+  const champion = round === 'final' ? bracket.final[0].winner : null
+
+  const columnLeft = (col: number) => col * (COLUMN_WIDTH + COLUMN_GAP)
+  const quarterCenters = QUARTER_ORDER.map((_, i) => SLOT_PITCH * i + SLOT_PITCH / 2)
+  const semiCenters = [0, 1].map((j) => (quarterCenters[j * 2] + quarterCenters[j * 2 + 1]) / 2)
+  const finalCenter = (semiCenters[0] + semiCenters[1]) / 2
+
+  const matchById = (id: string) =>
+    [...bracket.quarter, ...bracket.semi, ...bracket.final].find((m) => m.id === id) as Match
+
+  // Right-angle connectors from each pair of feeder matches into their target.
+  const connectors: string[] = []
+  const connect = (col: number, feeders: number[], target: number) => {
+    const x1 = columnLeft(col) + COLUMN_WIDTH
+    const xm = x1 + COLUMN_GAP / 2
+    const x2 = columnLeft(col + 1)
+    feeders.forEach((y) => connectors.push(`M ${x1} ${y} H ${xm}`))
+    connectors.push(`M ${xm} ${feeders[0]} V ${feeders[1]}`)
+    connectors.push(`M ${xm} ${target} H ${x2}`)
+  }
+  connect(0, [quarterCenters[0], quarterCenters[1]], semiCenters[0])
+  connect(0, [quarterCenters[2], quarterCenters[3]], semiCenters[1])
+  connect(1, semiCenters, finalCenter)
+
+  const columnLabels: Round[] = ['quarter', 'semi', 'final']
 
   return (
-    <div style={CARD_STYLE}>
+    <div style={{...CARD_STYLE, width: BRACKET_WIDTH, padding: `56px ${BRACKET_PADDING}px 48px`}}>
       <CardHeader
         eyebrow={`Finals · ${ROUND_LABELS[round]}`}
         title={data.name}
         subtitle={decided ? 'Results' : 'Matchups'}
       />
 
-      <div style={{display: 'flex', flexDirection: 'column', gap: 28}}>
-        {matches.map((match) => {
-          const outcomeFor = (seed: Seed) =>
-            match.winner === null ? 'pending' : match.winner === seed ? 'won' : 'lost'
-          return (
-            <div
-              key={match.id}
-              style={{
-                borderRadius: 16,
-                overflow: 'hidden',
-                background: 'rgba(255,255,255,0.07)',
-              }}
-            >
-              <PlayerRow seed={match.a as Seed} name={nameOf(match.a as Seed)} outcome={outcomeFor(match.a as Seed)} />
-              <div style={{height: 2, background: 'rgba(255,255,255,0.12)'}} />
-              <PlayerRow seed={match.b as Seed} name={nameOf(match.b as Seed)} outcome={outcomeFor(match.b as Seed)} />
-            </div>
-          )
-        })}
+      <div style={{position: 'relative', height: 40}}>
+        {columnLabels.map((label, col) => (
+          <div
+            key={label}
+            style={{
+              position: 'absolute',
+              left: columnLeft(col),
+              width: COLUMN_WIDTH,
+              textAlign: 'center',
+              fontSize: 20,
+              letterSpacing: 3,
+              textTransform: 'uppercase',
+              color: 'rgba(255,255,255,0.55)',
+            }}
+          >
+            {ROUND_LABELS[label]}
+          </div>
+        ))}
+      </div>
+
+      <div style={{position: 'relative', height: BRACKET_HEIGHT}}>
+        <svg
+          width={COLUMN_WIDTH * 3 + COLUMN_GAP * 2}
+          height={BRACKET_HEIGHT}
+          style={{position: 'absolute', top: 0, left: 0}}
+        >
+          {connectors.map((d, i) => (
+            <path key={i} d={d} stroke="rgba(255,255,255,0.3)" strokeWidth={3} fill="none" />
+          ))}
+        </svg>
+
+        {QUARTER_ORDER.map((id, i) => (
+          <MatchBox
+            key={id}
+            data={data}
+            match={matchById(id)}
+            top={quarterCenters[i] - MATCH_HEIGHT / 2}
+            left={columnLeft(0)}
+            show={through >= 0}
+          />
+        ))}
+        {['sf1', 'sf2'].map((id, j) => (
+          <MatchBox
+            key={id}
+            data={data}
+            match={matchById(id)}
+            top={semiCenters[j] - MATCH_HEIGHT / 2}
+            left={columnLeft(1)}
+            show={through >= 1}
+          />
+        ))}
+        <MatchBox
+          data={data}
+          match={matchById('f1')}
+          top={finalCenter - MATCH_HEIGHT / 2}
+          left={columnLeft(2)}
+          show={through >= 2}
+        />
       </div>
 
       {champion !== null && (
@@ -172,7 +305,9 @@ function RoundGraphic({
           <div style={{fontSize: 20, letterSpacing: 3, textTransform: 'uppercase', color: '#f5c542'}}>
             Champion
           </div>
-          <div style={{fontSize: 56, fontWeight: 700, marginTop: 8}}>{nameOf(champion)}</div>
+          <div style={{fontSize: 56, fontWeight: 700, marginTop: 8}}>
+            {data.standings[champion - 1].player}
+          </div>
         </div>
       )}
 
@@ -346,8 +481,8 @@ export function exportSeasonBracketAction(props: {id: string; type: string}) {
                     {ready ? (
                       <>
                         <div style={{overflow: 'auto', maxHeight: 420, borderRadius: 8}}>
-                          <div ref={refs[round]} style={{width: CARD_WIDTH}}>
-                            <RoundGraphic data={data} round={round} matches={matches} />
+                          <div ref={refs[round]} style={{width: BRACKET_WIDTH}}>
+                            <RoundGraphic data={data} round={round} bracket={bracket} />
                           </div>
                         </div>
                         <div style={{display: 'flex', justifyContent: 'flex-end'}}>
