@@ -262,17 +262,9 @@ function StandingsGraphic({data}: {data: SeasonExport}) {
 // The eight players who make the finals. Larger rows than the full table since
 // there are only eight, so it reads well on a phone.
 function TopEightGraphic({data}: {data: SeasonExport}) {
-  const subtitle = data.isComplete
-    ? `Final standings · the top ${TOP_CUT} advance to the finals`
-    : `Current top ${TOP_CUT} after ${data.stageCount} ${data.stageCount === 1 ? 'stage' : 'stages'}`
-
   return (
     <div style={CARD_STYLE}>
-      <CardHeader
-        eyebrow={data.isComplete ? 'Top 8 · Finals Qualifiers' : 'Top 8 · Current Standings'}
-        title={data.name}
-        subtitle={subtitle}
-      />
+      <CardHeader eyebrow={data.name} title={`Top ${TOP_CUT} - ${data.name}`} />
 
       <div style={{display: 'flex', flexDirection: 'column', gap: 14}}>
         {data.standings.slice(0, TOP_CUT).map((row) => (
