@@ -1,7 +1,7 @@
 import React, {useCallback, useRef, useState} from 'react'
 import {useClient, type SanityClient} from 'sanity'
 import {DownloadIcon} from '@sanity/icons'
-import {aggregateSeason, type SeasonStageInput} from '../../web/src/lib/seasonScoring'
+import {aggregateSeason, keptStageCount, type SeasonStageInput} from '../../web/src/lib/seasonScoring'
 import {
   ArchetypePieChart,
   CARD_STYLE,
@@ -25,7 +25,8 @@ import {
 // The standings are computed with the same aggregateSeason() the public site
 // uses (imported from the web package so the two cannot drift), and follow the
 // same live/final switch as getStandings in web/src/lib/data.ts: once today is
-// past the season's End Date the "drop worst two results" rule is applied.
+// past the season's End Date each player's best results are kept (the count
+// comes from keptStageCount, which depends on the season number).
 // Only published events are used, matching what the site shows.
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -40,6 +41,7 @@ interface PlayerNames {
 interface SeasonDoc {
   _id: string
   name: string | null
+  seasonNumber: number | null
   endDate: string | null
 }
 
@@ -77,13 +79,15 @@ export interface StandingRow {
 export interface SeasonExport {
   name: string
   isComplete: boolean
+  /** How many of each player's best results the final table keeps. */
+  keptStages: number
   stageCount: number
   standings: StandingRow[]
   slices: ArchetypeSlice[]
   entryCount: number
 }
 
-const SEASON_QUERY = `*[_id in [$id, $draftId]]{_id, name, endDate}`
+const SEASON_QUERY = `*[_id in [$id, $draftId]]{_id, name, seasonNumber, endDate}`
 
 const EVENTS_QUERY = `*[_type == "event" && season._ref == $id && isCancelled != true
   && defined(results) && !(_id in path("drafts.**"))] | order(eventDate asc){
@@ -158,7 +162,8 @@ function buildSeasonExport(season: SeasonDoc, events: SeasonEventDoc[]): SeasonE
     }),
   }))
 
-  const standings = aggregateSeason(stages, {dropWorstTwo: isComplete})
+  const keptStages = keptStageCount(season.seasonNumber)
+  const standings = aggregateSeason(stages, {keepBest: isComplete ? keptStages : null})
     .map((t) => ({
       player: namesByRef.get(t.playerRef) ?? 'Unknown player',
       matchesPlayed: t.matchesPlayed,
@@ -178,6 +183,7 @@ function buildSeasonExport(season: SeasonDoc, events: SeasonEventDoc[]): SeasonE
   return {
     name: season.name ?? 'Season',
     isComplete,
+    keptStages,
     stageCount: events.length,
     standings,
     slices: computeArchetypeSlices(entries),
@@ -396,7 +402,7 @@ export function exportSeasonResultsAction(props: {id: string; type: string}) {
             <>
               <p style={{margin: 0, fontSize: '0.875rem', opacity: 0.8, lineHeight: 1.5}}>
                 {data.isComplete
-                  ? 'This season has ended, so the standings are the final table with each player’s worst two results dropped.'
+                  ? `This season has ended, so the standings are the final table with each player’s best ${data.keptStages} results kept.`
                   : 'This season is still running, so the standings are the live running total with nothing dropped.'}{' '}
                 The CSV has one row per player (rank, player, played, W, D, L, points and the
                 tiebreakers); the standings and archetype images are separate, story-sized cards you

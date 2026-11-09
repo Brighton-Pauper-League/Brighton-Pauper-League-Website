@@ -42,7 +42,7 @@ A season groups a run of events into one league table.
 **Why the End Date matters:** while today is on or before the End Date the season
 is *active* and standings show the live running total. Once the End Date has
 passed the season is *complete* and the standings switch to the **final table**
-with the "drop worst two" rule applied. So we must set the End Date, as it's the
+with the "best 7 kept" rule applied. So we must set the End Date, as it's the
 switch that finalises a season.
 
 ---
@@ -141,8 +141,8 @@ On a season, open the **menu next to the Publish button (the chevron) → Export
 Season**. You get:
 
 - **Download standings image** - a shareable standings card for the whole season.
-  Once the season is complete it shows the final table (worst two results
-  dropped) with a gold line under 8th place marking the top 8 cut.
+  Once the season is complete it shows the final table (best 7 results
+  kept) with a gold line under 8th place marking the top 8 cut.
 - **Download top 8 image** - the eight players who make the finals, with their
   records and points.
 - **Download archetype image** - the share of each archetype played across every
@@ -175,9 +175,12 @@ so download the images before closing it.
 - **During a season:** the table is the live running total of every stage played
   so far.
 - **After the End Date:** the table becomes the **final** version - each player's
-  stage scores with their **worst two dropped**, and any stage they missed counts
-  as **0**. In practice: you can miss up to two nights with no penalty; a third
-  missed night starts costing you points.
+  stage scores with only their **best 7 kept**, and any stage they missed counts
+  as **0**. In practice: with 10 stages in a season you can miss up to three
+  nights with no penalty; a fourth missed night starts costing you points.
+  (Season 1 is the exception: it had 8 stages and kept each player's best 6, i.e.
+  its worst two were dropped. The rule is chosen by Season Number, so Season 2
+  onwards all keep the best 7.)
 - **Ties** are broken by OMW%, then GW%, then OGW% (standard MTG tiebreakers).
 - **Top 8 & finals:** once a season is complete, the standings mark the **top 8
   cut** - the eight players who advance to the finals. Record the overall

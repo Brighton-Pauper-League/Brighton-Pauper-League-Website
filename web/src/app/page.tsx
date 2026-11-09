@@ -380,13 +380,13 @@ export default async function Home() {
                 <div className="flex gap-3 items-start">
                   <span className="text-secondary-yellow text-2xl leading-none">•</span>
                   <p className="font-(family-name:--font-bricolage-grotesque) text-lg text-white">
-                    7-8 fortnightly Swiss stages per season
+                    10 fortnightly Swiss stages per season
                   </p>
                 </div>
                 <div className="flex gap-3 items-start">
                   <span className="text-secondary-yellow text-2xl leading-none">•</span>
                   <p className="font-(family-name:--font-bricolage-grotesque) text-lg text-white">
-                    Win 3, Draw 1, Loss 0 - worst two results dropped
+                    Win 3, Draw 1, Loss 0 - best 7 results kept
                   </p>
                 </div>
                 <div className="flex gap-3 items-start">

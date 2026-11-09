@@ -52,7 +52,7 @@ export default function HowItWorksPage() {
             </div>
             <div className="bg-white rounded-2xl p-8 flex flex-col gap-2">
               <span className="font-(family-name:--font-young-serif) text-5xl text-primary-blue leading-none">
-                7&ndash;8
+                10
               </span>
               <p className="font-(family-name:--font-bricolage-grotesque) text-base text-black/70">
                 Fortnightly stages per season, feeding one overall league table.
@@ -145,11 +145,11 @@ export default function HowItWorksPage() {
             </div>
             <div className="bg-white/5 border border-white/10 rounded-2xl p-8">
               <h3 className="font-(family-name:--font-young-serif) text-2xl text-white mb-2">
-                Your worst two results are dropped
+                Your best 7 results are kept
               </h3>
               <p className="font-(family-name:--font-bricolage-grotesque) text-base text-white/80 leading-relaxed">
-                To keep scores fair and balanced, the worst two results each
-                season are not counted towards the league table. Missed weeks are
+                To keep scores fair and balanced, only your best seven results
+                each season count towards the league table. Missed weeks are
                 recorded as a score of 0.
               </p>
             </div>

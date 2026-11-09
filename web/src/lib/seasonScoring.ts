@@ -2,11 +2,25 @@
 //   1. eventSync.ts (write path) — aggregates the raw running total that is
 //      denormalised into playerSeasonStats and shown live during a season.
 //   2. data.ts getStandings (read path) — for a completed season, recomputes
-//      the final table with the "drop worst two results" rule applied.
+//      the final table with each player's best N stage results kept, where N
+//      comes from keptStageCount().
 //
 // Keeping the maths in one pure module means the live total and the final
-// dropped total can never drift apart on the parts they share (points = 3W+D,
+// trimmed total can never drift apart on the parts they share (points = 3W+D,
 // how percentages are averaged, etc.).
+
+/**
+ * How many of a player's best stage results count towards a completed season's
+ * final table.
+ *
+ * Season 1 ran 8 stages and dropped each player's worst two (so its best 6 were
+ * kept). That result is settled, so it is preserved exactly. Season 2 onwards
+ * keep the best 7 stages. Expressed as a count of kept results, not dropped
+ * ones, so the rule still reads sensibly as the number of stages changes.
+ */
+export function keptStageCount(seasonNumber: number | null | undefined): number {
+  return seasonNumber === 1 ? 6 : 7
+}
 
 export interface StageResultInput {
   playerRef: string
@@ -99,19 +113,19 @@ function averageOf(values: number[]): number | null {
 /**
  * Aggregates a season's stages into per-player totals.
  *
- * - `dropWorstTwo: false` — the raw running total: sum every result row,
+ * - `keepBest: null` — the raw running total: sum every result row,
  *   average each percentage over the rows that carry it. Behaviour matches the
  *   pre-existing eventSync aggregation exactly.
- * - `dropWorstTwo: true` — the final table: every player gets an entry for
- *   every stage (a derived 0 where they have no row), then their two
- *   lowest-scoring stages are removed before totalling. Ties on the dropped
+ * - `keepBest: N` — the final table: every player gets an entry for every
+ *   stage (a derived 0 where they have no row), then only their N
+ *   highest-scoring stages are kept before totalling. Ties on the cut-off
  *   value are broken by earliest event date so the result is deterministic.
- *   A completed season with <= 2 stages keeps at least its single best stage
- *   rather than zeroing everyone.
+ *   If a player has N or fewer entries, all of them are kept, so a season with
+ *   fewer than N stages does not lose any results.
  */
 export function aggregateSeason(
   stages: SeasonStageInput[],
-  options: { dropWorstTwo: boolean },
+  options: { keepBest: number | null },
 ): PlayerSeasonTotals[] {
   const entriesByPlayer = new Map<string, StageEntry[]>()
   const pushEntry = (playerRef: string, entry: StageEntry) => {
@@ -128,8 +142,8 @@ export function aggregateSeason(
   }
 
   // Full-slate padding: charge every known player a 0 for every stage they did
-  // not appear in. Only relevant to the drop path.
-  if (options.dropWorstTwo) {
+  // not appear in. Only relevant to the keep-best path.
+  if (options.keepBest !== null) {
     for (const stage of stages) {
       const present = new Set(stage.results.map((r) => r.playerRef))
       for (const playerRef of entriesByPlayer.keys()) {
@@ -143,9 +157,9 @@ export function aggregateSeason(
   const totals: PlayerSeasonTotals[] = []
   for (const [playerRef, entries] of entriesByPlayer) {
     let kept = entries
-    if (options.dropWorstTwo) {
-      // Keep at least the best stage; only drop two once there are 3+.
-      const dropCount = Math.min(2, Math.max(0, entries.length - 1))
+    if (options.keepBest !== null) {
+      // Drop whatever exceeds the kept count; always keep at least one stage.
+      const dropCount = Math.max(0, entries.length - Math.max(1, options.keepBest))
       const ordered = [...entries].sort(
         (a, b) => a.points - b.points || a.eventDate.localeCompare(b.eventDate),
       )

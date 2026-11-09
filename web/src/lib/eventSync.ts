@@ -104,9 +104,9 @@ async function syncSeasonStandings(
     },
   ];
 
-  // Live running total: no drop. The final "drop worst two" table is computed
-  // at read time (data.ts getStandings) once the season's end date passes.
-  const totals = aggregateSeason(stages, { dropWorstTwo: false });
+  // Live running total: nothing trimmed. The final "best N kept" table is
+  // computed at read time (data.ts getStandings) once the season's end date passes.
+  const totals = aggregateSeason(stages, { keepBest: null });
   const byPlayer = new Map(totals.map((t) => [t.playerRef, t]));
 
   const existing: { _id: string; playerRef: string }[] = await writeClient.fetch(

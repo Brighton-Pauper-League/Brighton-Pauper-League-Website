@@ -16,7 +16,7 @@ import {
   PUBLIC_PLAYERS_QUERY,
   SEASON_BY_NUMBER_QUERY,
   SEASON_EVENTS_QUERY,
-  SEASON_END_DATE_QUERY,
+  SEASON_STANDINGS_INFO_QUERY,
   COMPLETED_SEASON_EVENTS_QUERY,
   SITE_SETTINGS_QUERY,
   STANDINGS_BY_SEASON_QUERY,
@@ -31,7 +31,7 @@ import {
   INDEXABLE_LOANER_DECK_SLUGS_QUERY,
 } from "@/sanity/lib/queries";
 import { getTodayString, type StandingsPlayer } from "./standings";
-import { aggregateSeason, type SeasonStageInput } from "./seasonScoring";
+import { aggregateSeason, keptStageCount, type SeasonStageInput } from "./seasonScoring";
 import { computeMetagameTable, type MetagameRow } from "./metagameStats";
 import type {
   ArchetypeRef,
@@ -122,14 +122,16 @@ interface CompletedSeasonEvent {
  * While a season is running (today on or before its end date) this returns the
  * live running total denormalised into playerSeasonStats by eventSync. Once the
  * season has ended it recomputes the final table from the raw event results with
- * the "drop worst two results" rule applied (see seasonScoring.aggregateSeason).
+ * each player's best results kept (see seasonScoring.keptStageCount and
+ * aggregateSeason).
  */
 export async function getStandings(seasonId: string): Promise<StandingsRow[]> {
-  const { data: endDate } = await sanityFetch({
-    query: SEASON_END_DATE_QUERY,
+  const { data: info } = await sanityFetch({
+    query: SEASON_STANDINGS_INFO_QUERY,
     params: { seasonId },
   });
-  const seasonEndDate = endDate as string | null;
+  const seasonInfo = info as { endDate: string | null; seasonNumber: number | null } | null;
+  const seasonEndDate = seasonInfo?.endDate ?? null;
 
   if (!seasonEndDate || getTodayString() <= seasonEndDate) {
     const { data } = await sanityFetch({
@@ -143,7 +145,11 @@ export async function getStandings(seasonId: string): Promise<StandingsRow[]> {
     query: COMPLETED_SEASON_EVENTS_QUERY,
     params: { seasonId },
   });
-  return computeFinalStandings(seasonId, (data as CompletedSeasonEvent[] | null) ?? []);
+  return computeFinalStandings(
+    seasonId,
+    seasonInfo?.seasonNumber ?? null,
+    (data as CompletedSeasonEvent[] | null) ?? [],
+  );
 }
 
 // Per-archetype metagame breakdown across every completed event in a
@@ -161,9 +167,10 @@ export async function getSeasonMetagameTable(seasonId: string): Promise<Metagame
   return computeMetagameTable(events);
 }
 
-/** Builds the dropped final standings rows from a completed season's events. */
+/** Builds the final standings rows from a completed season's events. */
 function computeFinalStandings(
   seasonId: string,
+  seasonNumber: number | null,
   events: CompletedSeasonEvent[],
 ): StandingsRow[] {
   const playersByRef = new Map<string, StandingsPlayer>();
@@ -188,7 +195,7 @@ function computeFinalStandings(
       }),
   }));
 
-  return aggregateSeason(stages, { dropWorstTwo: true }).flatMap((t) => {
+  return aggregateSeason(stages, { keepBest: keptStageCount(seasonNumber) }).flatMap((t) => {
     const player = playersByRef.get(t.playerRef);
     if (!player) return [];
     return [
