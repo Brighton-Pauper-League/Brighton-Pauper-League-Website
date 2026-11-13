@@ -1,4 +1,4 @@
-import { defineType, defineField } from 'sanity'
+import { defineType, defineField, defineArrayMember } from 'sanity'
 import { UserIcon } from '@sanity/icons'
 
 export const player = defineType({
@@ -73,9 +73,69 @@ export const player = defineType({
     defineField({
       name: 'bio',
       title: 'Bio',
-      type: 'text',
-      rows: 4,
-      description: 'Shown on the player profile page',
+      type: 'array',
+      description:
+        'Shown on the player profile page. Select text and use the link button to turn it into a link. Member cards show a plain-text version.',
+      of: [
+        defineArrayMember({
+          type: 'block',
+          // Deliberately minimal: paragraphs and links only, so a bio stays
+          // simple text and cannot pick up headings, lists or images.
+          styles: [{ title: 'Normal', value: 'normal' }],
+          lists: [],
+          marks: {
+            decorators: [],
+            annotations: [
+              {
+                name: 'link',
+                type: 'object',
+                title: 'Link',
+                fields: [
+                  defineField({
+                    name: 'href',
+                    type: 'url',
+                    title: 'URL',
+                    validation: (rule) =>
+                      rule.required().uri({ scheme: ['http', 'https'] }),
+                  }),
+                ],
+              },
+            ],
+          },
+        }),
+      ],
+    }),
+
+    defineField({
+      name: 'socials',
+      title: 'Socials',
+      type: 'array',
+      description: 'Links shown on the player profile page, e.g. Website, Instagram, Twitch',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'socialLink',
+          fields: [
+            defineField({
+              name: 'label',
+              title: 'Label',
+              type: 'string',
+              description: 'What the link is, e.g. "Website" or "Instagram"',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'url',
+              title: 'Link',
+              type: 'url',
+              validation: (rule) =>
+                rule.required().uri({ scheme: ['http', 'https'] }),
+            }),
+          ],
+          preview: {
+            select: { title: 'label', subtitle: 'url' },
+          },
+        }),
+      ],
     }),
 
     // ── Visibility ────────────────────────────────────────────────────────

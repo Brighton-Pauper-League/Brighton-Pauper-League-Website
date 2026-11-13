@@ -61,6 +61,7 @@ switch that finalises a season.
 | Active | Marks a current vs former regular. |
 | Slug | The profile page URL. |
 | Image / Bio / Join date | Profile content. |
+| Socials | Optional links shown on the profile page. Add one entry per link, with a **Label** (e.g. "Website", "Instagram") and the full **Link** starting with https://. |
 
 Add a player once; you then reference them from event results. Because new
 players are hidden by default, you can set someone up in advance and switch

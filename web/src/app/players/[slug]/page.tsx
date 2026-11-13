@@ -5,6 +5,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { PlayerBio } from "@/components/PlayerBio";
 import { getPlayerBySlug, getPlayerSlugs } from "@/lib/data";
 import { playerDisplayName } from "@/lib/standings";
 import { urlFor } from "@/sanity/lib/image";
@@ -29,7 +30,7 @@ export async function generateMetadata({
   return buildMetadata(
     resolveSeo(player.seo, {
       title: displayName,
-      description: player.bio ?? `${displayName} — Brighton Pauper League member.`,
+      description: player.bioText || `${displayName} — Brighton Pauper League member.`,
       path: `/players/${slug}`,
       fallbackImage: player.image,
     })
@@ -102,10 +103,24 @@ export default async function PlayerProfilePage({
                 </div>
               </div>
 
-              {player.bio && (
-                <p className="font-(family-name:--font-bricolage-grotesque) text-lg text-black/70 leading-relaxed max-w-prose">
-                  {player.bio}
-                </p>
+              {player.bio && <PlayerBio value={player.bio} />}
+
+              {player.socials && player.socials.length > 0 && (
+                <ul className="flex flex-wrap gap-x-6 gap-y-2 font-(family-name:--font-bricolage-grotesque) text-base">
+                  {player.socials.map((social) => (
+                    <li key={social._key}>
+                      <span className="text-black/50">{social.label}: </span>
+                      <a
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary-blue hover:text-darker-blue transition-colors underline underline-offset-2 break-all"
+                      >
+                        {social.url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
               )}
             </div>
           </div>

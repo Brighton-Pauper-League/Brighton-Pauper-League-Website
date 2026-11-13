@@ -224,7 +224,7 @@ export const PUBLIC_PLAYERS_QUERY = defineQuery(`
     isActive,
     slug,
     image,
-    bio
+    "bio": coalesce(pt::text(bio), bio)
   }
 `)
 
@@ -239,6 +239,8 @@ export const PLAYER_BY_SLUG_QUERY = defineQuery(`
     slug,
     image,
     bio,
+    "bioText": coalesce(pt::text(bio), bio),
+    socials[]{ _key, label, url },
     joinDate,
     seo
   }

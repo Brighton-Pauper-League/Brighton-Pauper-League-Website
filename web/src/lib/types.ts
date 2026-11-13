@@ -116,7 +116,19 @@ export interface PlayerCard {
   bio?: string;
 }
 
-export interface PlayerProfile extends PlayerCard {
+export interface PlayerSocial {
+  _key: string;
+  label: string;
+  url: string;
+}
+
+// On the profile page `bio` is Portable Text (it can contain links); `bioText`
+// is the same content flattened to plain text for metadata. A legacy plain
+// string is tolerated until every bio has been migrated to blocks.
+export interface PlayerProfile extends Omit<PlayerCard, "bio"> {
+  bio?: unknown[] | string | null;
+  bioText?: string | null;
+  socials?: PlayerSocial[] | null;
   joinDate?: string;
   seo?: SeoFields;
 }
